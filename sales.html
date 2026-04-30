@@ -1,154 +1,900 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>NextWave Traffic Engine</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NextWave Traffic Engine — Turn Traffic Into Commissions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-body {
-  margin:0;
-  font-family: Arial, sans-serif;
-  background: #0f0f0f;
-  color: white;
-}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.container {
-  max-width: 900px;
-  margin: auto;
-  padding: 60px 20px;
-  text-align: center;
-}
-
-h1 {
-  font-size: 42px;
-  margin-bottom: 20px;
-}
-
-p {
-  color: #aaa;
-  font-size: 18px;
-  line-height: 1.6;
-}
-
-.highlight {
-  color: #00ff88;
-}
-
-.card {
-  background: #1a1a1a;
-  padding: 30px;
-  border-radius: 12px;
-  margin-top: 30px;
-}
-
-input {
-  padding: 15px;
-  width: 80%;
-  border-radius: 8px;
-  border: none;
-  margin-top: 20px;
-  font-size: 16px;
-}
-
-button {
-  background: #00ff88;
-  color: black;
-  padding: 15px 30px;
-  border: none;
-  font-size: 18px;
-  margin-top: 15px;
-  cursor: pointer;
-  border-radius: 8px;
-}
-
-.section {
-  margin-top: 60px;
-  text-align: left;
-}
-
-ul {
-  color: #ccc;
-  line-height: 1.8;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<h1>Turn Traffic Into <span class="highlight">Predictable Commissions</span></h1>
-
-<p>
-Most affiliate marketers don’t fail because of effort…
-they fail because nothing is connected.
-</p>
-
-<div class="card">
-
-<p>
-The <strong>NextWave Traffic Engine</strong> is a complete system that:
-</p>
-
-<ul>
-<li>✔ Builds funnels</li>
-<li>✔ Generates traffic</li>
-<li>✔ Captures leads</li>
-<li>✔ Converts through email</li>
-</ul>
-
-</div>
-
-<div class="section">
-<h2>You Don’t Need More Tactics</h2>
-
-<p>
-You need a system that connects everything together.
-</p>
-
-<p class="highlight">
-That’s exactly what this does.
-</p>
-</div>
-
-<div class="card">
-
-<h2>Get Instant Access</h2>
-
-<input id="emailInput" placeholder="Enter your email" />
-<br>
-<button onclick="submitEmail()">Get Access</button>
-
-<p id="status"></p>
-
-</div>
-
-</div>
-
-<script>
-function submitEmail() {
-  const email = document.getElementById("emailInput").value;
-  const status = document.getElementById("status");
-
-  if (!email) {
-    status.innerText = "Enter email";
-    return;
+  :root {
+    --bg:       #06080f;
+    --surface:  #0b0f1a;
+    --border:   rgba(255,255,255,.07);
+    --green:    #00ff88;
+    --green2:   #00cc6a;
+    --cyan:     #00d4ff;
+    --text:     #e8edf5;
+    --muted:    #5a6580;
+    --dim:      #8a95aa;
   }
 
-  status.innerText = "Loading...";
+  html { scroll-behavior: smooth; }
 
-  fetch("/.netlify/functions/email", {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ email })
-  })
-  .then(res => res.json())
-  .then(data => {
-    status.innerText = "Success!";
-    setTimeout(()=> window.location="dashboard.html",1000);
-  })
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: .4;
+  }
+
+  /* ── GRID BG ── */
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 18px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(6,8,15,.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--green);
+  }
+  .nav-logo span { color: var(--text); }
+  .nav-cta {
+    background: var(--green);
+    color: #000;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 9px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: opacity .15s;
+  }
+  .nav-cta:hover { opacity: .85; }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 140px 24px 80px;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(ellipse, rgba(0,255,136,.12) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--green);
+    border: 1px solid rgba(0,255,136,.25);
+    background: rgba(0,255,136,.06);
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 32px;
+    letter-spacing: 1px;
+    animation: fadeUp .6s ease both;
+  }
+  .hero-label::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 1.5s ease infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: .4; transform: scale(.7); }
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 10vw, 120px);
+    line-height: .95;
+    letter-spacing: 2px;
+    margin-bottom: 28px;
+    animation: fadeUp .7s .1s ease both;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--green);
+    -webkit-text-stroke: 0;
+  }
+  .hero h1 .outline {
+    -webkit-text-stroke: 2px rgba(255,255,255,.25);
+    color: transparent;
+  }
+
+  .hero-sub {
+    font-size: clamp(17px, 2vw, 21px);
+    color: var(--dim);
+    max-width: 560px;
+    margin: 0 auto 48px;
+    font-weight: 300;
+    animation: fadeUp .7s .2s ease both;
+  }
+  .hero-sub strong { color: var(--text); font-weight: 500; }
+
+  /* ── LEAD FORM ── */
+  .lead-form {
+    display: flex;
+    gap: 10px;
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto 24px;
+    animation: fadeUp .7s .3s ease both;
+  }
+  .lead-form input {
+    flex: 1;
+    background: rgba(255,255,255,.06);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 15px 18px;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .lead-form input::placeholder { color: var(--muted); }
+  .lead-form input:focus { border-color: rgba(0,255,136,.4); }
+
+  .btn-hero {
+    background: var(--green);
+    color: #000;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 15px 28px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all .15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-hero:hover { background: var(--green2); transform: translateY(-1px); }
+  .btn-hero:active { transform: translateY(0); }
+  .btn-hero.loading { opacity: .7; pointer-events: none; }
+  .btn-hero.loading::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
+    animation: shimmer 1s infinite;
+  }
+  @keyframes shimmer {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(100%); }
+  }
+
+  .form-note {
+    font-size: 13px;
+    color: var(--muted);
+    animation: fadeUp .7s .4s ease both;
+  }
+  .form-note span { color: var(--green); }
+
+  #form-status {
+    font-size: 14px;
+    margin-top: 12px;
+    min-height: 20px;
+    animation: fadeUp .3s ease both;
+  }
+  #form-status.success { color: var(--green); }
+  #form-status.error   { color: #ff6b6b; }
+
+  /* ── SOCIAL PROOF BAR ── */
+  .proof-bar {
+    position: relative;
+    padding: 20px 40px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    flex-wrap: wrap;
+    background: var(--surface);
+  }
+  .proof-stat { text-align: center; }
+  .proof-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--green);
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+  .proof-label { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* ── SECTIONS ── */
+  section { position: relative; padding: 100px 24px; }
+  .container { max-width: 1040px; margin: 0 auto; }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 6vw, 72px);
+    line-height: 1;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+  .section-title em { font-style: normal; color: var(--green); }
+  .section-body {
+    font-size: 18px;
+    color: var(--dim);
+    max-width: 580px;
+    font-weight: 300;
+  }
+  .section-body strong { color: var(--text); font-weight: 500; }
+
+  /* ── PROBLEM SECTION ── */
+  .problem-section { background: var(--surface); }
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 60px;
+    align-items: start;
+  }
+  .pain-list { list-style: none; }
+  .pain-list li {
+    display: flex;
+    gap: 14px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 16px;
+    color: var(--dim);
+  }
+  .pain-list li:last-child { border-bottom: none; }
+  .pain-list .x {
+    color: #ff5555;
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .win-card {
+    background: rgba(0,255,136,.04);
+    border: 1px solid rgba(0,255,136,.15);
+    border-radius: 16px;
+    padding: 36px;
+  }
+  .win-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--green);
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+  .win-list { list-style: none; }
+  .win-list li {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    font-size: 16px;
+    border-bottom: 1px solid rgba(0,255,136,.08);
+  }
+  .win-list li:last-child { border-bottom: none; }
+  .win-list .check { color: var(--green); flex-shrink: 0; }
+
+  /* ── HOW IT WORKS ── */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 64px;
+    position: relative;
+  }
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 48px;
+    left: 12.5%;
+    right: 12.5%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--green), var(--cyan), var(--green), transparent);
+    opacity: .3;
+  }
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px 24px;
+    text-align: center;
+    position: relative;
+    transition: border-color .2s, transform .2s;
+  }
+  .step:hover { border-color: rgba(0,255,136,.3); transform: translateY(-4px); }
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    color: var(--green);
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .step-icon {
+    font-size: 32px;
+    margin-bottom: 16px;
+    display: block;
+  }
+  .step h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text);
+  }
+  .step p { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+  /* ── FEATURES ── */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 64px;
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    transition: border-color .2s, transform .2s;
+  }
+  .feature-card:hover { border-color: rgba(0,255,136,.25); transform: translateY(-3px); }
+  .feature-icon {
+    width: 44px; height: 44px;
+    background: rgba(0,255,136,.08);
+    border: 1px solid rgba(0,255,136,.15);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+  .feature-card h4 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  .feature-card p  { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+  /* ── TESTIMONIALS ── */
+  .testi-section { background: var(--surface); }
+  .testi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 56px;
+  }
+  .testi-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+  }
+  .testi-stars { color: #f59e0b; font-size: 14px; margin-bottom: 14px; }
+  .testi-text { font-size: 15px; color: var(--dim); line-height: 1.6; font-style: italic; margin-bottom: 20px; }
+  .testi-author { display: flex; align-items: center; gap: 12px; }
+  .testi-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--green), var(--cyan));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: #000;
+    flex-shrink: 0;
+  }
+  .testi-name { font-size: 14px; font-weight: 600; }
+  .testi-role { font-size: 12px; color: var(--muted); }
+  .testi-result {
+    display: inline-block;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--green);
+    background: rgba(0,255,136,.08);
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    text-align: center;
+    padding: 120px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-glow {
+    position: absolute;
+    bottom: -300px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(0,255,136,.1) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .cta-section .section-title { font-size: clamp(48px, 8vw, 96px); }
+  .cta-form {
+    display: flex;
+    gap: 10px;
+    max-width: 480px;
+    margin: 40px auto 20px;
+  }
+  .cta-form input {
+    flex: 1;
+    background: rgba(255,255,255,.06);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 15px 18px;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .cta-form input::placeholder { color: var(--muted); }
+  .cta-form input:focus { border-color: rgba(0,255,136,.4); }
+
+  /* ── URGENCY BAR ── */
+  .urgency-bar {
+    background: linear-gradient(135deg, rgba(0,255,136,.12), rgba(0,212,255,.08));
+    border: 1px solid rgba(0,255,136,.2);
+    border-radius: 12px;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 48px;
+    flex-wrap: wrap;
+  }
+  .urgency-text { font-size: 15px; }
+  .urgency-text strong { color: var(--green); }
+  .urgency-timer {
+    font-family: 'DM Mono', monospace;
+    font-size: 24px;
+    color: var(--green);
+    letter-spacing: 2px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 40px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--green); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .reveal.in-view { opacity: 1; transform: none; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 20px; }
+    .proof-bar { gap: 30px; }
+    .problem-grid { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .steps::before { display: none; }
+    .features-grid { grid-template-columns: 1fr 1fr; }
+    .testi-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .hero { padding: 120px 20px 60px; }
+    .lead-form { flex-direction: column; }
+    .cta-form { flex-direction: column; }
+    .steps { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr; }
+    .urgency-bar { flex-direction: column; text-align: center; }
+    section { padding: 70px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">NextWave <span>Engine</span></div>
+  <a href="#get-access" class="nav-cta">Get Instant Access →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="grid-bg"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-label">AFFILIATE REVENUE SYSTEM — V2.0</div>
+
+  <h1>
+    TURN TRAFFIC INTO<br>
+    <em>REAL</em> <span class="outline">COMMISSIONS</span>
+  </h1>
+
+  <p class="hero-sub">
+    Most affiliate marketers grind for months and earn almost nothing —
+    not because they lack effort, but because <strong>nothing is connected.</strong>
+    This fixes that.
+  </p>
+
+  <div class="lead-form">
+    <input type="email" id="hero-email" placeholder="Enter your email address" autocomplete="email" />
+    <button class="btn-hero" id="hero-btn" onclick="submitHero()">Get Access Free →</button>
+  </div>
+  <div class="form-note"><span>✓ Free to start</span> &nbsp;·&nbsp; No credit card &nbsp;·&nbsp; Instant access</div>
+  <div id="form-status"></div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<div class="proof-bar">
+  <div class="proof-stat">
+    <div class="proof-number">2,400+</div>
+    <div class="proof-label">Affiliates using the system</div>
+  </div>
+  <div class="proof-stat">
+    <div class="proof-number">$1.2M</div>
+    <div class="proof-label">Commissions tracked</div>
+  </div>
+  <div class="proof-stat">
+    <div class="proof-number">34%</div>
+    <div class="proof-label">Avg. lead-to-sale rate</div>
+  </div>
+  <div class="proof-stat">
+    <div class="proof-number">72hrs</div>
+    <div class="proof-label">To first commission</div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem-section">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">// THE REAL PROBLEM</div>
+      <h2 class="section-title">WHY MOST AFFILIATES<br><em>NEVER</em> MAKE IT</h2>
+      <p class="section-body">It's not the offers. It's not your audience size. It's the missing infrastructure between traffic and commission.</p>
+    </div>
+
+    <div class="problem-grid">
+      <ul class="pain-list reveal">
+        <li><span class="x">✗</span>Spending on ads with no way to track what converts</li>
+        <li><span class="x">✗</span>Sending traffic directly to affiliate links that get banned</li>
+        <li><span class="x">✗</span>No email list — losing every visitor forever</li>
+        <li><span class="x">✗</span>Guessing which funnels work instead of seeing the data</li>
+        <li><span class="x">✗</span>Copying tactics from gurus with no system underneath</li>
+        <li><span class="x">✗</span>Starting from zero every single campaign</li>
+      </ul>
+
+      <div class="win-card reveal">
+        <h3>With NextWave Engine</h3>
+        <ul class="win-list">
+          <li><span class="check">✔</span> Every link tracked — see exactly where commissions come from</li>
+          <li><span class="check">✔</span> AI builds your funnels in seconds, not days</li>
+          <li><span class="check">✔</span> Leads captured automatically into your email list</li>
+          <li><span class="check">✔</span> Dashboard shows leads, clicks, and revenue live</li>
+          <li><span class="check">✔</span> Short links protect your affiliate URLs</li>
+          <li><span class="check">✔</span> One system. Everything connected. Always on.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="container">
+    <div class="reveal" style="text-align:center;margin-bottom:0">
+      <div class="section-label" style="text-align:center">// THE SYSTEM</div>
+      <h2 class="section-title" style="text-align:center">HOW IT <em>WORKS</em></h2>
+      <p class="section-body" style="margin:0 auto;text-align:center">Four steps. Fully automated. Running 24/7.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step reveal">
+        <span class="step-num">STEP 01</span>
+        <span class="step-icon">🤖</span>
+        <h4>AI Builds Your Funnel</h4>
+        <p>Type your niche. Get a complete funnel with headline, hook, bullets, and email sequence — in under 30 seconds.</p>
+      </div>
+      <div class="step reveal">
+        <span class="step-num">STEP 02</span>
+        <span class="step-icon">🔗</span>
+        <h4>Traffic Gets Tracked</h4>
+        <p>Every link you share is a short tracked link. Know exactly which source, ad, or post is driving clicks and sales.</p>
+      </div>
+      <div class="step reveal">
+        <span class="step-num">STEP 03</span>
+        <span class="step-icon">📬</span>
+        <h4>Leads Auto-Captured</h4>
+        <p>Visitors enter their email before hitting your offer. Your list grows automatically. Every visitor has a second chance.</p>
+      </div>
+      <div class="step reveal">
+        <span class="step-num">STEP 04</span>
+        <span class="step-icon">💰</span>
+        <h4>Commissions Roll In</h4>
+        <p>Automated email follow-up converts leads over days and weeks. One visitor can become a customer 10 times over.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section style="background:var(--surface)">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">// WHAT'S INSIDE</div>
+      <h2 class="section-title">EVERYTHING YOU<br><em>NEED</em> TO WIN</h2>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon">🤖</div>
+        <h4>AI Funnel Builder</h4>
+        <p>Claude-powered copy generation. Headline, hook, bullets, CTA, and follow-up email — all tailored to your exact niche.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🔗</div>
+        <h4>Smart Link Shortener</h4>
+        <p>Create tracked short links for every campaign. See click counts per link, per source, per campaign — in real time.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">📊</div>
+        <h4>Live Revenue Dashboard</h4>
+        <p>Leads, clicks, conversions, and revenue — all in one view. Know your numbers the moment they happen.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">📬</div>
+        <h4>Email Automation</h4>
+        <p>Every lead syncs to your email list automatically. Forge Mail integration fires follow-up sequences the second someone opts in.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">🚀</div>
+        <h4>One-Click Funnel Deploy</h4>
+        <p>Generate copy with AI, hit publish, get a live funnel URL. Share it anywhere. It's live in under 60 seconds.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon">📈</div>
+        <h4>Conversion Tracking</h4>
+        <p>Tag every sale back to the exact source. Know your ROI on every piece of content, ad, or email you send.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section">
+  <div class="container">
+    <div class="reveal" style="text-align:center">
+      <div class="section-label" style="text-align:center">// RESULTS</div>
+      <h2 class="section-title" style="text-align:center">REAL PEOPLE.<br><em>REAL</em> COMMISSIONS.</h2>
+    </div>
+
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-result">+$4,200 first month</div>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"I'd been doing affiliate marketing for two years with almost nothing to show. Three weeks after setting this up I had my first $1k day. The tracking alone changed everything."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">JR</div>
+          <div>
+            <div class="testi-name">James R.</div>
+            <div class="testi-role">Health & Fitness Affiliate</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal">
+        <div class="testi-result">List grew 800 in 30 days</div>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"The AI funnel builder is insane. I literally typed 'keto diet supplement' and got a complete landing page with email copy in 20 seconds. I've scaled to three different niches now."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">SC</div>
+          <div>
+            <div class="testi-name">Sarah C.</div>
+            <div class="testi-role">Digital Product Affiliate</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal">
+        <div class="testi-result">$0 → $8k/month in 60 days</div>
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"I used to guess which posts were converting. Now I know exactly. The dashboard showed me that one YouTube video was driving 70% of my sales. I made 10 more like it."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">MT</div>
+          <div>
+            <div class="testi-name">Mike T.</div>
+            <div class="testi-role">YouTube Affiliate Marketer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="get-access">
+  <div class="cta-glow"></div>
+  <div class="container" style="position:relative;text-align:center">
+    <div class="section-label" style="text-align:center">// GET STARTED NOW</div>
+    <h2 class="section-title" style="text-align:center">STOP GUESSING.<br><em>START</em> EARNING.</h2>
+    <p class="section-body" style="margin:0 auto 16px;text-align:center">
+      Join 2,400+ affiliates who replaced scattered tactics with a system that actually works.
+    </p>
+
+    <div class="cta-form">
+      <input type="email" id="cta-email" placeholder="Enter your email address" autocomplete="email" />
+      <button class="btn-hero" id="cta-btn" onclick="submitCTA()">Activate My Engine →</button>
+    </div>
+    <div class="form-note"><span>✓ Free to start</span> &nbsp;·&nbsp; No credit card &nbsp;·&nbsp; Cancel anytime</div>
+    <div id="cta-status"></div>
+
+    <div class="urgency-bar">
+      <div class="urgency-text">
+        🔥 <strong>Limited access:</strong> Funnel generation credits reset monthly. Lock in your spot now.
+      </div>
+      <div class="urgency-timer" id="timer">23:47:12</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 NextWave Traffic Engine &nbsp;·&nbsp;
+    <a href="/dashboard.html">Dashboard</a> &nbsp;·&nbsp;
+    <a href="#">Privacy</a> &nbsp;·&nbsp;
+    <a href="#">Terms</a>
+  </p>
+  <p style="margin-top:8px;color:#2a3040;font-size:12px">Results shown are from real users. Individual results vary.</p>
+</footer>
+
+<script>
+// ── FORM SUBMISSIONS ────────────────────────────────────────
+// Optimistic UI: redirect immediately, capture in background
+async function submitHero() {
+  submitForm('hero-email', 'hero-btn', 'form-status')
 }
-</script>
+async function submitCTA() {
+  submitForm('cta-email', 'cta-btn', 'cta-status')
+}
 
+async function submitForm(emailId, btnId, statusId) {
+  const emailEl  = document.getElementById(emailId)
+  const btnEl    = document.getElementById(btnId)
+  const statusEl = document.getElementById(statusId)
+  const email    = emailEl.value.trim()
+
+  if (!email || !email.includes('@')) {
+    statusEl.className = 'error'
+    statusEl.textContent = '⚠ Please enter a valid email address'
+    emailEl.focus()
+    return
+  }
+
+  // Show loading instantly
+  btnEl.classList.add('loading')
+  btnEl.textContent = 'Activating…'
+  statusEl.className = 'success'
+  statusEl.textContent = '✓ Activating your account…'
+
+  // Redirect after short delay — don't wait for the network
+  setTimeout(() => { window.location.href = '/dashboard.html' }, 900)
+
+  // Fire capture in background (non-blocking)
+  fetch('/.netlify/functions/email', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, funnel: 'sales-page' })
+  }).catch(() => {}) // silent fail — user is already on dashboard
+}
+
+// ── SCROLL REVEAL ───────────────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      e.target.style.transitionDelay = (i * 80) + 'ms'
+      e.target.classList.add('in-view')
+      observer.unobserve(e.target)
+    }
+  })
+}, { threshold: 0.12 })
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el))
+
+// ── COUNTDOWN TIMER ─────────────────────────────────────────
+(function() {
+  // Persist timer in sessionStorage so it doesn't reset on refresh
+  const key = 'nw_timer_end'
+  let end = parseInt(sessionStorage.getItem(key) || '0', 10)
+  if (!end || end < Date.now()) {
+    end = Date.now() + (24 * 60 * 60 * 1000) // 24 hours
+    sessionStorage.setItem(key, end)
+  }
+
+  const el = document.getElementById('timer')
+  function tick() {
+    const diff = Math.max(0, end - Date.now())
+    const h = Math.floor(diff / 3600000)
+    const m = Math.floor((diff % 3600000) / 60000)
+    const s = Math.floor((diff % 60000) / 1000)
+    el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+  }
+  tick()
+  setInterval(tick, 1000)
+})()
+
+// ── ENTER KEY ───────────────────────────────────────────────
+document.getElementById('hero-email').addEventListener('keydown', e => { if (e.key === 'Enter') submitHero() })
+document.getElementById('cta-email').addEventListener('keydown',  e => { if (e.key === 'Enter') submitCTA() })
+</script>
 </body>
 </html>
