@@ -111,12 +111,12 @@ button {
 <!-- KPIs -->
 <div class="kpis">
   <div class="kpi">
-    <h3>Revenue Est.</h3>
+    <h3>Revenue</h3>
     <h2 id="rev">$0</h2>
   </div>
 
   <div class="kpi">
-    <h3>Active Funnels</h3>
+    <h3>Funnels</h3>
     <h2 id="funnels">0</h2>
   </div>
 
@@ -126,7 +126,7 @@ button {
   </div>
 
   <div class="kpi">
-    <h3>System Score</h3>
+    <h3>Score</h3>
     <h2 id="score">0</h2>
   </div>
 </div>
@@ -143,7 +143,7 @@ button {
 <button onclick="createFunnel()">Deploy Funnel</button>
 
 <div class="feed" id="log">
-> System ready...
+> System initialized...
 </div>
 </div>
 
@@ -163,12 +163,12 @@ button {
 <script type="module">
 import { supabase } from "./supabase.js";
 
-/* LOG FEED */
+/* LOG */
 function log(msg){
   document.getElementById("log").innerHTML += "<br>> " + msg;
 }
 
-/* LOAD SYSTEM */
+/* LOAD DASHBOARD */
 async function load(){
 
   const { data: funnels } = await supabase.from("funnels").select("*");
@@ -182,9 +182,7 @@ async function load(){
     return sum + (c.revenue || 0);
   }, 0);
 
-  let avgRevenuePerLead = leadCount > 0 ? totalRevenue / leadCount : 0;
-
-  let score = totalRevenue * 2 + leadCount * 0.5;
+  let score = (totalRevenue * 2) + (leadCount * 0.5);
 
   document.getElementById("funnels").innerText = funnelCount;
   document.getElementById("leads").innerText = leadCount;
@@ -198,27 +196,44 @@ window.createFunnel = async function(){
   const name = document.getElementById("name").value;
   const link = document.getElementById("link").value;
 
+  if(!name || !link){
+    log("❌ Missing funnel data");
+    return;
+  }
+
   await supabase.from("funnels").insert([
     { name, affiliate_link: link }
   ]);
 
-  await supabase.from("events").insert([
-    { type:"click", funnel_name:name }
-  ]);
+  log("📦 Funnel deployed: " + name);
 
-  log("Funnel deployed: " + name);
   load();
 };
 
-/* AI */
+/* AI COPY */
 window.ai = function(){
   document.getElementById("aiout").innerText =
-`HEADLINE: Turn Traffic Into Predictable Revenue
-HOOK: Stop guessing — start using a system that compounds
-CTA: Activate Revenue Engine`;
+`HEADLINE: Turn Traffic Into Revenue
+HOOK: Stop guessing. Start tracking money.
+CTA: Activate your revenue system`;
 };
 
-/* LIVE LOOP */
+/* TRACK CONVERSION (REAL MONETIZATION LAYER) */
+window.trackConversion = async function(email, funnelName, amount){
+
+  await supabase.from("conversions").insert([
+    {
+      email,
+      funnel_name: funnelName,
+      revenue: amount
+    }
+  ]);
+
+  log("💰 Conversion: $" + amount);
+  load();
+};
+
+/* START */
 setInterval(load, 5000);
 load();
 
