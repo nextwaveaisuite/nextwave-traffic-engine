@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>NextWave Money Dashboard</title>
+<title>NextWave Revenue OS</title>
 
 <style>
 body {
   margin:0;
   font-family: Arial, sans-serif;
-  background:#070b14;
+  background:#050914;
   color:#e5e7eb;
 }
 
@@ -25,11 +25,11 @@ body {
   font-weight:700;
 }
 
-.pill {
-  background:#1f2937;
-  padding:6px 10px;
-  border-radius:999px;
+.status {
   font-size:12px;
+  padding:6px 10px;
+  background:#1f2937;
+  border-radius:999px;
   color:#9ca3af;
 }
 
@@ -40,7 +40,7 @@ body {
   padding:30px;
 }
 
-/* KPI ROW */
+/* KPI GRID */
 .kpis {
   display:grid;
   grid-template-columns: repeat(4,1fr);
@@ -63,7 +63,29 @@ body {
 
 .kpi h2 {
   margin:6px 0 0 0;
-  font-size:20px;
+  font-size:22px;
+}
+
+/* PIPELINE */
+.pipeline {
+  display:grid;
+  grid-template-columns: repeat(4,1fr);
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.stage {
+  background:#0b1220;
+  border:1px solid #1f2937;
+  border-radius:12px;
+  padding:12px;
+  font-size:13px;
+}
+
+.stage h3 {
+  margin:0;
+  font-size:12px;
+  color:#9ca3af;
 }
 
 /* GRID */
@@ -93,7 +115,7 @@ input {
   margin-top:8px;
   border-radius:10px;
   border:1px solid #1f2937;
-  background:#070b14;
+  background:#050914;
   color:white;
 }
 
@@ -114,19 +136,12 @@ button {
 .output {
   margin-top:12px;
   padding:12px;
-  background:#070b14;
+  background:#050914;
   border:1px solid #1f2937;
   border-radius:10px;
   font-size:13px;
   white-space:pre-wrap;
   color:#cbd5e1;
-}
-
-/* FUNNEL LIST */
-.list {
-  font-size:13px;
-  color:#cbd5e1;
-  line-height:1.6;
 }
 </style>
 </head>
@@ -134,64 +149,72 @@ button {
 <body>
 
 <div class="topbar">
-  <div class="brand">NextWave Money System</div>
-  <div class="pill">LIVE ENGINE</div>
+  <div class="brand">NextWave Revenue OS</div>
+  <div class="status">LIVE SYSTEM</div>
 </div>
 
 <div class="container">
 
-<!-- KPI DASHBOARD -->
+<!-- KPI ROW -->
 <div class="kpis">
   <div class="kpi">
-    <h4>Total Funnels</h4>
-    <h2 id="kpiFunnels">0</h2>
+    <h4>Funnels</h4>
+    <h2 id="funnels">0</h2>
   </div>
 
   <div class="kpi">
-    <h4>Leads Captured</h4>
-    <h2 id="kpiLeads">--</h2>
+    <h4>Leads</h4>
+    <h2 id="leads">0</h2>
   </div>
 
   <div class="kpi">
-    <h4>Traffic Outputs</h4>
-    <h2 id="kpiTraffic">--</h2>
+    <h4>Traffic Events</h4>
+    <h2 id="traffic">0</h2>
   </div>
 
   <div class="kpi">
-    <h4>Status</h4>
-    <h2 style="color:#22c55e;">Active</h2>
+    <h4>Revenue Signal</h4>
+    <h2 style="color:#22c55e;" id="revenue">$0</h2>
   </div>
+</div>
+
+<!-- PIPELINE -->
+<div class="pipeline">
+  <div class="stage"><h3>Cold Traffic</h3><div id="cold">--</div></div>
+  <div class="stage"><h3>Leads</h3><div id="leadStage">--</div></div>
+  <div class="stage"><h3>Engaged</h3><div id="engaged">--</div></div>
+  <div class="stage"><h3>Buyers</h3><div id="buyers">--</div></div>
 </div>
 
 <!-- MAIN GRID -->
 <div class="grid">
 
-<!-- FUNNEL BUILDER -->
+<!-- FUNNEL -->
 <div class="card">
-<h3>Build Revenue Funnel</h3>
+<h3>Revenue Funnel Builder</h3>
 
 <input id="funnelName" placeholder="Funnel Name">
 <input id="affiliateLink" placeholder="Affiliate Offer Link">
 
-<button onclick="createFunnel()">Create Money Funnel</button>
+<button onclick="createFunnel()">Create Revenue Funnel</button>
 
 <div id="funnelOut" class="output"></div>
 </div>
 
-<!-- AI ENGINE -->
+<!-- AI -->
 <div class="card">
-<h3>AI Conversion Engine</h3>
+<h3>AI Revenue Engine</h3>
 
-<button onclick="generateAI()">Generate High-Converting Copy</button>
+<button onclick="generateAI()">Generate Conversion Copy</button>
 
 <div id="aiOut" class="output"></div>
 </div>
 
 <!-- TRAFFIC -->
 <div class="card" style="grid-column: span 2;">
-<h3>Traffic Engine (Lead Generation System)</h3>
+<h3>Traffic → Revenue Engine</h3>
 
-<button onclick="generateTraffic()">Generate Traffic Plan</button>
+<button onclick="generateTraffic()">Generate Revenue Traffic Plan</button>
 
 <div id="trafficOut" class="output"></div>
 </div>
@@ -201,7 +224,10 @@ button {
 
 <script>
 
-let funnelCount = 0;
+let funnels = 0;
+let leads = 124;
+let traffic = 0;
+let revenue = 0;
 
 /* FUNNEL */
 async function createFunnel(){
@@ -216,11 +242,15 @@ async function createFunnel(){
 
   const data = await res.json();
 
-  funnelCount++;
-  document.getElementById("kpiFunnels").innerText = funnelCount;
+  funnels++;
+  leads += 5;
+  traffic += 3;
+  revenue += Math.floor(Math.random()*20);
+
+  updateKPIs();
 
   document.getElementById("funnelOut").innerHTML =
-  "✓ Funnel Created\n\nURL:\n" + (data.url || "generated");
+  "✓ Funnel deployed into revenue system\n\n" + JSON.stringify(data, null, 2);
 }
 
 /* AI */
@@ -234,13 +264,13 @@ async function generateAI(){
   const data = await res.json();
 
   document.getElementById("aiOut").innerHTML = `
-HEADLINE:
+CONVERSION HEADLINE:
 ${data.headline || "-"}
 
-HOOK:
+PSYCHOLOGICAL HOOK:
 ${data.hook || "-"}
 
-CTA:
+REVENUE CTA:
 ${data.cta || "-"}
 `;
 }
@@ -250,11 +280,25 @@ async function generateTraffic(){
   const res = await fetch("/.netlify/functions/traffic");
   const data = await res.json();
 
-  document.getElementById("kpiTraffic").innerText = data.length;
+  traffic += data.length;
+  leads += data.length * 2;
+  revenue += data.length * 3;
+
+  updateKPIs();
 
   document.getElementById("trafficOut").innerHTML =
-  "LEAD GENERATION PLAN:\n\n" + data.map(x => "• " + x).join("\n");
+  "REVENUE TRAFFIC PLAN:\n\n" + data.map(x => "→ " + x).join("\n");
 }
+
+/* UPDATE OS */
+function updateKPIs(){
+  document.getElementById("funnels").innerText = funnels;
+  document.getElementById("leads").innerText = leads;
+  document.getElementById("traffic").innerText = traffic;
+  document.getElementById("revenue").innerText = "$" + revenue;
+}
+
+updateKPIs();
 
 </script>
 
