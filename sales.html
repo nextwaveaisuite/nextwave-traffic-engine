@@ -3,21 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <title>NextWave Traffic Engine</title>
+
   <style>
-    body { font-family: Arial; background:#0f0f0f; color:white; text-align:center; padding:50px; }
-    .box { max-width:700px; margin:auto; }
-    h1 { font-size:40px; }
-    p { font-size:18px; color:#ccc; }
-    .cta {
-      background:#00ff88; color:black;
-      padding:15px 25px;
-      border:none;
-      font-size:18px;
-      cursor:pointer;
-      margin-top:20px;
+    body {
+      font-family: Arial;
+      background: #0f0f0f;
+      color: white;
+      text-align: center;
+      padding: 50px;
     }
-    .section { margin-top:40px; text-align:left; }
-    ul { text-align:left; color:#ccc; }
+
+    .box {
+      max-width: 700px;
+      margin: auto;
+    }
+
+    h1 {
+      font-size: 40px;
+    }
+
+    p {
+      font-size: 18px;
+      color: #ccc;
+    }
+
+    input {
+      padding: 12px;
+      width: 70%;
+      margin-top: 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    .cta {
+      background: #00ff88;
+      color: black;
+      padding: 15px 25px;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      margin-top: 15px;
+      border-radius: 5px;
+    }
   </style>
 </head>
 
@@ -25,50 +53,56 @@
 
 <div class="box">
 
-<h1>Turn Traffic Into Sales With A Real System</h1>
+  <h1>Turn Traffic Into Sales With A Real System</h1>
 
-<p>
-The NextWave Traffic Engine is a simple affiliate system that generates traffic, captures leads, and converts them into commissions.
-</p>
+  <p>
+    Enter your email to access the system that builds funnels,
+    generates traffic, and converts leads into commissions.
+  </p>
 
-<button class="cta" onclick="window.location='dashboard.html'">
-Get Access Now
-</button>
+  <input id="emailInput" placeholder="Enter your email" />
+  <br>
+  <button class="cta" onclick="submitEmail()">Get Instant Access</button>
 
-<div class="section">
-
-<h2>What You Get</h2>
-<ul>
-  <li>AI-powered funnel generator</li>
-  <li>Traffic automation system</li>
-  <li>Lead capture + tracking</li>
-  <li>Email monetisation framework</li>
-</ul>
+  <p id="status"></p>
 
 </div>
 
-<div class="section">
+<script>
+function submitEmail() {
+  const email = document.getElementById("emailInput").value;
+  const status = document.getElementById("status");
 
-<h2>How It Works</h2>
-<p>
-1. Generate a funnel<br>
-2. Send traffic<br>
-3. Capture leads<br>
-4. Convert via email system
-</p>
+  if (!email) {
+    status.innerText = "Please enter an email.";
+    return;
+  }
 
-</div>
+  status.innerText = "Submitting...";
 
-<div class="section">
-
-<h2>Who This Is For</h2>
-<p>
-Affiliate marketers, beginners, and creators who want a simple system instead of scattered tactics.
-</p>
-
-</div>
-
-</div>
+  fetch("/.netlify/functions/email", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ email: email })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      status.innerText = "Success! Redirecting...";
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 1000);
+    } else {
+      status.innerText = "Error: " + JSON.stringify(data);
+    }
+  })
+  .catch(() => {
+    status.innerText = "Error sending email.";
+  });
+}
+</script>
 
 </body>
 </html>
