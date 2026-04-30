@@ -6,12 +6,20 @@ export async function handler(event) {
     if (!email) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "No email provided" })
+        body: JSON.stringify({ error: "No email" })
       }
     }
 
-    // TODO: send to Supabase or email tool API
-    console.log("Lead captured:", email)
+    // 👉 SEND TO FORGE MAIL
+    await fetch("https://mail.nextwaveaisuite.com/api/lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email,
+        source: "traffic-engine",
+        offer: "nextwave"
+      })
+    })
 
     return {
       statusCode: 200,
