@@ -2,165 +2,179 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Dashboard - NextWave</title>
+<title>NextWave Engine</title>
 
 <style>
 body {
   margin:0;
   font-family: Arial, sans-serif;
-  background:#0f0f0f;
-  color:white;
+  background:#0b0f14;
+  color:#e6e6e6;
 }
 
-.header {
-  padding:20px;
-  background:#111;
-  border-bottom:1px solid #222;
+.topbar {
+  padding:16px 24px;
+  background:#111827;
+  border-bottom:1px solid #1f2937;
+  font-weight:bold;
 }
 
-.header h1 {
-  margin:0;
-  font-size:22px;
-}
-
-.container {
-  max-width:1000px;
+.wrap {
+  max-width:1100px;
   margin:auto;
-  padding:40px 20px;
+  padding:30px;
 }
 
 .grid {
   display:grid;
   grid-template-columns: 1fr 1fr;
-  gap:20px;
+  gap:18px;
 }
 
 .card {
-  background:#1a1a1a;
-  padding:25px;
+  background:#111827;
+  border:1px solid #1f2937;
   border-radius:12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  padding:18px;
 }
 
-.card h3 {
-  margin-top:0;
+h2 {
+  font-size:16px;
+  margin-bottom:12px;
+  color:#9ca3af;
 }
 
 input {
   width:100%;
-  padding:12px;
-  margin-top:10px;
-  border:none;
-  border-radius:6px;
-  background:#111;
+  padding:10px;
+  margin:6px 0;
+  border-radius:8px;
+  border:1px solid #374151;
+  background:#0b0f14;
   color:white;
 }
 
 button {
-  margin-top:15px;
   width:100%;
-  padding:12px;
+  padding:10px;
+  margin-top:10px;
   border:none;
-  border-radius:6px;
-  background:#00ff88;
+  border-radius:8px;
+  background:#22c55e;
   color:black;
   font-weight:bold;
   cursor:pointer;
 }
 
-button:hover {
-  opacity:0.9;
-}
-
-.full {
-  grid-column: span 2;
-}
+button:hover { opacity:0.9; }
 
 .output {
-  margin-top:15px;
-  font-size:14px;
-  color:#aaa;
+  margin-top:10px;
+  padding:10px;
+  background:#0b0f14;
+  border:1px solid #1f2937;
+  border-radius:8px;
+  font-size:13px;
   white-space:pre-wrap;
+}
+
+.tag {
+  display:inline-block;
+  padding:4px 8px;
+  background:#1f2937;
+  border-radius:6px;
+  font-size:12px;
+  margin-bottom:10px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <h1>🚀 NextWave Traffic Engine</h1>
+<div class="topbar">NextWave Traffic Engine</div>
+
+<div class="wrap">
+
+<div class="grid">
+
+<!-- FUNNEL -->
+<div class="card">
+<h2>Funnel Builder</h2>
+
+<input id="funnelName" placeholder="Funnel Name">
+<input id="affiliateLink" placeholder="Affiliate Link">
+
+<button onclick="createFunnel()">Generate Funnel</button>
+
+<div id="funnelOut" class="output"></div>
 </div>
 
-<div class="container">
+<!-- AI -->
+<div class="card">
+<h2>AI Funnel Engine</h2>
 
-  <div class="grid">
+<button onclick="generateAI()">Generate Funnel Copy</button>
 
-    <!-- CREATE FUNNEL -->
-    <div class="card">
-      <h3>Create Funnel</h3>
+<div id="aiOut" class="output"></div>
+</div>
 
-      <input id="funnelName" placeholder="Funnel Name">
-      <input id="affiliateLink" placeholder="Affiliate Link">
+<!-- TRAFFIC -->
+<div class="card" style="grid-column: span 2;">
+<h2>Traffic System</h2>
 
-      <button onclick="createFunnel()">Create Funnel</button>
+<button onclick="generateTraffic()">Generate Traffic Strategy</button>
 
-      <div id="funnelOutput" class="output"></div>
-    </div>
+<div id="trafficOut" class="output"></div>
+</div>
 
-    <!-- AI GENERATOR -->
-    <div class="card">
-      <h3>AI Funnel Generator</h3>
-
-      <button onclick="generateAI()">Generate Funnel Copy</button>
-
-      <div id="aiOutput" class="output"></div>
-    </div>
-
-    <!-- TRAFFIC -->
-    <div class="card full">
-      <h3>Traffic Ideas Generator</h3>
-
-      <button onclick="generateTraffic()">Generate Traffic Ideas</button>
-
-      <div id="trafficOutput" class="output"></div>
-    </div>
-
-  </div>
-
+</div>
 </div>
 
 <script>
-async function createFunnel() {
-  const name = document.getElementById("funnelName").value;
-  const link = document.getElementById("affiliateLink").value;
 
+async function createFunnel(){
   const res = await fetch("/.netlify/functions/createPage", {
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({ name, link })
+    body: JSON.stringify({
+      name: document.getElementById("funnelName").value,
+      link: document.getElementById("affiliateLink").value
+    })
   });
 
   const data = await res.json();
-  document.getElementById("funnelOutput").innerText = JSON.stringify(data, null, 2);
+
+  document.getElementById("funnelOut").innerHTML =
+  `<div class="tag">Generated Funnel</div>\n` +
+  JSON.stringify(data, null, 2);
 }
 
-async function generateAI() {
+async function generateAI(){
   const res = await fetch("/.netlify/functions/ai", {
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({ niche:"make money online" })
+    body: JSON.stringify({ niche:"affiliate marketing" })
   });
 
   const data = await res.json();
-  document.getElementById("aiOutput").innerText = data.result;
+
+  document.getElementById("aiOut").innerHTML = `
+Title: ${data.headline || "N/A"}
+
+Hook: ${data.hook || "N/A"}
+
+CTA: ${data.cta || "N/A"}
+`;
 }
 
-async function generateTraffic() {
+async function generateTraffic(){
   const res = await fetch("/.netlify/functions/traffic");
   const data = await res.json();
 
-  document.getElementById("trafficOutput").innerText = data.join("\n");
+  document.getElementById("trafficOut").innerHTML =
+  data.map(x => "• " + x).join("\n");
 }
+
 </script>
 
 </body>
