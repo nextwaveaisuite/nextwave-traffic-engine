@@ -6,299 +6,210 @@
 
 <style>
 body {
-  margin:0;
+  margin: 0;
   font-family: Arial, sans-serif;
-  background:#050914;
-  color:#e5e7eb;
+  background: #050914;
+  color: #e5e7eb;
 }
 
-/* TOP BAR */
-.topbar {
-  padding:18px 24px;
-  background:#0b1220;
-  border-bottom:1px solid #1f2937;
-  display:flex;
-  justify-content:space-between;
+.header {
+  padding: 20px;
+  background: #0b1220;
+  border-bottom: 1px solid #1f2937;
+  display: flex;
+  justify-content: space-between;
 }
 
-.brand {
-  font-weight:700;
-}
-
-.status {
-  font-size:12px;
-  padding:6px 10px;
-  background:#1f2937;
-  border-radius:999px;
-  color:#9ca3af;
-}
-
-/* LAYOUT */
 .container {
-  max-width:1200px;
-  margin:auto;
-  padding:30px;
+  padding: 25px;
+  max-width: 1100px;
+  margin: auto;
 }
 
-/* KPI GRID */
-.kpis {
-  display:grid;
-  grid-template-columns: repeat(4,1fr);
-  gap:12px;
-  margin-bottom:20px;
-}
-
-.kpi {
-  background:#0b1220;
-  border:1px solid #1f2937;
-  border-radius:12px;
-  padding:14px;
-}
-
-.kpi h4 {
-  margin:0;
-  font-size:12px;
-  color:#9ca3af;
-}
-
-.kpi h2 {
-  margin:6px 0 0 0;
-  font-size:22px;
-}
-
-/* PIPELINE */
-.pipeline {
-  display:grid;
-  grid-template-columns: repeat(4,1fr);
-  gap:10px;
-  margin-bottom:20px;
-}
-
-.stage {
-  background:#0b1220;
-  border:1px solid #1f2937;
-  border-radius:12px;
-  padding:12px;
-  font-size:13px;
-}
-
-.stage h3 {
-  margin:0;
-  font-size:12px;
-  color:#9ca3af;
-}
-
-/* GRID */
 .grid {
-  display:grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap:16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
 }
 
 .card {
-  background:#0b1220;
-  border:1px solid #1f2937;
-  border-radius:14px;
-  padding:18px;
+  background: #0b1220;
+  padding: 15px;
+  border-radius: 12px;
+  border: 1px solid #1f2937;
 }
 
-h3 {
-  margin:0 0 10px 0;
-  font-size:14px;
-  color:#9ca3af;
-}
-
-/* INPUTS */
 input {
-  width:100%;
-  padding:12px;
-  margin-top:8px;
-  border-radius:10px;
-  border:1px solid #1f2937;
-  background:#050914;
-  color:white;
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  border-radius: 8px;
+  border: 1px solid #1f2937;
+  background: #050914;
+  color: white;
 }
 
-/* BUTTON */
 button {
-  width:100%;
-  padding:12px;
-  margin-top:12px;
-  border:none;
-  border-radius:10px;
-  background:linear-gradient(135deg,#22c55e,#16a34a);
-  color:black;
-  font-weight:700;
-  cursor:pointer;
+  margin-top: 10px;
+  padding: 10px;
+  width: 100%;
+  background: #22c55e;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
-/* OUTPUT */
-.output {
-  margin-top:12px;
-  padding:12px;
-  background:#050914;
-  border:1px solid #1f2937;
-  border-radius:10px;
-  font-size:13px;
-  white-space:pre-wrap;
-  color:#cbd5e1;
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.kpi {
+  background: #0b1220;
+  border: 1px solid #1f2937;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.kpi h3 {
+  margin: 0;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.kpi h2 {
+  margin: 5px 0 0 0;
+}
+
+pre {
+  background: #050914;
+  padding: 10px;
+  border-radius: 8px;
+  overflow: auto;
 }
 </style>
 </head>
 
 <body>
 
-<div class="topbar">
-  <div class="brand">NextWave Revenue OS</div>
-  <div class="status">LIVE SYSTEM</div>
+<div class="header">
+  <div><b>NextWave Revenue OS</b></div>
+  <div>LIVE SYSTEM</div>
 </div>
 
 <div class="container">
 
-<!-- KPI ROW -->
+<!-- KPIs -->
 <div class="kpis">
   <div class="kpi">
-    <h4>Funnels</h4>
+    <h3>Funnels</h3>
     <h2 id="funnels">0</h2>
   </div>
-
   <div class="kpi">
-    <h4>Leads</h4>
+    <h3>Leads</h3>
     <h2 id="leads">0</h2>
   </div>
-
   <div class="kpi">
-    <h4>Traffic Events</h4>
+    <h3>Traffic</h3>
     <h2 id="traffic">0</h2>
   </div>
-
   <div class="kpi">
-    <h4>Revenue Signal</h4>
-    <h2 style="color:#22c55e;" id="revenue">$0</h2>
+    <h3>Revenue</h3>
+    <h2 id="revenue">$0</h2>
   </div>
 </div>
 
-<!-- PIPELINE -->
-<div class="pipeline">
-  <div class="stage"><h3>Cold Traffic</h3><div id="cold">--</div></div>
-  <div class="stage"><h3>Leads</h3><div id="leadStage">--</div></div>
-  <div class="stage"><h3>Engaged</h3><div id="engaged">--</div></div>
-  <div class="stage"><h3>Buyers</h3><div id="buyers">--</div></div>
-</div>
-
-<!-- MAIN GRID -->
 <div class="grid">
 
-<!-- FUNNEL -->
+<!-- FUNNEL BUILDER -->
 <div class="card">
-<h3>Revenue Funnel Builder</h3>
+  <h3>Create Funnel</h3>
 
-<input id="funnelName" placeholder="Funnel Name">
-<input id="affiliateLink" placeholder="Affiliate Offer Link">
+  <input id="funnelName" placeholder="Funnel Name">
+  <input id="affiliateLink" placeholder="Affiliate Link">
 
-<button onclick="createFunnel()">Create Revenue Funnel</button>
+  <button onclick="createFunnel()">Create Funnel</button>
 
-<div id="funnelOut" class="output"></div>
+  <pre id="funnelOut"></pre>
 </div>
 
-<!-- AI -->
+<!-- AI ENGINE -->
 <div class="card">
-<h3>AI Revenue Engine</h3>
+  <h3>AI Funnel Generator</h3>
 
-<button onclick="generateAI()">Generate Conversion Copy</button>
+  <button onclick="generateAI()">Generate Funnel Copy</button>
 
-<div id="aiOut" class="output"></div>
-</div>
-
-<!-- TRAFFIC -->
-<div class="card" style="grid-column: span 2;">
-<h3>Traffic → Revenue Engine</h3>
-
-<button onclick="generateTraffic()">Generate Revenue Traffic Plan</button>
-
-<div id="trafficOut" class="output"></div>
+  <pre id="aiOut"></pre>
 </div>
 
 </div>
+
 </div>
 
-<script>
+<script type="module">
+import { supabase } from "./supabase.js";
 
-let funnels = 0;
-let leads = 124;
-let traffic = 0;
-let revenue = 0;
+/* =========================
+   LOAD REAL METRICS
+========================= */
+async function loadMetrics() {
 
-/* FUNNEL */
-async function createFunnel(){
-  const res = await fetch("/.netlify/functions/createPage", {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({
-      name: document.getElementById("funnelName").value,
-      link: document.getElementById("affiliateLink").value
-    })
-  });
+  const { data: funnels } = await supabase.from("funnels").select("*");
+  const { data: leads } = await supabase.from("leads").select("*");
+  const { data: events } = await supabase.from("events").select("*");
 
-  const data = await res.json();
+  const traffic = (events || []).filter(e => e.type === "traffic");
+  const conversions = (events || []).filter(e => e.type === "conversion");
 
-  funnels++;
-  leads += 5;
-  traffic += 3;
-  revenue += Math.floor(Math.random()*20);
-
-  updateKPIs();
-
-  document.getElementById("funnelOut").innerHTML =
-  "✓ Funnel deployed into revenue system\n\n" + JSON.stringify(data, null, 2);
+  document.getElementById("funnels").innerText = funnels?.length || 0;
+  document.getElementById("leads").innerText = leads?.length || 0;
+  document.getElementById("traffic").innerText = traffic.length;
+  document.getElementById("revenue").innerText = "$" + (conversions.length * 10);
 }
 
-/* AI */
-async function generateAI(){
-  const res = await fetch("/.netlify/functions/ai", {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({ niche:"affiliate marketing" })
-  });
+/* =========================
+   CREATE FUNNEL
+========================= */
+window.createFunnel = async function () {
 
-  const data = await res.json();
+  const name = document.getElementById("funnelName").value;
+  const link = document.getElementById("affiliateLink").value;
 
-  document.getElementById("aiOut").innerHTML = `
-CONVERSION HEADLINE:
-${data.headline || "-"}
+  const { data, error } = await supabase
+    .from("funnels")
+    .insert([{ name, affiliate_link: link }])
+    .select();
 
-PSYCHOLOGICAL HOOK:
-${data.hook || "-"}
+  await supabase.from("events").insert([
+    { type: "traffic", value: 1 }
+  ]);
 
-REVENUE CTA:
-${data.cta || "-"}
-`;
-}
+  document.getElementById("funnelOut").innerText =
+    JSON.stringify(data, null, 2);
 
-/* TRAFFIC */
-async function generateTraffic(){
-  const res = await fetch("/.netlify/functions/traffic");
-  const data = await res.json();
+  loadMetrics();
+};
 
-  traffic += data.length;
-  leads += data.length * 2;
-  revenue += data.length * 3;
+/* =========================
+   AI (simple placeholder)
+========================= */
+window.generateAI = function () {
 
-  updateKPIs();
+  const copy = {
+    headline: "Discover how to turn traffic into commissions",
+    hook: "Most affiliates fail because they lack a system.",
+    cta: "Click to activate your funnel system"
+  };
 
-  document.getElementById("trafficOut").innerHTML =
-  "REVENUE TRAFFIC PLAN:\n\n" + data.map(x => "→ " + x).join("\n");
-}
+  document.getElementById("aiOut").innerText =
+    JSON.stringify(copy, null, 2);
+};
 
-/* UPDATE OS */
-function updateKPIs(){
-  document.getElementById("funnels").innerText = funnels;
-  document.getElementById("leads").innerText = leads;
-  document.getElementById("traffic").innerText = traffic;
-  document.getElementById("revenue").innerText = "$" + revenue;
-}
-
-updateKPIs();
+/* INIT */
+loadMetrics();
 
 </script>
 
