@@ -2,65 +2,88 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>NextWave Engine</title>
+<title>NextWave Money Dashboard</title>
 
 <style>
 body {
   margin:0;
-  font-family: Inter, Arial, sans-serif;
-  background:#0a0f1a;
+  font-family: Arial, sans-serif;
+  background:#070b14;
   color:#e5e7eb;
 }
 
 /* TOP BAR */
 .topbar {
   padding:18px 24px;
-  background:#0f172a;
+  background:#0b1220;
   border-bottom:1px solid #1f2937;
   display:flex;
   justify-content:space-between;
-  align-items:center;
 }
 
 .brand {
   font-weight:700;
-  letter-spacing:0.5px;
 }
 
-.status {
-  font-size:12px;
-  padding:6px 10px;
+.pill {
   background:#1f2937;
+  padding:6px 10px;
   border-radius:999px;
+  font-size:12px;
   color:#9ca3af;
 }
 
 /* LAYOUT */
 .container {
-  max-width:1100px;
+  max-width:1200px;
   margin:auto;
   padding:30px;
 }
 
+/* KPI ROW */
+.kpis {
+  display:grid;
+  grid-template-columns: repeat(4,1fr);
+  gap:12px;
+  margin-bottom:20px;
+}
+
+.kpi {
+  background:#0b1220;
+  border:1px solid #1f2937;
+  border-radius:12px;
+  padding:14px;
+}
+
+.kpi h4 {
+  margin:0;
+  font-size:12px;
+  color:#9ca3af;
+}
+
+.kpi h2 {
+  margin:6px 0 0 0;
+  font-size:20px;
+}
+
+/* GRID */
 .grid {
   display:grid;
   grid-template-columns: 1.2fr 1fr;
-  gap:18px;
+  gap:16px;
 }
 
-/* CARDS */
 .card {
-  background:#0f172a;
+  background:#0b1220;
   border:1px solid #1f2937;
   border-radius:14px;
   padding:18px;
 }
 
-.card h3 {
+h3 {
   margin:0 0 10px 0;
   font-size:14px;
   color:#9ca3af;
-  font-weight:500;
 }
 
 /* INPUTS */
@@ -70,9 +93,8 @@ input {
   margin-top:8px;
   border-radius:10px;
   border:1px solid #1f2937;
-  background:#0a0f1a;
+  background:#070b14;
   color:white;
-  outline:none;
 }
 
 /* BUTTON */
@@ -92,7 +114,7 @@ button {
 .output {
   margin-top:12px;
   padding:12px;
-  background:#0a0f1a;
+  background:#070b14;
   border:1px solid #1f2937;
   border-radius:10px;
   font-size:13px;
@@ -100,33 +122,11 @@ button {
   color:#cbd5e1;
 }
 
-/* HERO CARD */
-.hero {
-  grid-column: span 2;
-  padding:22px;
-  background:linear-gradient(135deg,#0f172a,#0a0f1a);
-  border:1px solid #1f2937;
-  border-radius:14px;
-}
-
-.hero h1 {
-  margin:0;
-  font-size:20px;
-}
-
-.hero p {
-  color:#9ca3af;
-  margin-top:8px;
+/* FUNNEL LIST */
+.list {
   font-size:13px;
-}
-
-.step {
-  display:inline-block;
-  margin-top:10px;
-  padding:6px 10px;
-  background:#1f2937;
-  border-radius:999px;
-  font-size:12px;
+  color:#cbd5e1;
+  line-height:1.6;
 }
 </style>
 </head>
@@ -134,49 +134,64 @@ button {
 <body>
 
 <div class="topbar">
-  <div class="brand">NextWave Traffic Engine</div>
-  <div class="status">SYSTEM ACTIVE</div>
+  <div class="brand">NextWave Money System</div>
+  <div class="pill">LIVE ENGINE</div>
 </div>
 
 <div class="container">
 
-<!-- HERO -->
-<div class="grid">
+<!-- KPI DASHBOARD -->
+<div class="kpis">
+  <div class="kpi">
+    <h4>Total Funnels</h4>
+    <h2 id="kpiFunnels">0</h2>
+  </div>
 
-<div class="hero">
-  <h1>Build Funnels → Generate Traffic → Capture Leads → Monetise</h1>
-  <p>This is your automated affiliate engine. Use the steps below in order.</p>
-  <div class="step">Step 1: Create Funnel</div>
-  <div class="step">Step 2: Generate AI Copy</div>
-  <div class="step">Step 3: Generate Traffic</div>
+  <div class="kpi">
+    <h4>Leads Captured</h4>
+    <h2 id="kpiLeads">--</h2>
+  </div>
+
+  <div class="kpi">
+    <h4>Traffic Outputs</h4>
+    <h2 id="kpiTraffic">--</h2>
+  </div>
+
+  <div class="kpi">
+    <h4>Status</h4>
+    <h2 style="color:#22c55e;">Active</h2>
+  </div>
 </div>
 
-<!-- FUNNEL -->
+<!-- MAIN GRID -->
+<div class="grid">
+
+<!-- FUNNEL BUILDER -->
 <div class="card">
-<h3>1. Funnel Builder</h3>
+<h3>Build Revenue Funnel</h3>
 
 <input id="funnelName" placeholder="Funnel Name">
-<input id="affiliateLink" placeholder="Affiliate Link">
+<input id="affiliateLink" placeholder="Affiliate Offer Link">
 
-<button onclick="createFunnel()">Generate Funnel</button>
+<button onclick="createFunnel()">Create Money Funnel</button>
 
 <div id="funnelOut" class="output"></div>
 </div>
 
-<!-- AI -->
+<!-- AI ENGINE -->
 <div class="card">
-<h3>2. AI Sales Engine</h3>
+<h3>AI Conversion Engine</h3>
 
-<button onclick="generateAI()">Generate Copy</button>
+<button onclick="generateAI()">Generate High-Converting Copy</button>
 
 <div id="aiOut" class="output"></div>
 </div>
 
 <!-- TRAFFIC -->
 <div class="card" style="grid-column: span 2;">
-<h3>3. Traffic System</h3>
+<h3>Traffic Engine (Lead Generation System)</h3>
 
-<button onclick="generateTraffic()">Generate Traffic Strategy</button>
+<button onclick="generateTraffic()">Generate Traffic Plan</button>
 
 <div id="trafficOut" class="output"></div>
 </div>
@@ -185,6 +200,8 @@ button {
 </div>
 
 <script>
+
+let funnelCount = 0;
 
 /* FUNNEL */
 async function createFunnel(){
@@ -199,8 +216,11 @@ async function createFunnel(){
 
   const data = await res.json();
 
+  funnelCount++;
+  document.getElementById("kpiFunnels").innerText = funnelCount;
+
   document.getElementById("funnelOut").innerHTML =
-  "✓ Funnel Generated\n\n" + JSON.stringify(data, null, 2);
+  "✓ Funnel Created\n\nURL:\n" + (data.url || "generated");
 }
 
 /* AI */
@@ -230,8 +250,10 @@ async function generateTraffic(){
   const res = await fetch("/.netlify/functions/traffic");
   const data = await res.json();
 
+  document.getElementById("kpiTraffic").innerText = data.length;
+
   document.getElementById("trafficOut").innerHTML =
-  "TRAFFIC PLAN:\n\n" + data.map(x => "• " + x).join("\n");
+  "LEAD GENERATION PLAN:\n\n" + data.map(x => "• " + x).join("\n");
 }
 
 </script>
