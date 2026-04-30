@@ -2,93 +2,68 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>NextWave Revenue OS</title>
+<title>Revenue OS</title>
 
 <style>
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #050914;
-  color: #e5e7eb;
+  margin:0;
+  font-family: Arial;
+  background:#0b0f1a;
+  color:white;
 }
 
 .header {
-  padding: 20px;
-  background: #0b1220;
-  border-bottom: 1px solid #1f2937;
-  display: flex;
-  justify-content: space-between;
+  padding:15px;
+  background:#111827;
+  display:flex;
+  justify-content:space-between;
 }
 
 .container {
-  padding: 25px;
-  max-width: 1100px;
-  margin: auto;
+  padding:20px;
+  max-width:1000px;
+  margin:auto;
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:15px;
 }
 
 .card {
-  background: #0b1220;
-  padding: 15px;
-  border-radius: 12px;
-  border: 1px solid #1f2937;
+  background:#111827;
+  padding:15px;
+  border-radius:10px;
 }
 
 input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  border-radius: 8px;
-  border: 1px solid #1f2937;
-  background: #050914;
-  color: white;
+  width:100%;
+  padding:10px;
+  margin-top:10px;
 }
 
 button {
-  margin-top: 10px;
-  padding: 10px;
-  width: 100%;
-  background: #22c55e;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  background:#22c55e;
+  border:none;
+  color:black;
+  font-weight:bold;
 }
 
 .kpis {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 20px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-bottom:20px;
 }
 
 .kpi {
-  background: #0b1220;
-  border: 1px solid #1f2937;
-  padding: 12px;
-  border-radius: 10px;
-}
-
-.kpi h3 {
-  margin: 0;
-  font-size: 12px;
-  color: #9ca3af;
-}
-
-.kpi h2 {
-  margin: 5px 0 0 0;
-}
-
-pre {
-  background: #050914;
-  padding: 10px;
-  border-radius: 8px;
-  overflow: auto;
+  background:#111827;
+  padding:10px;
+  border-radius:8px;
 }
 </style>
 </head>
@@ -96,53 +71,33 @@ pre {
 <body>
 
 <div class="header">
-  <div><b>NextWave Revenue OS</b></div>
-  <div>LIVE SYSTEM</div>
+  <div><b>Revenue OS</b></div>
+  <div>LIVE</div>
 </div>
 
 <div class="container">
 
-<!-- KPIs -->
 <div class="kpis">
-  <div class="kpi">
-    <h3>Funnels</h3>
-    <h2 id="funnels">0</h2>
-  </div>
-  <div class="kpi">
-    <h3>Leads</h3>
-    <h2 id="leads">0</h2>
-  </div>
-  <div class="kpi">
-    <h3>Traffic</h3>
-    <h2 id="traffic">0</h2>
-  </div>
-  <div class="kpi">
-    <h3>Revenue</h3>
-    <h2 id="revenue">$0</h2>
-  </div>
+  <div class="kpi">Funnels: <span id="funnels">0</span></div>
+  <div class="kpi">Leads: <span id="leads">0</span></div>
+  <div class="kpi">Clicks: <span id="clicks">0</span></div>
+  <div class="kpi">Score: <span id="score">0</span></div>
 </div>
 
 <div class="grid">
 
-<!-- FUNNEL BUILDER -->
 <div class="card">
-  <h3>Create Funnel</h3>
-
-  <input id="funnelName" placeholder="Funnel Name">
-  <input id="affiliateLink" placeholder="Affiliate Link">
-
-  <button onclick="createFunnel()">Create Funnel</button>
-
-  <pre id="funnelOut"></pre>
+<h3>Create Funnel</h3>
+<input id="name" placeholder="Funnel name">
+<input id="link" placeholder="Affiliate link">
+<button onclick="createFunnel()">Create</button>
+<pre id="out"></pre>
 </div>
 
-<!-- AI ENGINE -->
 <div class="card">
-  <h3>AI Funnel Generator</h3>
-
-  <button onclick="generateAI()">Generate Funnel Copy</button>
-
-  <pre id="aiOut"></pre>
+<h3>AI Copy</h3>
+<button onclick="ai()">Generate</button>
+<pre id="aiout"></pre>
 </div>
 
 </div>
@@ -152,64 +107,52 @@ pre {
 <script type="module">
 import { supabase } from "./supabase.js";
 
-/* =========================
-   LOAD REAL METRICS
-========================= */
-async function loadMetrics() {
+/* LOAD DASHBOARD */
+async function load() {
 
   const { data: funnels } = await supabase.from("funnels").select("*");
   const { data: leads } = await supabase.from("leads").select("*");
   const { data: events } = await supabase.from("events").select("*");
 
-  const traffic = (events || []).filter(e => e.type === "traffic");
-  const conversions = (events || []).filter(e => e.type === "conversion");
-
   document.getElementById("funnels").innerText = funnels?.length || 0;
   document.getElementById("leads").innerText = leads?.length || 0;
-  document.getElementById("traffic").innerText = traffic.length;
-  document.getElementById("revenue").innerText = "$" + (conversions.length * 10);
+
+  const clicks = (events || []).filter(e => e.type === "click");
+  document.getElementById("clicks").innerText = clicks.length;
+
+  const score = (leads?.length || 0) * 2 + clicks.length;
+  document.getElementById("score").innerText = score;
 }
 
-/* =========================
-   CREATE FUNNEL
-========================= */
+/* CREATE FUNNEL */
 window.createFunnel = async function () {
 
-  const name = document.getElementById("funnelName").value;
-  const link = document.getElementById("affiliateLink").value;
+  const name = document.getElementById("name").value;
+  const link = document.getElementById("link").value;
 
-  const { data, error } = await supabase
-    .from("funnels")
-    .insert([{ name, affiliate_link: link }])
-    .select();
-
-  await supabase.from("events").insert([
-    { type: "traffic", value: 1 }
+  await supabase.from("funnels").insert([
+    { name, affiliate_link: link }
   ]);
 
-  document.getElementById("funnelOut").innerText =
-    JSON.stringify(data, null, 2);
+  await supabase.from("events").insert([
+    { type: "click", funnel_name: name }
+  ]);
 
-  loadMetrics();
+  document.getElementById("out").innerText = "Funnel Created";
+
+  load();
 };
 
-/* =========================
-   AI (simple placeholder)
-========================= */
-window.generateAI = function () {
-
-  const copy = {
-    headline: "Discover how to turn traffic into commissions",
-    hook: "Most affiliates fail because they lack a system.",
-    cta: "Click to activate your funnel system"
-  };
-
-  document.getElementById("aiOut").innerText =
-    JSON.stringify(copy, null, 2);
+/* AI PLACEHOLDER */
+window.ai = function () {
+  document.getElementById("aiout").innerText =
+  "Headline: Turn Traffic Into Sales\nHook: Simple system converts visitors into buyers\nCTA: Get started now";
 };
 
-/* INIT */
-loadMetrics();
+load();
+
+/* REFRESH LOOP */
+setInterval(load, 10000);
 
 </script>
 
