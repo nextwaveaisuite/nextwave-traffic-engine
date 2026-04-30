@@ -1,0 +1,13 @@
+[build]
+  functions = "netlify/functions"
+  publish = "."
+
+[[redirects]]
+  from = "/l/*"
+  to = "/.netlify/functions/l"
+  status = 200
+
+[[redirects]]
+  from = "/funnel/*"
+  to = "/sales.html"
+  status = 200
