@@ -1,59 +1,20 @@
-<!DOCTYPE html>
-<html>
-<body>
+<h1>Your Traffic Engine</h1>
 
-<h2>Dashboard</h2>
+<div style="background:#1a1a1a;padding:20px;border-radius:10px;margin-top:20px;">
+<h3>Create Funnel</h3>
 
-<input id="funnelName" placeholder="Funnel Name">
-<input id="affiliateLink" placeholder="Affiliate Link">
+<input placeholder="Funnel Name"><br><br>
+<input placeholder="Affiliate Link"><br><br>
 
-<button onclick="buildFunnel()">Create Funnel</button>
-<button onclick="activateTraffic()">Auto Traffic</button>
+<button>Create Funnel</button>
+</div>
 
+<div style="background:#1a1a1a;padding:20px;border-radius:10px;margin-top:20px;">
 <h3>AI Generator</h3>
-<input id="offerInput">
-<button onclick="generateFunnel()">Generate</button>
+<button>Generate Funnel Copy</button>
+</div>
 
-<div id="output"></div>
-
-<script type="module">
-import { supabase } from './supabase.js'
-import { createFunnel, useCredit } from './app.js'
-
-async function buildFunnel() {
-  const user = (await supabase.auth.getUser()).data.user
-  const name = document.getElementById('funnelName').value
-  const link = document.getElementById('affiliateLink').value
-
-  await useCredit(user.id)
-
-  const res = await fetch('/.netlify/functions/createPage', {
-    method: 'POST',
-    body: JSON.stringify({ name, link })
-  })
-
-  const data = await res.json()
-  await createFunnel(user.id, name, data.url)
-
-  alert("Live: " + data.url)
-}
-
-async function generateFunnel(){
-  const offer = document.getElementById("offerInput").value
-  const res = await fetch('/.netlify/functions/ai',{
-    method:'POST',
-    body: JSON.stringify({prompt:offer})
-  })
-  const data = await res.json()
-  document.getElementById("output").innerText = data.result
-}
-
-async function activateTraffic(){
-  const res = await fetch('/.netlify/functions/traffic')
-  const data = await res.json()
-  alert(data.join("\n"))
-}
-</script>
-
-</body>
-</html>
+<div style="background:#1a1a1a;padding:20px;border-radius:10px;margin-top:20px;">
+<h3>Traffic Engine</h3>
+<button>Generate Traffic Ideas</button>
+</div>
