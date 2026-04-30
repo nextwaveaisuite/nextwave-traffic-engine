@@ -1,20 +1,167 @@
-<h1>Your Traffic Engine</h1>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dashboard - NextWave</title>
 
-<div style="background:#1a1a1a;padding:20px;border-radius:10px;margin-top:20px;">
-<h3>Create Funnel</h3>
+<style>
+body {
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#0f0f0f;
+  color:white;
+}
 
-<input placeholder="Funnel Name"><br><br>
-<input placeholder="Affiliate Link"><br><br>
+.header {
+  padding:20px;
+  background:#111;
+  border-bottom:1px solid #222;
+}
 
-<button>Create Funnel</button>
+.header h1 {
+  margin:0;
+  font-size:22px;
+}
+
+.container {
+  max-width:1000px;
+  margin:auto;
+  padding:40px 20px;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:20px;
+}
+
+.card {
+  background:#1a1a1a;
+  padding:25px;
+  border-radius:12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.card h3 {
+  margin-top:0;
+}
+
+input {
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:6px;
+  background:#111;
+  color:white;
+}
+
+button {
+  margin-top:15px;
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:6px;
+  background:#00ff88;
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover {
+  opacity:0.9;
+}
+
+.full {
+  grid-column: span 2;
+}
+
+.output {
+  margin-top:15px;
+  font-size:14px;
+  color:#aaa;
+  white-space:pre-wrap;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h1>🚀 NextWave Traffic Engine</h1>
 </div>
 
-<div style="background:#1a1a1a;padding:20px;border-radius:10px;margin-top:20px;">
-<h3>AI Generator</h3>
-<button>Generate Funnel Copy</button>
+<div class="container">
+
+  <div class="grid">
+
+    <!-- CREATE FUNNEL -->
+    <div class="card">
+      <h3>Create Funnel</h3>
+
+      <input id="funnelName" placeholder="Funnel Name">
+      <input id="affiliateLink" placeholder="Affiliate Link">
+
+      <button onclick="createFunnel()">Create Funnel</button>
+
+      <div id="funnelOutput" class="output"></div>
+    </div>
+
+    <!-- AI GENERATOR -->
+    <div class="card">
+      <h3>AI Funnel Generator</h3>
+
+      <button onclick="generateAI()">Generate Funnel Copy</button>
+
+      <div id="aiOutput" class="output"></div>
+    </div>
+
+    <!-- TRAFFIC -->
+    <div class="card full">
+      <h3>Traffic Ideas Generator</h3>
+
+      <button onclick="generateTraffic()">Generate Traffic Ideas</button>
+
+      <div id="trafficOutput" class="output"></div>
+    </div>
+
+  </div>
+
 </div>
 
-<div style="background:#1a1a1a;padding:20px;border-radius:10px;margin-top:20px;">
-<h3>Traffic Engine</h3>
-<button>Generate Traffic Ideas</button>
-</div>
+<script>
+async function createFunnel() {
+  const name = document.getElementById("funnelName").value;
+  const link = document.getElementById("affiliateLink").value;
+
+  const res = await fetch("/.netlify/functions/createPage", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({ name, link })
+  });
+
+  const data = await res.json();
+  document.getElementById("funnelOutput").innerText = JSON.stringify(data, null, 2);
+}
+
+async function generateAI() {
+  const res = await fetch("/.netlify/functions/ai", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({ niche:"make money online" })
+  });
+
+  const data = await res.json();
+  document.getElementById("aiOutput").innerText = data.result;
+}
+
+async function generateTraffic() {
+  const res = await fetch("/.netlify/functions/traffic");
+  const data = await res.json();
+
+  document.getElementById("trafficOutput").innerText = data.join("\n");
+}
+</script>
+
+</body>
+</html>
