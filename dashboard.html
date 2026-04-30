@@ -108,7 +108,7 @@ button {
 
 <div class="container">
 
-<!-- KPIs -->
+<!-- KPIS -->
 <div class="kpis">
   <div class="kpi">
     <h3>Revenue</h3>
@@ -143,11 +143,11 @@ button {
 <button onclick="createFunnel()">Deploy Funnel</button>
 
 <div class="feed" id="log">
-> System initialized...
+> System ready...
 </div>
 </div>
 
-<!-- AI -->
+<!-- AI OUTPUT -->
 <div class="card">
 <h3>AI System Output</h3>
 
@@ -163,12 +163,12 @@ button {
 <script type="module">
 import { supabase } from "./supabase.js";
 
-/* LOG */
+/* LOG FUNCTION */
 function log(msg){
   document.getElementById("log").innerHTML += "<br>> " + msg;
 }
 
-/* LOAD DASHBOARD */
+/* LOAD DASHBOARD DATA */
 async function load(){
 
   const { data: funnels } = await supabase.from("funnels").select("*");
@@ -190,7 +190,7 @@ async function load(){
   document.getElementById("score").innerText = Math.round(score);
 }
 
-/* CREATE FUNNEL */
+/* CREATE FUNNEL (FIXED + CLEAN) */
 window.createFunnel = async function(){
 
   const name = document.getElementById("name").value;
@@ -202,23 +202,25 @@ window.createFunnel = async function(){
   }
 
   await supabase.from("funnels").insert([
-    { name, affiliate_link: link }
+    {
+      name,
+      affiliate_link: link
+    }
   ]);
 
   log("📦 Funnel deployed: " + name);
-
   load();
 };
 
-/* AI COPY */
+/* AI FUNCTION */
 window.ai = function(){
   document.getElementById("aiout").innerText =
 `HEADLINE: Turn Traffic Into Revenue
-HOOK: Stop guessing. Start tracking money.
-CTA: Activate your revenue system`;
+HOOK: Stop guessing. Start tracking what converts.
+CTA: Activate Revenue Engine`;
 };
 
-/* TRACK CONVERSION (REAL MONETIZATION LAYER) */
+/* OPTIONAL: REAL CONVERSION TRACKER */
 window.trackConversion = async function(email, funnelName, amount){
 
   await supabase.from("conversions").insert([
@@ -229,11 +231,11 @@ window.trackConversion = async function(email, funnelName, amount){
     }
   ]);
 
-  log("💰 Conversion: $" + amount);
+  log("💰 Conversion tracked: $" + amount);
   load();
 };
 
-/* START */
+/* INIT */
 setInterval(load, 5000);
 load();
 
