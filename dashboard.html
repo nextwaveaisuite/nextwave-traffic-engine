@@ -7,19 +7,36 @@
 <style>
 body {
   margin:0;
-  font-family: Arial, sans-serif;
-  background:#0b0f14;
-  color:#e6e6e6;
+  font-family: Inter, Arial, sans-serif;
+  background:#0a0f1a;
+  color:#e5e7eb;
 }
 
+/* TOP BAR */
 .topbar {
-  padding:16px 24px;
-  background:#111827;
+  padding:18px 24px;
+  background:#0f172a;
   border-bottom:1px solid #1f2937;
-  font-weight:bold;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-.wrap {
+.brand {
+  font-weight:700;
+  letter-spacing:0.5px;
+}
+
+.status {
+  font-size:12px;
+  padding:6px 10px;
+  background:#1f2937;
+  border-radius:999px;
+  color:#9ca3af;
+}
+
+/* LAYOUT */
+.container {
   max-width:1100px;
   margin:auto;
   padding:30px;
@@ -27,79 +44,116 @@ body {
 
 .grid {
   display:grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.2fr 1fr;
   gap:18px;
 }
 
+/* CARDS */
 .card {
-  background:#111827;
+  background:#0f172a;
   border:1px solid #1f2937;
-  border-radius:12px;
+  border-radius:14px;
   padding:18px;
 }
 
-h2 {
-  font-size:16px;
-  margin-bottom:12px;
+.card h3 {
+  margin:0 0 10px 0;
+  font-size:14px;
   color:#9ca3af;
+  font-weight:500;
 }
 
+/* INPUTS */
 input {
   width:100%;
-  padding:10px;
-  margin:6px 0;
-  border-radius:8px;
-  border:1px solid #374151;
-  background:#0b0f14;
+  padding:12px;
+  margin-top:8px;
+  border-radius:10px;
+  border:1px solid #1f2937;
+  background:#0a0f1a;
   color:white;
+  outline:none;
 }
 
+/* BUTTON */
 button {
   width:100%;
-  padding:10px;
-  margin-top:10px;
+  padding:12px;
+  margin-top:12px;
   border:none;
-  border-radius:8px;
-  background:#22c55e;
+  border-radius:10px;
+  background:linear-gradient(135deg,#22c55e,#16a34a);
   color:black;
-  font-weight:bold;
+  font-weight:700;
   cursor:pointer;
 }
 
-button:hover { opacity:0.9; }
-
+/* OUTPUT */
 .output {
-  margin-top:10px;
-  padding:10px;
-  background:#0b0f14;
+  margin-top:12px;
+  padding:12px;
+  background:#0a0f1a;
   border:1px solid #1f2937;
-  border-radius:8px;
+  border-radius:10px;
   font-size:13px;
   white-space:pre-wrap;
+  color:#cbd5e1;
 }
 
-.tag {
+/* HERO CARD */
+.hero {
+  grid-column: span 2;
+  padding:22px;
+  background:linear-gradient(135deg,#0f172a,#0a0f1a);
+  border:1px solid #1f2937;
+  border-radius:14px;
+}
+
+.hero h1 {
+  margin:0;
+  font-size:20px;
+}
+
+.hero p {
+  color:#9ca3af;
+  margin-top:8px;
+  font-size:13px;
+}
+
+.step {
   display:inline-block;
-  padding:4px 8px;
+  margin-top:10px;
+  padding:6px 10px;
   background:#1f2937;
-  border-radius:6px;
+  border-radius:999px;
   font-size:12px;
-  margin-bottom:10px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="topbar">NextWave Traffic Engine</div>
+<div class="topbar">
+  <div class="brand">NextWave Traffic Engine</div>
+  <div class="status">SYSTEM ACTIVE</div>
+</div>
 
-<div class="wrap">
+<div class="container">
 
+<!-- HERO -->
 <div class="grid">
+
+<div class="hero">
+  <h1>Build Funnels → Generate Traffic → Capture Leads → Monetise</h1>
+  <p>This is your automated affiliate engine. Use the steps below in order.</p>
+  <div class="step">Step 1: Create Funnel</div>
+  <div class="step">Step 2: Generate AI Copy</div>
+  <div class="step">Step 3: Generate Traffic</div>
+</div>
 
 <!-- FUNNEL -->
 <div class="card">
-<h2>Funnel Builder</h2>
+<h3>1. Funnel Builder</h3>
 
 <input id="funnelName" placeholder="Funnel Name">
 <input id="affiliateLink" placeholder="Affiliate Link">
@@ -111,16 +165,16 @@ button:hover { opacity:0.9; }
 
 <!-- AI -->
 <div class="card">
-<h2>AI Funnel Engine</h2>
+<h3>2. AI Sales Engine</h3>
 
-<button onclick="generateAI()">Generate Funnel Copy</button>
+<button onclick="generateAI()">Generate Copy</button>
 
 <div id="aiOut" class="output"></div>
 </div>
 
 <!-- TRAFFIC -->
 <div class="card" style="grid-column: span 2;">
-<h2>Traffic System</h2>
+<h3>3. Traffic System</h3>
 
 <button onclick="generateTraffic()">Generate Traffic Strategy</button>
 
@@ -132,6 +186,7 @@ button:hover { opacity:0.9; }
 
 <script>
 
+/* FUNNEL */
 async function createFunnel(){
   const res = await fetch("/.netlify/functions/createPage", {
     method:"POST",
@@ -145,10 +200,10 @@ async function createFunnel(){
   const data = await res.json();
 
   document.getElementById("funnelOut").innerHTML =
-  `<div class="tag">Generated Funnel</div>\n` +
-  JSON.stringify(data, null, 2);
+  "✓ Funnel Generated\n\n" + JSON.stringify(data, null, 2);
 }
 
+/* AI */
 async function generateAI(){
   const res = await fetch("/.netlify/functions/ai", {
     method:"POST",
@@ -159,20 +214,24 @@ async function generateAI(){
   const data = await res.json();
 
   document.getElementById("aiOut").innerHTML = `
-Title: ${data.headline || "N/A"}
+HEADLINE:
+${data.headline || "-"}
 
-Hook: ${data.hook || "N/A"}
+HOOK:
+${data.hook || "-"}
 
-CTA: ${data.cta || "N/A"}
+CTA:
+${data.cta || "-"}
 `;
 }
 
+/* TRAFFIC */
 async function generateTraffic(){
   const res = await fetch("/.netlify/functions/traffic");
   const data = await res.json();
 
   document.getElementById("trafficOut").innerHTML =
-  data.map(x => "• " + x).join("\n");
+  "TRAFFIC PLAN:\n\n" + data.map(x => "• " + x).join("\n");
 }
 
 </script>
