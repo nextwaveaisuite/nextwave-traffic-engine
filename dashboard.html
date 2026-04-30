@@ -8,20 +8,21 @@
 body {
   margin:0;
   font-family: Arial;
-  background:#0b0f1a;
+  background:#070b16;
   color:white;
 }
 
 .header {
-  padding:15px;
-  background:#111827;
+  padding:16px;
+  background:#0f172a;
   display:flex;
   justify-content:space-between;
+  border-bottom:1px solid #1f2937;
 }
 
 .container {
   padding:20px;
-  max-width:1000px;
+  max-width:1100px;
   margin:auto;
 }
 
@@ -32,15 +33,20 @@ body {
 }
 
 .card {
-  background:#111827;
-  padding:15px;
-  border-radius:10px;
+  background:#0f172a;
+  padding:16px;
+  border-radius:12px;
+  border:1px solid #1f2937;
 }
 
 input {
   width:100%;
   padding:10px;
   margin-top:10px;
+  background:#020617;
+  border:1px solid #334155;
+  color:white;
+  border-radius:8px;
 }
 
 button {
@@ -49,8 +55,9 @@ button {
   margin-top:10px;
   background:#22c55e;
   border:none;
-  color:black;
   font-weight:bold;
+  border-radius:8px;
+  cursor:pointer;
 }
 
 .kpis {
@@ -61,9 +68,33 @@ button {
 }
 
 .kpi {
-  background:#111827;
-  padding:10px;
-  border-radius:8px;
+  background:#0f172a;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #1f2937;
+}
+
+.kpi h3 {
+  margin:0;
+  font-size:12px;
+  color:#94a3b8;
+}
+
+.kpi h2 {
+  margin:5px 0 0 0;
+  font-size:18px;
+}
+
+.feed {
+  margin-top:15px;
+  background:#0f172a;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #1f2937;
+  font-size:13px;
+  color:#cbd5e1;
+  height:140px;
+  overflow:auto;
 }
 </style>
 </head>
@@ -72,31 +103,56 @@ button {
 
 <div class="header">
   <div><b>Revenue OS</b></div>
-  <div>LIVE</div>
+  <div id="status">SYSTEM ACTIVE</div>
 </div>
 
 <div class="container">
 
+<!-- KPIs -->
 <div class="kpis">
-  <div class="kpi">Funnels: <span id="funnels">0</span></div>
-  <div class="kpi">Leads: <span id="leads">0</span></div>
-  <div class="kpi">Clicks: <span id="clicks">0</span></div>
-  <div class="kpi">Score: <span id="score">0</span></div>
+  <div class="kpi">
+    <h3>Revenue Est.</h3>
+    <h2 id="rev">$0</h2>
+  </div>
+
+  <div class="kpi">
+    <h3>Active Funnels</h3>
+    <h2 id="funnels">0</h2>
+  </div>
+
+  <div class="kpi">
+    <h3>Leads</h3>
+    <h2 id="leads">0</h2>
+  </div>
+
+  <div class="kpi">
+    <h3>System Score</h3>
+    <h2 id="score">0</h2>
+  </div>
 </div>
 
 <div class="grid">
 
+<!-- FUNNEL BUILDER -->
 <div class="card">
 <h3>Create Funnel</h3>
+
 <input id="name" placeholder="Funnel name">
 <input id="link" placeholder="Affiliate link">
-<button onclick="createFunnel()">Create</button>
-<pre id="out"></pre>
+
+<button onclick="createFunnel()">Deploy Funnel</button>
+
+<div class="feed" id="log">
+> System ready...
+</div>
 </div>
 
+<!-- AI -->
 <div class="card">
-<h3>AI Copy</h3>
-<button onclick="ai()">Generate</button>
+<h3>AI System Output</h3>
+
+<button onclick="ai()">Generate Copy</button>
+
 <pre id="aiout"></pre>
 </div>
 
@@ -107,25 +163,35 @@ button {
 <script type="module">
 import { supabase } from "./supabase.js";
 
-/* LOAD DASHBOARD */
-async function load() {
+/* LOG FEED */
+function log(msg){
+  document.getElementById("log").innerHTML += "<br>> " + msg;
+}
+
+/* LOAD SYSTEM */
+async function load(){
 
   const { data: funnels } = await supabase.from("funnels").select("*");
   const { data: leads } = await supabase.from("leads").select("*");
   const { data: events } = await supabase.from("events").select("*");
 
-  document.getElementById("funnels").innerText = funnels?.length || 0;
-  document.getElementById("leads").innerText = leads?.length || 0;
+  let funnelCount = funnels?.length || 0;
+  let leadCount = leads?.length || 0;
 
-  const clicks = (events || []).filter(e => e.type === "click");
-  document.getElementById("clicks").innerText = clicks.length;
+  let clicks = (events || []).filter(e => e.type === "click").length;
 
-  const score = (leads?.length || 0) * 2 + clicks.length;
-  document.getElementById("score").innerText = score;
+  let revenue = leadCount * 2.5 + clicks * 0.8;
+  let score = leadCount * 3 + clicks * 1.2;
+
+  document.getElementById("funnels").innerText = funnelCount;
+  document.getElementById("leads").innerText = leadCount;
+  document.getElementById("rev").innerText = "$" + revenue.toFixed(2);
+  document.getElementById("score").innerText = Math.round(score);
+
 }
 
 /* CREATE FUNNEL */
-window.createFunnel = async function () {
+window.createFunnel = async function(){
 
   const name = document.getElementById("name").value;
   const link = document.getElementById("link").value;
@@ -135,24 +201,24 @@ window.createFunnel = async function () {
   ]);
 
   await supabase.from("events").insert([
-    { type: "click", funnel_name: name }
+    { type:"click", funnel_name:name }
   ]);
 
-  document.getElementById("out").innerText = "Funnel Created";
-
+  log("Funnel deployed: " + name);
   load();
 };
 
-/* AI PLACEHOLDER */
-window.ai = function () {
+/* AI */
+window.ai = function(){
   document.getElementById("aiout").innerText =
-  "Headline: Turn Traffic Into Sales\nHook: Simple system converts visitors into buyers\nCTA: Get started now";
+`HEADLINE: Turn Traffic Into Predictable Revenue
+HOOK: Stop guessing — start using a system that compounds
+CTA: Activate Revenue Engine`;
 };
 
+/* LIVE LOOP */
+setInterval(load, 5000);
 load();
-
-/* REFRESH LOOP */
-setInterval(load, 10000);
 
 </script>
 
