@@ -1,35 +1,21 @@
-export async function handler(event) {
-  try {
-    const body = event.body ? JSON.parse(event.body) : {}
-    const email = body.email
+import { supabase } from "../../supabase.js"
 
-    if (!email) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: "No email" })
-      }
-    }
+export const handler = async (event) => {
 
-    // 👉 SEND TO FORGE MAIL
-    await fetch("https://mail.nextwaveaisuite.com/api/lead", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        source: "traffic-engine",
-        offer: "nextwave"
-      })
-    })
+  const { email } = JSON.parse(event.body || "{}")
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true })
-    }
+  if (!email) {
+    return { statusCode: 400, body: "No email" }
+  }
 
-  } catch (err) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: err.message })
-    }
+  await supabase.from("leads").insert([{ email }])
+
+  await supabase.from("events").insert([
+    { type: "lead", value: 1 }
+  ])
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ success: true })
   }
 }
