@@ -1,245 +1,379 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Revenue OS</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NextWave — Dashboard</title>
 <style>
-body {
-  margin:0;
-  font-family: Arial;
-  background:#070b16;
-  color:white;
-}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.header {
-  padding:16px;
-  background:#0f172a;
-  display:flex;
-  justify-content:space-between;
-  border-bottom:1px solid #1f2937;
-}
-
-.container {
-  padding:20px;
-  max-width:1100px;
-  margin:auto;
-}
-
-.grid {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:15px;
-}
-
-.card {
-  background:#0f172a;
-  padding:16px;
-  border-radius:12px;
-  border:1px solid #1f2937;
-}
-
-input {
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  background:#020617;
-  border:1px solid #334155;
-  color:white;
-  border-radius:8px;
-}
-
-button {
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-  background:#22c55e;
-  border:none;
-  font-weight:bold;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-.kpis {
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  margin-bottom:20px;
-}
-
-.kpi {
-  background:#0f172a;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #1f2937;
-}
-
-.kpi h3 {
-  margin:0;
-  font-size:12px;
-  color:#94a3b8;
-}
-
-.kpi h2 {
-  margin:5px 0 0 0;
-  font-size:18px;
-}
-
-.feed {
-  margin-top:15px;
-  background:#0f172a;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #1f2937;
-  font-size:13px;
-  color:#cbd5e1;
-  height:140px;
-  overflow:auto;
-}
-</style>
-</head>
-
-<body>
-
-<div class="header">
-  <div><b>Revenue OS</b></div>
-  <div id="status">SYSTEM ACTIVE</div>
-</div>
-
-<div class="container">
-
-<!-- KPIS -->
-<div class="kpis">
-  <div class="kpi">
-    <h3>Revenue</h3>
-    <h2 id="rev">$0</h2>
-  </div>
-
-  <div class="kpi">
-    <h3>Funnels</h3>
-    <h2 id="funnels">0</h2>
-  </div>
-
-  <div class="kpi">
-    <h3>Leads</h3>
-    <h2 id="leads">0</h2>
-  </div>
-
-  <div class="kpi">
-    <h3>Score</h3>
-    <h2 id="score">0</h2>
-  </div>
-</div>
-
-<div class="grid">
-
-<!-- FUNNEL BUILDER -->
-<div class="card">
-<h3>Create Funnel</h3>
-
-<input id="name" placeholder="Funnel name">
-<input id="link" placeholder="Affiliate link">
-
-<button onclick="createFunnel()">Deploy Funnel</button>
-
-<div class="feed" id="log">
-> System ready...
-</div>
-</div>
-
-<!-- AI OUTPUT -->
-<div class="card">
-<h3>AI System Output</h3>
-
-<button onclick="ai()">Generate Copy</button>
-
-<pre id="aiout"></pre>
-</div>
-
-</div>
-
-</div>
-
-<script type="module">
-import { supabase } from "./supabase.js";
-
-/* LOG FUNCTION */
-function log(msg){
-  document.getElementById("log").innerHTML += "<br>> " + msg;
-}
-
-/* LOAD DASHBOARD DATA */
-async function load(){
-
-  const { data: funnels } = await supabase.from("funnels").select("*");
-  const { data: leads } = await supabase.from("leads").select("*");
-  const { data: conversions } = await supabase.from("conversions").select("*");
-
-  let funnelCount = funnels?.length || 0;
-  let leadCount = leads?.length || 0;
-
-  let totalRevenue = (conversions || []).reduce((sum, c) => {
-    return sum + (c.revenue || 0);
-  }, 0);
-
-  let score = (totalRevenue * 2) + (leadCount * 0.5);
-
-  document.getElementById("funnels").innerText = funnelCount;
-  document.getElementById("leads").innerText = leadCount;
-  document.getElementById("rev").innerText = "$" + totalRevenue.toFixed(2);
-  document.getElementById("score").innerText = Math.round(score);
-}
-
-/* CREATE FUNNEL (FIXED + CLEAN) */
-window.createFunnel = async function(){
-
-  const name = document.getElementById("name").value;
-  const link = document.getElementById("link").value;
-
-  if(!name || !link){
-    log("❌ Missing funnel data");
-    return;
+  :root {
+    --bg:        #070b16;
+    --surface:   #0f172a;
+    --surface2:  #1e293b;
+    --border:    #1e293b;
+    --accent:    #00ff88;
+    --accent2:   #00ccff;
+    --warn:      #f59e0b;
+    --danger:    #ef4444;
+    --text:      #e2e8f0;
+    --muted:     #64748b;
+    --radius:    10px;
   }
 
-  await supabase.from("funnels").insert([
-    {
-      name,
-      affiliate_link: link
-    }
-  ]);
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+  }
 
-  log("📦 Funnel deployed: " + name);
-  load();
-};
+  .sidebar {
+    width: 220px;
+    min-height: 100vh;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .logo {
+    padding: 0 20px 24px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .logo span { color: var(--text); }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--muted);
+    border-left: 3px solid transparent;
+    transition: all .15s;
+  }
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,.04); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,255,136,.06); }
+  .nav-icon { font-size: 16px; width: 20px; text-align: center; }
 
-/* AI FUNCTION */
-window.ai = function(){
-  document.getElementById("aiout").innerText =
-`HEADLINE: Turn Traffic Into Revenue
-HOOK: Stop guessing. Start tracking what converts.
-CTA: Activate Revenue Engine`;
-};
+  .main { flex: 1; overflow-y: auto; padding: 32px; }
 
-/* OPTIONAL: REAL CONVERSION TRACKER */
-window.trackConversion = async function(email, funnelName, amount){
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+  .page-title { font-size: 22px; font-weight: 700; }
+  .page-title small { font-size: 13px; color: var(--muted); font-weight: 400; margin-left: 10px; }
+  .range-selector { display: flex; gap: 8px; }
+  .range-btn {
+    padding: 6px 14px;
+    font-size: 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .range-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
 
-  await supabase.from("conversions").insert([
-    {
-      email,
-      funnel_name: funnelName,
-      revenue: amount
-    }
-  ]);
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .stat-value { font-size: 32px; font-weight: 700; margin: 8px 0 4px; }
+  .stat-sub   { font-size: 12px; color: var(--muted); }
+  .stat-card.green .stat-value { color: var(--accent); }
+  .stat-card.blue  .stat-value { color: var(--accent2); }
+  .stat-card.gold  .stat-value { color: var(--warn); }
+  .stat-card.red   .stat-value { color: var(--danger); }
 
-  log("💰 Conversion tracked: $" + amount);
-  load();
-};
+  .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+  }
+  .panel.full { grid-column: 1 / -1; }
+  .panel-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: rgba(0,255,136,.15);
+    color: var(--accent);
+  }
 
-/* INIT */
-setInterval(load, 5000);
-load();
+  .form-row { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 150px; }
+  label { font-size: 12px; color: var(--muted); }
+  input, textarea, select {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 10px 12px;
+    font-size: 14px;
+    width: 100%;
+    outline: none;
+    transition: border-color .15s;
+  }
+  input:focus, textarea:focus { border-color: var(--accent); }
 
-</script>
+  .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity .15s, transform .1s;
+    white-space: nowrap;
+  }
+  .btn:hover { opacity: .88; }
+  .btn:active { transform: scale(.97); }
+  .btn:disabled { opacity: .4; cursor: not-allowed; }
+  .btn-primary   { background: var(--accent); color: #000; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
 
-</body>
-</html>
+  .result-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    margin-top: 12px;
+    display: none;
+  }
+  .result-box.visible { display: block; }
+  .result-box.success { border-color: var(--accent); }
+  .result-box.error   { border-color: var(--danger); color: var(--danger); }
+
+  .copy-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg);
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    font-size: 13px;
+  }
+  .copy-link code { flex: 1; color: var(--accent); word-break: break-all; }
+  .copy-btn {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .copy-output { display: none; }
+  .copy-output.visible { display: block; }
+  .copy-field { margin-bottom: 14px; }
+  .copy-field-label { font-size: 11px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+  .copy-field-value {
+    background: var(--bg);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .copy-field-value.headline { font-size: 18px; font-weight: 700; color: var(--accent); }
+  .bullets-list { list-style: none; padding: 0; }
+  .bullets-list li::before { content: '✔ '; color: var(--accent); }
+  .bullets-list li { padding: 3px 0; font-size: 14px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: left;
+    padding: 10px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,.04); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,.02); }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: rgba(0,204,255,.15);
+    color: var(--accent2);
+  }
+
+  .click-bar { display: flex; align-items: center; gap: 8px; }
+  .click-bar-fill {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--accent);
+    min-width: 4px;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,.2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #toast {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-size: 13px;
+    display: none;
+    z-index: 9999;
+  }
+  #toast.show { display: block; }
+  #toast.success { border-color: var(--accent); }
+  #toast.error   { border-color: var(--danger); color: var(--danger); }
+
+  .page-section { display: none; }
+  .page-section.active { display: block; }
+
+  @media (max-width: 900px) {
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .panels { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .sidebar { display: none; }
+    .main { padding: 20px; }
+    .stats-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="logo">NextWave <span>Engine</span></div>
+  <div class="nav-item active" onclick="showPage('overview', this)">
+    <span class="nav-icon">📊</span> Overview
+  </div>
+  <div class="nav-item" onclick="showPage('funnels', this)">
+    <span class="nav-icon">🤖</span> AI Funnels
+  </div>
+  <div class="nav-item" onclick="showPage('links', this)">
+    <span class="nav-icon">🔗</span> Link Shortener
+  </div>
+  <div class="nav-item" onclick="showPage('leads', this)">
+    <span class="nav-icon">👥</span> Leads
+  </div>
+</nav>
+
+<main class="main">
+
+  <!-- OVERVIEW -->
+  <div class="page-section active" id="page-overview">
+    <div class="page-header">
+      <div class="page-title">Dashboard <small id="overview-updated">Loading…</small></div>
+      <div class="range-selector">
+        <button class="range-btn active" onclick="setRange('24h', this)">24h</button>
+        <button class="range-btn" onclick="setRange('7d', this)">7 days</button>
+        <button class="range-btn" onclick="setRange('30d', this)">30 days</button>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card green">
+        <div class="stat-label">Leads Captured</div>
+        <div class="stat-value" id="stat-leads">—</div>
+        <div class="stat-sub">emails collected</div>
+      </div>
+      <div class="stat-card blue">
+        <div class="stat-label">Link Clicks</div>
+        <div class="stat-value" id="stat-clicks">—</div>
+        <div class="stat-sub">tracked visits</div>
+      </div>
+      <div class="stat-card gold">
+        <div class="stat-label">Conversions</div>
+        <div class="stat-value" id="stat-conversions">—</div>
+        <div class="stat-sub">tracked purchases</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-label">Revenue Tracked</div>
+        <div class="stat-value" id="stat-revenue">—</div>
+        <div class="stat-sub">via conversion events</div>
+      </div>
+    </div>
+
+    <div class="panels">
+      <div class="panel">
+        <div class="panel-title">📬 Recent Leads <span class="badge" id="leads-count-badge">0</span></div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Email</th><th>Funnel</th><th>Time</th></tr></thead>
+            <tbody id="recent-leads-table">
+              <tr><td colspan="3" style="color:var(--muted)">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">🔗 Top Links <span class="badge" id="links-count-badge">0</span></div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Slug</th><th>Clicks</th></tr></thead>
+            <tbody id="top-links-table">
+              <tr><td colspan="2" style="color:var(--muted)">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI FUNNELS -->
+  <div class="page-section" id="page-funnels">
+    <div class="page-header">
+      <div class="page-title">🤖 AI Funnel Builder</div>
+    </div>
+    <div class="panels">
+      <div class="panel">
+        <div class="panel-title">Generate Funnel Copy</div>
+        <div class="form-group" style="margin-bottom:12px">
+          <label>What are you promoting?</label>
+          <input id="ai-prompt" placeholder="e.g. weight loss supplement, make money online course…" />
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <label>Affiliate Link</label>
+          <input id="ai-affiliate-link" placeholder="https://your-affiliate-link.com" />
+        </div>
+        <button class="btn btn-primary" id="ai-gen-btn" onclick="generateFunnel()">
+          ✨ Generate
