@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enroll — NextWave Traffic Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#04060d;--surface:#090d18;--card:#0d1120;
+  --border:rgba(255,255,255,.06);
+  --green:#00ff88;--green2:#00e676;--blue:#00b4ff;
+  --gold:#ffb800;--red:#ff4444;
+  --text:#dce8f0;--dim:#6b7d95;--muted:#3a4558;
+}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.65;overflow-x:hidden;min-height:100vh}
+
+/* TOP BAR */
+.topbar{background:linear-gradient(90deg,#110800,#1f0e00,#110800);padding:9px 20px;text-align:center;font-size:12px;color:var(--gold);font-weight:500;border-bottom:1px solid rgba(255,184,0,.15)}
+.topbar strong{color:#fff}
+
+/* NAV */
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 40px;border-bottom:1px solid var(--border);background:rgba(4,6,13,.95)}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px}
+.logo em{font-style:normal;color:var(--green)}
+.secure-badge{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim)}
+.secure-badge span{color:var(--green)}
+
+/* LAYOUT */
+.checkout-wrap{max-width:1020px;margin:0 auto;padding:48px 24px;display:grid;grid-template-columns:1fr 420px;gap:40px;align-items:start}
+
+/* LEFT — PLAN SELECTOR */
+.plan-section h1{font-family:'Syne',sans-serif;font-weight:800;font-size:32px;letter-spacing:-1px;margin-bottom:6px}
+.plan-section h1 em{font-style:normal;color:var(--green)}
+.plan-sub{font-size:15px;color:var(--dim);margin-bottom:32px}
+
+.plans{display:flex;flex-direction:column;gap:14px;margin-bottom:32px}
+.plan{border:2px solid var(--border);border-radius:12px;padding:20px 22px;cursor:pointer;transition:all .2s;position:relative;background:var(--card)}
+.plan:hover{border-color:rgba(0,255,136,.3)}
+.plan.selected{border-color:var(--green);background:rgba(0,255,136,.04)}
+.plan-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.plan-left{display:flex;gap:14px;align-items:flex-start}
+.radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--muted);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;transition:all .2s}
+.plan.selected .radio{border-color:var(--green);background:var(--green)}
+.plan.selected .radio::after{content:'';width:8px;height:8px;background:#000;border-radius:50%}
+.plan-name{font-family:'Syne',sans-serif;font-weight:700;font-size:17px;margin-bottom:4px}
+.plan-desc{font-size:13px;color:var(--dim)}
+.plan-price{text-align:right;flex-shrink:0}
+.plan-amount{font-family:'Syne',sans-serif;font-weight:800;font-size:28px;color:var(--text);line-height:1}
+.plan-period{font-size:12px;color:var(--dim);margin-top:3px}
+.plan-badge{position:absolute;top:-10px;right:16px;background:var(--green);color:#000;font-weight:700;font-size:10px;padding:3px 10px;border-radius:20px}
+.plan-items{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:none}
+.plan.selected .plan-items{display:block}
+.plan-items ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.plan-items li{display:flex;gap:8px;font-size:12px;color:var(--dim)}
+.plan-items .c{color:var(--green);flex-shrink:0}
+
+/* FORM */
+.form-section h2{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.5px;margin-bottom:20px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:12px;color:var(--dim);font-weight:500}
+.field input{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:12px 14px;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s;width:100%}
+.field input:focus{border-color:rgba(0,255,136,.4)}
+.field input::placeholder{color:var(--muted)}
+.card-row{display:grid;grid-template-columns:1fr 100px 80px;gap:12px}
+
+/* CARD ICONS */
+.card-icons{display:flex;gap:8px;align-items:center;margin-bottom:16px}
+.card-icon{width:40px;height:26px;border-radius:4px;background:rgba(255,255,255,.08);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--dim)}
+.card-icon.visa{color:#1a1f71;background:#e8edf5;border-color:transparent}
+.card-icon.mc{background:#eb001b;color:#fff;border-color:transparent;font-size:10px}
+
+.divider{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--muted);font-size:12px}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* SUBMIT BTN */
+.submit-btn{width:100%;padding:16px;background:var(--green);color:#000;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-weight:800;font-size:17px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;margin-top:6px}
+.submit-btn:hover{background:var(--green2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,255,136,.25)}
+.submit-btn:active{transform:translateY(0)}
+.submit-btn.loading{opacity:.8;pointer-events:none}
+.submit-btn.loading::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);animation:sweep 1s infinite}
+@keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.submit-note{font-size:12px;color:var(--muted);text-align:center;margin-top:10px}
+.submit-note span{color:rgba(0,255,136,.7)}
+
+/* RIGHT — ORDER SUMMARY */
+.summary-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;position:sticky;top:24px}
+.summary-box h3{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.summary-product{background:rgba(0,255,136,.04);border:1px solid rgba(0,255,136,.12);border-radius:10px;padding:16px;margin-bottom:20px}
+.sp-name{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;margin-bottom:4px}
+.sp-desc{font-size:12px;color:var(--dim)}
+.summary-line{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.summary-line:last-child{border-bottom:none}
+.summary-line .label{color:var(--dim)}
+.summary-line .val{font-weight:600}
+.summary-total{display:flex;justify-content:space-between;align-items:center;padding:16px 0 0;margin-top:6px}
+.summary-total .label{font-family:'Syne',sans-serif;font-weight:700;font-size:15px}
+.summary-total .val{font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:var(--green)}
+.trust-icons{margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.trust-item{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;font-size:12px;color:var(--dim)}
+.trust-item .ti{font-size:16px;flex-shrink:0}
+.guarantee-mini{background:rgba(0,180,255,.05);border:1px solid rgba(0,180,255,.12);border-radius:8px;padding:14px;margin-top:16px;font-size:12px;color:var(--dim);line-height:1.6}
+.guarantee-mini strong{color:var(--text);display:block;margin-bottom:4px;font-size:13px}
+
+/* INCLUDES LIST */
+.includes{margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.includes h4{font-size:12px;font-weight:600;color:var(--dim);margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
+.inc-item{display:flex;gap:8px;font-size:12px;color:var(--dim);padding:5px 0}
+.inc-item .c{color:var(--green);flex-shrink:0}
+
+/* STATUS */
+.form-status{padding:12px 16px;border-radius:8px;font-size:14px;margin-top:12px;display:none}
+.form-status.ok{display:block;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);color:var(--green)}
+.form-status.err{display:block;background:rgba(255,68,68,.08);border:1px solid rgba(255,68,68,.2);color:var(--red)}
+
+/* RESPONSIVE */
+@media(max-width:860px){.checkout-wrap{grid-template-columns:1fr}.summary-box{position:static}}
+@media(max-width:600px){nav{padding:14px 20px}.checkout-wrap{padding:28px 16px}.field-row{grid-template-columns:1fr}.card-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="topbar">🔒 <strong>Secure Checkout</strong> — 256-bit SSL encryption &nbsp;·&nbsp; Your information is safe</div>
+
+<nav>
+  <div class="logo">Next<em>Wave</em></div>
+  <div class="secure-badge"><span>🔒</span> Secure &amp; Encrypted</div>
+</nav>
+
+<div class="checkout-wrap">
+
+  <!-- LEFT -->
+  <div>
+    <div class="plan-section">
+      <h1>Enroll in<br><em>NextWave Engine</em></h1>
+      <p class="plan-sub">Choose your payment option — same system, same results, same access.</p>
+
+      <div class="plans">
+        <div class="plan selected" id="plan-lifetime" onclick="selectPlan('lifetime')">
+          <div class="plan-badge">⚡ BEST VALUE</div>
+          <div class="plan-header">
+            <div class="plan-left">
+              <div class="radio"></div>
+              <div>
+                <div class="plan-name">Lifetime Access</div>
+                <div class="plan-desc">One payment — yours forever. Save $494 vs payment plan.</div>
+              </div>
+            </div>
+            <div class="plan-price">
+              <div class="plan-amount">$997</div>
+              <div class="plan-period">one time</div>
+            </div>
+          </div>
+          <div class="plan-items">
+            <ul>
+              <li><span class="c">✓</span>All 6 core components</li>
+              <li><span class="c">✓</span>Unlimited AI funnel builds</li>
+              <li><span class="c">✓</span>Done-for-you funnels</li>
+              <li><span class="c">✓</span>$500K+ traffic sources</li>
+              <li><span class="c">✓</span>Live monthly calls</li>
+              <li><span class="c">✓</span>50% affiliate commissions</li>
+              <li><span class="c">✓</span>Full call archive</li>
+              <li><span class="c">✓</span>Expert community</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="plan" id="plan-split" onclick="selectPlan('split')">
+          <div class="plan-header">
+            <div class="plan-left">
+              <div class="radio"></div>
+              <div>
+                <div class="plan-name">3-Payment Plan</div>
+                <div class="plan-desc">Three monthly payments. Same full access. Total $1,491.</div>
+              </div>
+            </div>
+            <div class="plan-price">
+              <div class="plan-amount">$497</div>
+              <div class="plan-period">× 3 months</div>
+            </div>
+          </div>
+          <div class="plan-items">
+            <ul>
+              <li><span class="c">✓</span>All 6 core components</li>
+              <li><span class="c">✓</span>Unlimited AI funnel builds</li>
+              <li><span class="c">✓</span>Done-for-you funnels</li>
+              <li><span class="c">✓</span>$500K+ traffic sources</li>
+              <li><span class="c">✓</span>Live monthly calls</li>
+              <li><span class="c">✓</span>50% affiliate commissions</li>
+              <li><span class="c">✓</span>Full call archive</li>
+              <li><span class="c">✓</span>Expert community</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT INFO -->
+    <div class="form-section">
+      <h2>Your Information</h2>
+      <div class="field-row">
+        <div class="field"><label>First Name</label><input type="text" id="fname" placeholder="James" autocomplete="given-name" /></div>
+        <div class="field"><label>Last Name</label><input type="text" id="lname" placeholder="Fawcett" autocomplete="family-name" /></div>
+      </div>
+      <div class="field"><label>Email Address</label><input type="email" id="email" placeholder="you@email.com" autocomplete="email" /></div>
+
+      <div class="divider">Payment Details</div>
+
+      <div class="card-icons">
+        <div class="card-icon visa">VISA</div>
+        <div class="card-icon mc">MC</div>
+        <div class="card-icon">AMEX</div>
+        <div class="card-icon">PP</div>
+        <span style="font-size:12px;color:var(--muted);margin-left:4px">All major cards accepted</span>
+      </div>
+
+      <div class="field"><label>Card Number</label><input type="text" id="cardnum" placeholder="1234 5678 9012 3456" maxlength="19" autocomplete="cc-number" /></div>
+      <div class="card-row">
+        <div class="field" style="margin-bottom:0"><label>Cardholder Name</label><input type="text" id="cardname" placeholder="James Fawcett" autocomplete="cc-name" /></div>
+        <div class="field" style="margin-bottom:0"><label>Expiry</label><input type="text" id="expiry" placeholder="MM/YY" maxlength="5" autocomplete="cc-exp" /></div>
+        <div class="field" style="margin-bottom:0"><label>CVV</label><input type="text" id="cvv" placeholder="123" maxlength="4" autocomplete="cc-csc" /></div>
+      </div>
+
+      <button class="submit-btn" id="submit-btn" onclick="submitOrder()" style="margin-top:22px">
+        <span id="btn-text">Enroll Now — $997 →</span>
+      </button>
+      <p class="submit-note">🔒 <span>Secure 256-bit SSL</span> &nbsp;·&nbsp; You will receive confirmation by email</p>
+      <div class="form-status" id="form-status"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT — SUMMARY -->
+  <div class="summary-box">
+    <h3>📋 Order Summary</h3>
+
+    <div class="summary-product">
+      <div class="sp-name">NextWave Traffic Engine</div>
+      <div class="sp-desc">Full System Access — Powered by James Fawcett's $4M+ affiliate methodology</div>
+    </div>
+
+    <div class="summary-line"><span class="label">Plan</span><span class="val" id="sum-plan">Lifetime Access</span></div>
+    <div class="summary-line" id="sum-saving-row"><span class="label" style="color:var(--green)">You Save</span><span class="val" style="color:var(--green)">$494</span></div>
+    <div class="summary-line"><span class="label">Access</span><span class="val">Immediate</span></div>
+
+    <div class="summary-total">
+      <span class="label">Total Today</span>
+      <span class="val" id="sum-total">$997</span>
+    </div>
+
+    <div class="trust-icons">
+      <div class="trust-item"><span class="ti">🔒</span><span>Secure checkout. Your card details are encrypted and never stored.</span></div>
+      <div class="trust-item"><span class="ti">⚡</span><span>Instant access. Dashboard unlocks immediately after payment.</span></div>
+      <div class="trust-item"><span class="ti">🌍</span><span>Accepted worldwide. All major cards, PayPal supported.</span></div>
+    </div>
+
+    <div class="guarantee-mini">
+      <strong>🛡️ 90-Day Commitment Guarantee</strong>
+      Implement for 90 days and don't see measurable progress? James works with you one-on-one until you do. This is as close to risk-free as it gets.
+    </div>
+
+    <div class="includes">
+      <h4>Everything Included</h4>
+      <div class="inc-item"><span class="c">✓</span>6 Core Components</div>
+      <div class="inc-item"><span class="c">✓</span>Monthly Live Strategy Calls</div>
+      <div class="inc-item"><span class="c">✓</span>Done-For-You Shared Funnels</div>
+      <div class="inc-item"><span class="c">✓</span>AI-Powered Funnel Builder</div>
+      <div class="inc-item"><span class="c">✓</span>Offer Alignment System</div>
+      <div class="inc-item"><span class="c">✓</span>Email Automation Strategy</div>
+      <div class="inc-item"><span class="c">✓</span>Expert Community Access</div>
+      <div class="inc-item"><span class="c">✓</span>$500K+ Tested Traffic Sources</div>
+      <div class="inc-item"><span class="c">✓</span>50% Affiliate Commission Rights</div>
+      <div class="inc-item"><span class="c">✓</span>Full Archive — All Past Calls</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Read plan from URL
+const urlPlan = new URLSearchParams(window.location.search).get('plan')
+if (urlPlan === 'split') selectPlan('split')
+
+function selectPlan(plan) {
+  document.getElementById('plan-lifetime').classList.toggle('selected', plan === 'lifetime')
+  document.getElementById('plan-split').classList.toggle('selected', plan === 'split')
+
+  const btn = document.getElementById('btn-text')
+  const sumPlan = document.getElementById('sum-plan')
+  const sumTotal = document.getElementById('sum-total')
+  const savingRow = document.getElementById('sum-saving-row')
+
+  if (plan === 'lifetime') {
+    btn.textContent = 'Enroll Now — $997 →'
+    sumPlan.textContent = 'Lifetime Access'
+    sumTotal.textContent = '$997'
+    savingRow.style.display = 'flex'
+  } else {
+    btn.textContent = 'Start Payment Plan — $497/mo →'
+    sumPlan.textContent = '3 × $497/month'
+    sumTotal.textContent = '$497 today'
+    savingRow.style.display = 'none'
+  }
+}
+
+// Format card number
+document.getElementById('cardnum').addEventListener('input', function() {
+  this.value = this.value.replace(/\D/g,'').replace(/(.{4})/g,'$1 ').trim().substring(0,19)
+})
+// Format expiry
+document.getElementById('expiry').addEventListener('input', function() {
+  this.value = this.value.replace(/\D/g,'').replace(/^(\d{2})(\d)/,'$1/$2').substring(0,5)
+})
+
+function submitOrder() {
+  const fname = document.getElementById('fname').value.trim()
+  const lname = document.getElementById('lname').value.trim()
+  const email = document.getElementById('email').value.trim()
+  const card  = document.getElementById('cardnum').value.trim()
+  const exp   = document.getElementById('expiry').value.trim()
+  const cvv   = document.getElementById('cvv').value.trim()
+  const stat  = document.getElementById('form-status')
+  const btn   = document.getElementById('submit-btn')
+
+  if (!fname || !lname)     { showErr('Please enter your full name'); return }
+  if (!email.includes('@')) { showErr('Please enter a valid email address'); return }
+  if (card.replace(/\s/g,'').length < 16) { showErr('Please enter a valid card number'); return }
+  if (exp.length < 5)       { showErr('Please enter your card expiry date'); return }
+  if (cvv.length < 3)       { showErr('Please enter your CVV'); return }
+
+  btn.classList.add('loading')
+  document.getElementById('btn-text').textContent = 'Processing…'
+
+  // Capture lead first
+  fetch('/.netlify/functions/email', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({email, name: fname + ' ' + lname, funnel: 'checkout'})
+  }).catch(()=>{})
+
+  // In production: integrate Stripe / PayPal here
+  // For now: simulate processing and redirect to thank-you
+  setTimeout(() => {
+    const plan = document.getElementById('plan-lifetime').classList.contains('selected') ? 'lifetime' : 'split'
+    window.location.href = `/thankyou.html?plan=${plan}&email=${encodeURIComponent(email)}&name=${encodeURIComponent(fname)}`
+  }, 2200)
+}
+
+function showErr(msg) {
+  const s = document.getElementById('form-status')
+  s.className = 'form-status err'
+  s.textContent = '⚠ ' + msg
+}
+</script>
+</body>
+</html>
