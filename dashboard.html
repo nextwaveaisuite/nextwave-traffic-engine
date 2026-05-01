@@ -6,68 +6,32 @@
 <title>NextWave — Revenue Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ── RESET ─────────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
-
-/* ── DESIGN TOKENS ─────────────────────────────────────── */
 :root{
-  --ink:      #0c0f1a;
-  --ink2:     #111520;
-  --ink3:     #161b2e;
-  --ink4:     #1d2540;
-  --line:     #232e4a;
-  --line2:    rgba(255,255,255,.04);
-  --teal:     #19e6b0;
-  --teal-bg:  rgba(25,230,176,.07);
-  --teal-bdr: rgba(25,230,176,.18);
-  --cobalt:   #4f8ef7;
-  --cobalt-bg:rgba(79,142,247,.08);
-  --gold:     #f0a500;
-  --gold-bg:  rgba(240,165,0,.08);
-  --rose:     #f25c7a;
-  --rose-bg:  rgba(242,92,122,.08);
-  --slate:    #8fa3c4;
-  --slate2:   #3d5275;
-  --body:     #dce8f5;
-  --f:        'DM Sans',sans-serif;
-  --m:        'DM Mono',monospace;
-  --rad:      7px;
-  --rad2:     11px;
+  --ink:#080c14;--ink2:#0d1220;--ink3:#111827;--ink4:#1a2235;
+  --line:#1e2d42;--b2:rgba(255,255,255,.04);
+  --teal:#19e6b0;--teal2:#13c99a;
+  --teal-bg:rgba(25,230,176,.07);--teal-bdr:rgba(25,230,176,.18);
+  --blue:#4f8ef7;--blue-bg:rgba(79,142,247,.08);
+  --gold:#f0a500;--gold-bg:rgba(240,165,0,.08);
+  --rose:#f25c7a;--rose-bg:rgba(242,92,122,.08);
+  --body:#dce8f5;--dim:#8fa3c4;--muted:#3d5275;
+  --f:'DM Sans',sans-serif;--m:'DM Mono',monospace;
+  --r:7px;--r2:11px;
 }
-
-/* ── BASE ──────────────────────────────────────────────── */
-body{
-  background:var(--ink);
-  color:var(--body);
-  font-family:var(--f);
-  font-size:13px;
-  line-height:1.5;
-  display:flex;
-  flex-direction:column;
-}
+body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px;line-height:1.5;display:flex;flex-direction:column}
 ::-webkit-scrollbar{width:3px;height:3px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px}
 
-/* ── TOPBAR ────────────────────────────────────────────── */
-.topbar{
-  height:50px;min-height:50px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 18px;
-  background:var(--ink2);
-  border-bottom:1px solid var(--line);
-  z-index:50;
-}
+/* TOPBAR */
+.topbar{height:50px;min-height:50px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:var(--ink2);border-bottom:1px solid var(--line);z-index:50}
 .brand{display:flex;align-items:center;gap:9px;text-decoration:none}
-.brand-ico{
-  width:26px;height:26px;border-radius:5px;
-  background:var(--teal);
-  display:flex;align-items:center;justify-content:center;
-}
-.brand-ico svg{width:14px;height:14px;fill:#0c0f1a}
+.brand-ico{width:26px;height:26px;border-radius:5px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+.brand-ico svg{width:14px;height:14px;fill:#080c14}
 .brand-name{font-family:var(--m);font-size:12px;font-weight:500;color:var(--body);letter-spacing:.5px}
 .brand-name b{color:var(--teal)}
 .topbar-mid{display:flex;align-items:center;gap:6px}
@@ -75,285 +39,178 @@ body{
 @keyframes pip{0%,100%{opacity:1}50%{opacity:.25}}
 .live-txt{font-family:var(--m);font-size:10px;color:var(--teal);letter-spacing:.8px}
 .topbar-right{display:flex;align-items:center;gap:7px}
-.t-time{font-family:var(--m);font-size:10px;color:var(--slate2);padding:4px 9px;border:1px solid var(--line);border-radius:var(--rad);background:var(--ink3)}
-.t-btn{
-  width:30px;height:30px;border-radius:var(--rad);
-  background:none;border:1px solid var(--line);
-  color:var(--slate);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  font-size:13px;transition:all .12s;
-}
-.t-btn:hover{background:var(--ink3);color:var(--body);border-color:var(--line2)}
+.t-time{font-family:var(--m);font-size:10px;color:var(--muted);padding:4px 9px;border:1px solid var(--line);border-radius:var(--r);background:var(--ink3)}
+.t-btn{width:30px;height:30px;border-radius:var(--r);background:none;border:1px solid var(--line);color:var(--dim);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .12s}
+.t-btn:hover{background:var(--ink3);color:var(--body)}
 
-/* ── APP SHELL ─────────────────────────────────────────── */
+/* SHELL */
 .shell{display:flex;flex:1;overflow:hidden}
 
-/* ── SIDEBAR ───────────────────────────────────────────── */
-.sidebar{
-  width:210px;min-width:210px;flex-shrink:0;
-  background:var(--ink2);
-  border-right:1px solid var(--line);
-  display:flex;flex-direction:column;
-  overflow-y:auto;
-}
+/* SIDEBAR */
+.sidebar{width:210px;min-width:210px;flex-shrink:0;background:var(--ink2);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto}
 .sg{padding:14px 0 4px}
-.sg-lbl{
-  font-family:var(--m);font-size:9px;
-  letter-spacing:1.4px;text-transform:uppercase;
-  color:var(--slate2);padding:0 13px 5px;
-}
-.ni{
-  display:flex;align-items:center;gap:8px;
-  padding:7px 13px;font-size:12px;font-weight:500;
-  color:var(--slate);cursor:pointer;
-  border-left:2px solid transparent;
-  transition:all .1s;user-select:none;
-}
+.sg-lbl{font-family:var(--m);font-size:9px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);padding:0 13px 5px}
+.ni{display:flex;align-items:center;gap:8px;padding:7px 13px;font-size:12px;font-weight:500;color:var(--dim);cursor:pointer;border-left:2px solid transparent;transition:all .1s;user-select:none}
 .ni:hover{color:var(--body);background:rgba(255,255,255,.025)}
 .ni.on{color:var(--teal);border-left-color:var(--teal);background:var(--teal-bg)}
 .ni-ic{font-size:13px;width:16px;text-align:center;flex-shrink:0}
-.ni-ct{
-  margin-left:auto;
-  background:var(--teal);color:var(--ink);
-  font-family:var(--m);font-size:9px;font-weight:500;
-  padding:1px 5px;border-radius:10px;line-height:1.5;
-}
-
-/* sidebar integrations */
+.ni-ct{margin-left:auto;background:var(--teal);color:var(--ink);font-family:var(--m);font-size:9px;font-weight:500;padding:1px 5px;border-radius:10px;line-height:1.5}
 .si-row{padding:10px 12px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:5px}
-.si-pill{
-  display:flex;align-items:center;gap:7px;
-  padding:6px 9px;border-radius:var(--rad);
-  border:1px solid var(--line);background:var(--ink3);
-  font-size:11px;font-weight:500;cursor:pointer;transition:all .12s;
-}
+.si-pill{display:flex;align-items:center;gap:7px;padding:6px 9px;border-radius:var(--r);border:1px solid var(--line);background:var(--ink3);font-size:11px;font-weight:500;cursor:pointer;transition:all .12s}
 .si-pill.on{border-color:var(--teal-bdr);background:var(--teal-bg);color:var(--teal)}
-.si-pill.off{color:var(--slate2)}
+.si-pill.off{color:var(--muted)}
 .si-pip{width:5px;height:5px;border-radius:50%;flex-shrink:0}
 .si-pill.on .si-pip{background:var(--teal)}
-.si-pill.off .si-pip{background:var(--slate2);opacity:.4}
+.si-pill.off .si-pip{background:var(--muted);opacity:.4}
+.s-plan{margin:0 10px 10px;padding:11px;background:var(--ink3);border:1px solid var(--line);border-radius:var(--r2)}
+.s-plan-lbl{font-family:var(--m);font-size:9px;color:var(--muted);letter-spacing:.8px;margin-bottom:3px}
+.s-plan-name{font-size:11px;font-weight:600;margin-bottom:8px}
+.s-plan-btn{display:block;padding:6px;background:var(--teal);color:var(--ink);font-size:11px;font-weight:700;border-radius:5px;text-align:center;text-decoration:none;cursor:pointer;border:none;font-family:var(--f);width:100%;transition:opacity .12s}
+.s-plan-btn:hover{opacity:.85}
 
-/* sidebar plan */
-.s-plan{margin:0 10px 10px;padding:11px;background:var(--ink3);border:1px solid var(--line);border-radius:var(--rad2)}
-.s-plan-lbl{font-family:var(--m);font-size:9px;color:var(--slate2);letter-spacing:.8px;margin-bottom:3px}
-.s-plan-name{font-size:11px;font-weight:600;margin-bottom:7px}
-.s-bar{height:2px;background:var(--line);border-radius:2px;overflow:hidden;margin-bottom:5px}
-.s-bar-f{height:100%;background:var(--teal);border-radius:2px;width:40%}
-.s-plan-meta{font-size:10px;color:var(--slate2);margin-bottom:9px}
-.s-upgrade{
-  display:block;padding:6px;
-  background:var(--teal);color:var(--ink);
-  font-size:11px;font-weight:700;border-radius:5px;
-  text-align:center;text-decoration:none;transition:opacity .12s;
-}
-.s-upgrade:hover{opacity:.85}
-
-/* ── MAIN ──────────────────────────────────────────────── */
+/* MAIN */
 .main{flex:1;overflow-y:auto;background:var(--ink)}
 .page{display:none;padding:22px;flex-direction:column;min-height:100%}
 .page.on{display:flex}
-
-/* ── PAGE HEADER ───────────────────────────────────────── */
 .ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-shrink:0}
 .pt{font-size:15px;font-weight:700;letter-spacing:-.2px}
-.pt .ps{font-size:10px;color:var(--slate2);font-weight:400;margin-left:5px;font-family:var(--m)}
+.pt .ps{font-size:10px;color:var(--muted);font-weight:400;margin-left:5px;font-family:var(--m)}
 .pa{display:flex;gap:6px;align-items:center}
 
-/* ── BUTTONS ───────────────────────────────────────────── */
-.btn{
-  display:inline-flex;align-items:center;gap:5px;
-  padding:6px 13px;border-radius:var(--rad);border:none;
-  font-size:12px;font-weight:600;font-family:var(--f);
-  cursor:pointer;transition:all .12s;white-space:nowrap;text-decoration:none;
-}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:var(--r);border:none;font-size:12px;font-weight:600;font-family:var(--f);cursor:pointer;transition:all .12s;white-space:nowrap;text-decoration:none}
 .btn:hover{opacity:.86;transform:translateY(-1px)}
 .btn:active{transform:translateY(0)}
 .btn:disabled{opacity:.3;cursor:not-allowed;transform:none}
-.btn-p{background:var(--teal);color:var(--ink)}.btn-p:hover{opacity:1;background:#15ccA0}
+.btn-p{background:var(--teal);color:var(--ink)}.btn-p:hover{opacity:1;background:var(--teal2)}
 .btn-s{background:var(--ink3);color:var(--body);border:1px solid var(--line)}
-.btn-g{background:transparent;color:var(--slate);border:1px solid var(--line)}.btn-g:hover{color:var(--body);opacity:1}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--line)}.btn-g:hover{color:var(--body);opacity:1}
+.btn-gold{background:var(--gold);color:var(--ink)}.btn-gold:hover{opacity:.88;opacity:1}
 .btn-sm{padding:4px 9px;font-size:11px}
 .btn-w{width:100%}
-.spin-ico{width:11px;height:11px;border:1.5px solid rgba(12,15,26,.25);border-top-color:var(--ink);border-radius:50%;animation:sp .5s linear infinite;display:inline-block;flex-shrink:0}
+.spin-ico{width:11px;height:11px;border:1.5px solid rgba(8,12,20,.25);border-top-color:var(--ink);border-radius:50%;animation:sp .5s linear infinite;display:inline-block;flex-shrink:0}
 @keyframes sp{to{transform:rotate(360deg)}}
 
-/* ── KPI ROW ───────────────────────────────────────────── */
+/* KPI */
 .krow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;flex-shrink:0}
-.kc{
-  background:var(--ink2);border:1px solid var(--line);
-  border-radius:var(--rad2);padding:14px;
-  position:relative;overflow:hidden;
-}
+.kc{background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:14px;position:relative;overflow:hidden}
 .kc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
 .kt::after{background:linear-gradient(90deg,var(--teal),transparent)}
-.kb::after{background:linear-gradient(90deg,var(--cobalt),transparent)}
+.kb::after{background:linear-gradient(90deg,var(--blue),transparent)}
 .kg::after{background:linear-gradient(90deg,var(--gold),transparent)}
 .kr::after{background:linear-gradient(90deg,var(--rose),transparent)}
-.k-lbl{font-family:var(--m);font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:var(--slate2);margin-bottom:8px}
+.k-lbl{font-family:var(--m);font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
 .k-val{font-family:var(--m);font-size:24px;font-weight:500;line-height:1;margin-bottom:4px}
-.kt .k-val{color:var(--teal)}.kb .k-val{color:var(--cobalt)}.kg .k-val{color:var(--gold)}.kr .k-val{color:var(--rose)}
-.k-sub{font-size:10px;color:var(--slate2)}
+.kt .k-val{color:var(--teal)}.kb .k-val{color:var(--blue)}.kg .k-val{color:var(--gold)}.kr .k-val{color:var(--rose)}
+.k-sub{font-size:10px;color:var(--muted)}
 
-/* ── PANELS ────────────────────────────────────────────── */
+/* GRIDS */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .gm{display:grid;grid-template-columns:1.55fr 1fr;gap:12px}
 .gc{display:flex;flex-direction:column;gap:12px}
 
-.panel{
-  background:var(--ink2);border:1px solid var(--line);
-  border-radius:var(--rad2);display:flex;flex-direction:column;overflow:hidden;
-}
-.p-head{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 14px;border-bottom:1px solid var(--line);
-  flex-shrink:0;min-height:40px;
-}
+/* PANELS */
+.panel{background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);display:flex;flex-direction:column;overflow:hidden}
+.p-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);flex-shrink:0;min-height:40px}
 .p-title{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;color:var(--body)}
-.p-icon{font-size:12px;color:var(--slate2)}
+.p-icon{font-size:12px;color:var(--muted)}
 .p-body{padding:12px 14px;flex:1;overflow-y:auto}
 .p-body.np{padding:0}
 
-/* ── FORM ──────────────────────────────────────────────── */
+/* FORMS */
 .fld{margin-bottom:11px}.fld:last-child{margin-bottom:0}
-.lbl{
-  display:block;font-family:var(--m);font-size:9px;
-  letter-spacing:.4px;text-transform:uppercase;
-  color:var(--slate2);margin-bottom:4px;
-}
-.inp,.sel,.txta{
-  width:100%;background:var(--ink3);border:1px solid var(--line);
-  border-radius:var(--rad);color:var(--body);
-  padding:7px 10px;font-size:12px;font-family:var(--f);
-  outline:none;transition:border-color .12s;
-}
+.lbl{display:block;font-family:var(--m);font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.inp,.sel,.txta{width:100%;background:var(--ink3);border:1px solid var(--line);border-radius:var(--r);color:var(--body);padding:7px 10px;font-size:12px;font-family:var(--f);outline:none;transition:border-color .12s}
 .inp:focus,.sel:focus,.txta:focus{border-color:rgba(25,230,176,.35);background:var(--ink4)}
-.inp::placeholder,.txta::placeholder{color:var(--slate2)}
+.inp::placeholder,.txta::placeholder{color:var(--muted)}
 .txta{resize:vertical;min-height:68px;line-height:1.5}
 .sel{cursor:pointer;appearance:none}
 .r2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 
-/* ── TABLE ─────────────────────────────────────────────── */
+/* TABLE */
 .tbl{width:100%;border-collapse:collapse}
-.tbl th{
-  text-align:left;padding:7px 13px;
-  font-family:var(--m);font-size:9px;font-weight:500;
-  letter-spacing:.4px;text-transform:uppercase;
-  color:var(--slate2);border-bottom:1px solid var(--line);
-  white-space:nowrap;
-}
-.tbl td{
-  padding:8px 13px;border-bottom:1px solid var(--line2);
-  font-size:12px;color:var(--slate);vertical-align:middle;
-}
+.tbl th{text-align:left;padding:7px 13px;font-family:var(--m);font-size:9px;font-weight:500;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:8px 13px;border-bottom:1px solid var(--b2);font-size:12px;color:var(--dim);vertical-align:middle}
 .tbl tr:last-child td{border-bottom:none}
 .tbl tbody tr:hover td{background:rgba(255,255,255,.012);color:var(--body)}
 .tbl td:first-child{color:var(--body)}
 .mono{font-family:var(--m);font-size:10px}
-.ct{color:var(--teal)!important}
-.cb{color:var(--cobalt)!important}
-.cg{color:var(--gold)!important}
-.cs{color:var(--slate2)!important}
+.ct{color:var(--teal)!important}.cb{color:var(--blue)!important}.cg{color:var(--gold)!important}.cs{color:var(--muted)!important}
 
-/* ── BADGE ─────────────────────────────────────────────── */
-.bdg{
-  display:inline-flex;align-items:center;
-  font-family:var(--m);font-size:9px;font-weight:500;
-  padding:2px 6px;border-radius:9px;letter-spacing:.2px;
-}
+/* BADGES */
+.bdg{display:inline-flex;align-items:center;font-family:var(--m);font-size:9px;font-weight:500;padding:2px 6px;border-radius:9px;letter-spacing:.2px}
 .bdg-t{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bdr)}
-.bdg-b{background:var(--cobalt-bg);color:var(--cobalt);border:1px solid rgba(79,142,247,.2)}
+.bdg-b{background:var(--blue-bg);color:var(--blue);border:1px solid rgba(79,142,247,.2)}
 .bdg-g{background:var(--gold-bg);color:var(--gold);border:1px solid rgba(240,165,0,.2)}
 .bdg-r{background:var(--rose-bg);color:var(--rose);border:1px solid rgba(242,92,122,.2)}
-.bdg-m{background:rgba(255,255,255,.04);color:var(--slate2);border:1px solid var(--line)}
+.bdg-m{background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--b2)}
 
-/* ── FEEDBACK ──────────────────────────────────────────── */
-.fb{padding:9px 11px;border-radius:var(--rad);font-size:12px;line-height:1.5;margin-top:9px;display:none}
+/* FEEDBACK */
+.fb{padding:9px 11px;border-radius:var(--r);font-size:12px;line-height:1.5;margin-top:9px;display:none}
 .fb.on{display:block}
 .fb-ok{background:var(--teal-bg);border:1px solid var(--teal-bdr);color:var(--teal)}
 .fb-err{background:var(--rose-bg);border:1px solid rgba(242,92,122,.2);color:var(--rose)}
-.fb-info{background:var(--cobalt-bg);border:1px solid rgba(79,142,247,.2);color:var(--cobalt)}
-.lk-row{display:flex;align-items:center;gap:7px;background:var(--ink3);border:1px solid var(--line);border-radius:var(--rad);padding:6px 9px;margin-top:7px}
+.fb-info{background:var(--blue-bg);border:1px solid rgba(79,142,247,.2);color:var(--blue)}
+.lk-row{display:flex;align-items:center;gap:7px;background:var(--ink3);border:1px solid var(--line);border-radius:var(--r);padding:6px 9px;margin-top:7px}
 .lk-row code{flex:1;font-family:var(--m);font-size:10px;color:var(--teal);word-break:break-all}
-.cp-btn{font-size:9px;padding:3px 7px;border-radius:4px;background:var(--ink4);border:1px solid var(--line);color:var(--slate);cursor:pointer;font-family:var(--m);flex-shrink:0;transition:all .1s}
+.cp-btn{font-size:9px;padding:3px 7px;border-radius:4px;background:var(--ink4);border:1px solid var(--line);color:var(--dim);cursor:pointer;font-family:var(--m);flex-shrink:0;transition:all .1s}
 .cp-btn:hover{border-color:var(--teal);color:var(--teal)}
 
-/* ── AI OUTPUT ─────────────────────────────────────────── */
+/* AI OUTPUT */
 .ai-blk{display:none}.ai-blk.on{display:block}
 .ai-sec{margin-bottom:12px}
-.ai-sec-lbl{font-family:var(--m);font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--slate2);margin-bottom:4px}
-.ai-sec-val{background:var(--ink3);border:1px solid var(--line);border-radius:var(--rad);padding:9px 11px;font-size:12px;line-height:1.55}
+.ai-sec-lbl{font-family:var(--m);font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.ai-sec-val{background:var(--ink3);border:1px solid var(--line);border-radius:var(--r);padding:9px 11px;font-size:12px;line-height:1.55}
 .ai-sec-val.hl{font-size:14px;font-weight:600;color:var(--teal)}
 .ai-ul{list-style:none}
-.ai-ul li{padding:3px 0;font-size:12px;color:var(--slate);display:flex;gap:5px}
+.ai-ul li{padding:3px 0;font-size:12px;color:var(--dim);display:flex;gap:5px}
 .ai-ul li::before{content:'→';color:var(--teal);flex-shrink:0;font-family:var(--m)}
 
-/* ── BARS ──────────────────────────────────────────────── */
+/* BARS */
 .bars{display:flex;flex-direction:column;gap:8px}
 .bar-r{display:flex;align-items:center;gap:9px}
-.bar-lbl{width:96px;font-size:11px;color:var(--slate);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.bar-lbl{width:96px;font-size:11px;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
 .bar-tr{flex:1;height:4px;background:var(--ink4);border-radius:2px;overflow:hidden}
-.bar-f{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--cobalt));transition:width .5s ease}
-.bar-v{width:34px;text-align:right;font-family:var(--m);font-size:10px;color:var(--slate2);flex-shrink:0}
+.bar-f{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--blue));transition:width .5s ease}
+.bar-v{width:34px;text-align:right;font-family:var(--m);font-size:10px;color:var(--muted);flex-shrink:0}
 
-/* ── STAT LIST ─────────────────────────────────────────── */
+/* STAT LIST */
 .slist{display:flex;flex-direction:column}
-.sr{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line2)}
+.sr{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--b2)}
 .sr:last-child{border-bottom:none}
-.sr-l{font-size:12px;color:var(--slate)}
+.sr-l{font-size:12px;color:var(--dim)}
 .sr-v{font-family:var(--m);font-size:11px;font-weight:500;color:var(--body)}
 
-/* ── FEED ──────────────────────────────────────────────── */
+/* FEED */
 .feed{font-family:var(--m);font-size:10px;line-height:1.9;overflow-y:auto;max-height:150px}
-.fl{display:flex;gap:7px}.fl-ts{color:var(--slate2);flex-shrink:0}
-.fl-ok{color:var(--teal)}.fl-info{color:var(--cobalt)}.fl-w{color:var(--gold)}
+.fl{display:flex;gap:7px}.fl-ts{color:var(--muted);flex-shrink:0}
+.fl-ok{color:var(--teal)}.fl-info{color:var(--blue)}.fl-w{color:var(--gold)}
 
-/* ── EMPTY STATE ───────────────────────────────────────── */
-.empty{text-align:center;padding:28px 16px;color:var(--slate2)}
+/* EMPTY */
+.empty{text-align:center;padding:28px 16px;color:var(--muted)}
 .empty-ic{font-size:24px;opacity:.35;margin-bottom:7px}
 .empty p{font-size:11px;line-height:1.6}
 
-/* ── MODAL ─────────────────────────────────────────────── */
+/* MODAL */
 .modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
 .modal-wrap.on{display:flex}
-.modal{background:var(--ink2);border:1px solid var(--line);border-radius:var(--rad2);padding:22px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto}
+.modal{background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:22px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto}
 .modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
 .modal-t{font-size:13px;font-weight:700}
-.modal-x{background:none;border:none;color:var(--slate2);font-size:17px;cursor:pointer;line-height:1;padding:2px 4px;border-radius:4px}
+.modal-x{background:none;border:none;color:var(--muted);font-size:17px;cursor:pointer;line-height:1;padding:2px 4px;border-radius:4px}
 .modal-x:hover{color:var(--body);background:var(--ink3)}
 
-/* ── TOAST ─────────────────────────────────────────────── */
-#toast{
-  position:fixed;bottom:18px;right:18px;
-  background:var(--ink2);border:1px solid var(--line);
-  border-radius:var(--rad2);padding:9px 13px;
-  font-size:11px;display:none;z-index:9999;
-  max-width:250px;box-shadow:0 8px 20px rgba(0,0,0,.45);
-  font-family:var(--m);
-}
+/* TOAST */
+#toast{position:fixed;bottom:18px;right:18px;background:var(--ink2);border:1px solid var(--line);border-radius:var(--r2);padding:9px 13px;font-size:11px;display:none;z-index:9999;max-width:250px;box-shadow:0 8px 20px rgba(0,0,0,.45);font-family:var(--m)}
 #toast.on{display:flex;align-items:center;gap:7px;animation:tu .12s ease}
 #toast.ok{border-color:var(--teal-bdr);color:var(--teal)}
 #toast.err{border-color:rgba(242,92,122,.3);color:var(--rose)}
-#toast.info{border-color:rgba(79,142,247,.3);color:var(--cobalt)}
+#toast.info{border-color:rgba(79,142,247,.3);color:var(--blue)}
 @keyframes tu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 
-/* ── PRICING CARDS ─────────────────────────────────────── */
-.price-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:0}
-.pc{background:var(--ink3);border:1px solid var(--line);border-radius:var(--rad2);padding:16px;position:relative}
-.pc.featured{border-color:var(--teal-bdr);background:var(--teal-bg)}
-.pc-badge{position:absolute;top:-9px;left:14px;background:var(--teal);color:var(--ink);font-family:var(--m);font-size:9px;font-weight:500;padding:2px 9px;border-radius:9px}
-.pc-name{font-size:11px;font-weight:600;margin-bottom:3px}
-.pc-price{font-family:var(--m);font-size:22px;font-weight:500;color:var(--body);line-height:1;margin-bottom:3px}
-.pc-price sub{font-size:11px;color:var(--slate2);font-family:var(--f)}
-.pc-desc{font-size:10px;color:var(--slate2);margin-bottom:12px}
-.pc-feats{list-style:none;margin-bottom:13px}
-.pc-feats li{display:flex;gap:6px;font-size:11px;color:var(--slate);padding:3px 0;border-bottom:1px solid var(--line2)}
-.pc-feats li:last-child{border-bottom:none}
-.pc-feats .ck{color:var(--teal);flex-shrink:0}
-
-/* ── RESPONSIVE ────────────────────────────────────────── */
 @media(max-width:1080px){.krow{grid-template-columns:1fr 1fr}}
-@media(max-width:860px){.sidebar{display:none}.g2,.g3,.gm{grid-template-columns:1fr}.price-grid{grid-template-columns:1fr}}
+@media(max-width:860px){.sidebar{display:none}.g2,.g3,.gm{grid-template-columns:1fr}}
 @media(max-width:580px){.krow{grid-template-columns:1fr 1fr}.page{padding:14px}}
 </style>
 </head>
@@ -403,24 +260,22 @@ body{
   </div>
   <div class="s-plan">
     <div class="s-plan-lbl">PLAN</div>
-    <div class="s-plan-name">Free Tier</div>
-    <div class="s-bar"><div class="s-bar-f"></div></div>
-    <div class="s-plan-meta">5 of 5 AI builds/mo</div>
-    <a href="#" class="s-upgrade" onclick="nav('settings',null);return false">Upgrade — from $49/mo</a>
+    <div class="s-plan-name">Free Access</div>
+    <button class="s-plan-btn" onclick="nav('settings',null)">Upgrade — from $19/mo</button>
   </div>
 </nav>
 
 <!-- MAIN -->
 <main class="main">
 
-<!-- ══ DASHBOARD ═══════════════════════════════════════ -->
+<!-- ══ DASHBOARD ══ -->
 <div class="page on" id="page-overview">
   <div class="ph">
     <div class="pt">Dashboard <span class="ps" id="ov-rng">7 days</span></div>
     <div class="pa">
-      <button class="btn btn-g btn-sm" onclick="setRange('24h',this)">24h</button>
-      <button class="btn btn-g btn-sm" onclick="setRange('7d',this)">7d</button>
-      <button class="btn btn-g btn-sm" onclick="setRange('30d',this)">30d</button>
+      <button class="btn btn-g btn-sm" onclick="setRange('24h')">24h</button>
+      <button class="btn btn-g btn-sm" onclick="setRange('7d')">7d</button>
+      <button class="btn btn-g btn-sm" onclick="setRange('30d')">30d</button>
     </div>
   </div>
   <div class="krow">
@@ -434,9 +289,7 @@ body{
       <div class="p-head"><div class="p-title"><span class="p-icon">◎</span>Recent Leads</div><button class="btn btn-g btn-sm" onclick="nav('leads',null)">View all</button></div>
       <div class="p-body np">
         <table class="tbl"><thead><tr><th>Email</th><th>Funnel</th><th>When</th></tr></thead>
-        <tbody id="ov-leads">
-          <tr><td colspan="3"><div class="empty"><div class="empty-ic">◎</div><p>No leads yet.<br>Share a funnel link to start.</p></div></td></tr>
-        </tbody></table>
+        <tbody id="ov-leads"><tr><td colspan="3"><div class="empty"><div class="empty-ic">◎</div><p>No leads yet.<br>Share a funnel link to start.</p></div></td></tr></tbody></table>
       </div>
     </div>
     <div class="gc">
@@ -452,7 +305,7 @@ body{
   </div>
 </div>
 
-<!-- ══ AI FUNNELS ════════════════════════════════════════ -->
+<!-- ══ AI FUNNELS ══ -->
 <div class="page" id="page-funnels">
   <div class="ph"><div class="pt">AI Funnels <span class="ps">powered by Claude</span></div></div>
   <div class="gm" style="flex:1;min-height:0">
@@ -480,7 +333,7 @@ body{
       <div class="panel">
         <div class="p-head"><div class="p-title"><span class="p-icon">▶</span>Deploy to Live URL</div></div>
         <div class="p-body">
-          <p style="font-size:11px;color:var(--slate2);margin-bottom:11px;line-height:1.6">Generate copy above first. Once ready, deploy creates a live funnel URL in your account.</p>
+          <p style="font-size:11px;color:var(--muted);margin-bottom:11px;line-height:1.6">Generate copy first, then deploy creates a live funnel URL.</p>
           <button class="btn btn-s btn-w" id="dep-btn" onclick="deployFunnel()" disabled>Deploy Funnel</button>
           <div class="fb" id="dep-fb"></div>
         </div>
@@ -489,7 +342,7 @@ body{
     <div class="panel">
       <div class="p-head"><div class="p-title"><span class="p-icon">▤</span>Generated Copy</div><span class="bdg bdg-m" id="ai-bdg">waiting</span></div>
       <div class="p-body">
-        <div class="empty" id="ai-empty"><div class="empty-ic">◈</div><p>Enter your niche and click Generate.<br>AI builds your funnel copy here.</p></div>
+        <div class="empty" id="ai-empty"><div class="empty-ic">◈</div><p>Enter your niche and click Generate.</p></div>
         <div class="ai-blk" id="ai-out">
           <div class="ai-sec"><div class="ai-sec-lbl">Headline</div><div class="ai-sec-val hl" id="o-hl"></div></div>
           <div class="ai-sec"><div class="ai-sec-lbl">Subheadline</div><div class="ai-sec-val" id="o-sh"></div></div>
@@ -504,7 +357,7 @@ body{
   </div>
 </div>
 
-<!-- ══ LINK CLOAKER ══════════════════════════════════════ -->
+<!-- ══ LINK CLOAKER ══ -->
 <div class="page" id="page-links">
   <div class="ph"><div class="pt">Link Cloaker <span class="ps">track every click</span></div></div>
   <div class="gm" style="flex:1;min-height:0">
@@ -536,36 +389,26 @@ body{
       <div class="p-head"><div class="p-title"><span class="p-icon">▤</span>All Links</div><button class="btn btn-g btn-sm" onclick="loadLinks()">↻</button></div>
       <div class="p-body np">
         <table class="tbl"><thead><tr><th>Short link</th><th>Label</th><th>Destination</th><th>Clicks</th></tr></thead>
-        <tbody id="links-body">
-          <tr><td colspan="4"><div class="empty"><div class="empty-ic">⌖</div><p>No cloaked links yet.</p></div></td></tr>
-        </tbody></table>
+        <tbody id="links-body"><tr><td colspan="4"><div class="empty"><div class="empty-ic">⌖</div><p>No links yet.</p></div></td></tr></tbody></table>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ LEADS ═════════════════════════════════════════════ -->
+<!-- ══ LEADS ══ -->
 <div class="page" id="page-leads">
-  <div class="ph">
-    <div class="pt">Leads</div>
-    <div class="pa"><span class="bdg bdg-t" id="ld-ct-bdg">0 leads</span></div>
-  </div>
+  <div class="ph"><div class="pt">Leads</div><div class="pa"><span class="bdg bdg-t" id="ld-ct-bdg">0 leads</span></div></div>
   <div class="panel" style="flex:1;min-height:0">
     <div class="p-body np" style="overflow-y:auto">
       <table class="tbl"><thead><tr><th>Email</th><th>Funnel</th><th>Forge Mail</th><th>Captured</th></tr></thead>
-      <tbody id="leads-body">
-        <tr><td colspan="4"><div class="empty"><div class="empty-ic">◎</div><p>No leads yet.<br>Share a funnel link to start building your list.</p></div></td></tr>
-      </tbody></table>
+      <tbody id="leads-body"><tr><td colspan="4"><div class="empty"><div class="empty-ic">◎</div><p>No leads yet.<br>Share a funnel link to start building your list.</p></div></td></tr></tbody></table>
     </div>
   </div>
 </div>
 
-<!-- ══ CONVERSIONS ═══════════════════════════════════════ -->
+<!-- ══ CONVERSIONS ══ -->
 <div class="page" id="page-conversions">
-  <div class="ph">
-    <div class="pt">Conversions</div>
-    <div class="pa"><button class="btn btn-p btn-sm" onclick="openModal('m-conv')">+ Log Sale</button></div>
-  </div>
+  <div class="ph"><div class="pt">Conversions</div><div class="pa"><button class="btn btn-p btn-sm" onclick="openModal('m-conv')">+ Log Sale</button></div></div>
   <div class="krow" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px">
     <div class="kc kt"><div class="k-lbl">Total Revenue</div><div class="k-val" id="cv-rev">$0.00</div><div class="k-sub">logged commissions</div></div>
     <div class="kc kb"><div class="k-lbl">Sales Logged</div><div class="k-val" id="cv-cnt">0</div><div class="k-sub">conversion events</div></div>
@@ -576,9 +419,7 @@ body{
       <div class="p-head"><div class="p-title"><span class="p-icon">◉</span>Sale Log</div></div>
       <div class="p-body np">
         <table class="tbl"><thead><tr><th>Email</th><th>Offer / Funnel</th><th>Amount</th><th>When</th></tr></thead>
-        <tbody id="conv-body">
-          <tr><td colspan="4"><div class="empty"><div class="empty-ic">◉</div><p>No sales logged yet.<br>Use "Log Sale" to record a commission.</p></div></td></tr>
-        </tbody></table>
+        <tbody id="conv-body"><tr><td colspan="4"><div class="empty"><div class="empty-ic">◉</div><p>No sales logged yet.<br>Use "Log Sale" to record a commission.</p></div></td></tr></tbody></table>
       </div>
     </div>
     <div class="panel">
@@ -588,7 +429,7 @@ body{
   </div>
 </div>
 
-<!-- ══ TRAFFIC ════════════════════════════════════════════ -->
+<!-- ══ TRAFFIC ══ -->
 <div class="page" id="page-traffic">
   <div class="ph"><div class="pt">Traffic Events</div></div>
   <div class="g2" style="flex:1;min-height:0">
@@ -596,37 +437,35 @@ body{
       <div class="p-head"><div class="p-title"><span class="p-icon">◌</span>Recent Events</div></div>
       <div class="p-body np">
         <table class="tbl"><thead><tr><th>Type</th><th>Funnel</th><th>Value</th><th>When</th></tr></thead>
-        <tbody id="ev-body">
-          <tr><td colspan="4"><div class="empty"><p>No events recorded yet</p></div></td></tr>
-        </tbody></table>
+        <tbody id="ev-body"><tr><td colspan="4"><div class="empty"><p>No events recorded yet</p></div></td></tr></tbody></table>
       </div>
     </div>
     <div class="panel">
-      <div class="p-head"><div class="p-title">Event Types</div></div>
+      <div class="p-head"><div class="p-title">Event Breakdown</div></div>
       <div class="p-body"><div class="bars" id="ev-bars"><div class="empty" style="padding:6px 0"><p style="font-size:11px">No data yet</p></div></div></div>
     </div>
   </div>
 </div>
 
-<!-- ══ INTEGRATIONS ═══════════════════════════════════════ -->
+<!-- ══ INTEGRATIONS ══ -->
 <div class="page" id="page-integrations">
   <div class="ph"><div class="pt">Integrations</div></div>
   <div class="g2">
     <div class="panel">
       <div class="p-head"><div class="p-title">⚡ TrafficZest</div><span class="bdg bdg-m" id="tz-bdg">Not configured</span></div>
       <div class="p-body">
-        <p style="font-size:12px;color:var(--slate);line-height:1.65;margin-bottom:13px">Point your TrafficZest campaign URL at a NextWave cloaked link. Each click is tracked, each opt-in is captured, and leads sync to Forge Mail automatically.</p>
+        <p style="font-size:12px;color:var(--dim);line-height:1.65;margin-bottom:13px">Point your TrafficZest campaign at a NextWave cloaked link. Each click is tracked, each opt-in captured, and leads sync to Forge Mail automatically.</p>
         <div class="fld"><label class="lbl">Your TrafficZest campaign URL</label><input class="inp" id="tz-url" placeholder="https://trafficzest.com/c/your-campaign" /></div>
         <div class="fld"><label class="lbl">Traffic destination (your cloaked link)</label><input class="inp" id="tz-dest" placeholder="https://nextwave-traffic-engine.netlify.app/l/my-funnel" /></div>
         <button class="btn btn-p btn-w" onclick="saveTZ()">Save Configuration</button>
         <div class="fb" id="tz-fb"></div>
         <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line)">
-          <div style="font-family:var(--m);font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--slate2);margin-bottom:9px">Setup steps</div>
+          <div style="font-family:var(--m);font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:9px">Setup steps</div>
           <div style="display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;gap:8px;font-size:11px;color:var(--slate)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">1.</span>Create a cloaked link in the Link Cloaker tab</div>
-            <div style="display:flex;gap:8px;font-size:11px;color:var(--slate)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">2.</span>Paste that cloaked link as your TrafficZest destination</div>
-            <div style="display:flex;gap:8px;font-size:11px;color:var(--slate)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">3.</span>Visitors land on your funnel and opt in — lead is captured</div>
-            <div style="display:flex;gap:8px;font-size:11px;color:var(--slate)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">4.</span>Lead syncs to Forge Mail — your sequence fires automatically</div>
+            <div style="display:flex;gap:8px;font-size:11px;color:var(--dim)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">1.</span>Create a cloaked link in the Link Cloaker tab</div>
+            <div style="display:flex;gap:8px;font-size:11px;color:var(--dim)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">2.</span>Paste that link as your TrafficZest destination URL</div>
+            <div style="display:flex;gap:8px;font-size:11px;color:var(--dim)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">3.</span>Visitors land on your funnel and opt in — lead captured</div>
+            <div style="display:flex;gap:8px;font-size:11px;color:var(--dim)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">4.</span>Lead syncs to Forge Mail — your sequence fires</div>
           </div>
         </div>
       </div>
@@ -634,7 +473,7 @@ body{
     <div class="panel">
       <div class="p-head"><div class="p-title">✉ Forge Mail</div><span class="bdg bdg-m" id="fm-bdg">Not configured</span></div>
       <div class="p-body">
-        <p style="font-size:12px;color:var(--slate);line-height:1.65;margin-bottom:13px">Every lead captured through your funnels syncs to Forge Mail automatically, tagged with their funnel name and traffic source.</p>
+        <p style="font-size:12px;color:var(--dim);line-height:1.65;margin-bottom:13px">Every lead captured through your funnels syncs to Forge Mail automatically, tagged with funnel name and traffic source.</p>
         <div class="fld"><label class="lbl">Forge Mail API key</label><input class="inp" id="fm-key" type="password" placeholder="Your Forge Mail API key" /></div>
         <div class="fld"><label class="lbl">Default list name</label><input class="inp" id="fm-list" placeholder="nextwave-leads" /></div>
         <button class="btn btn-p btn-w" onclick="saveFM()">Save & Connect</button>
@@ -644,68 +483,96 @@ body{
             <div class="sr"><span class="sr-l">Leads synced (approx)</span><span class="sr-v ct" id="fm-sync">0</span></div>
             <div class="sr"><span class="sr-l">Last activity</span><span class="sr-v mono cs" id="fm-last">Never</span></div>
           </div>
-          <p style="font-size:10px;color:var(--slate2);margin-top:9px;line-height:1.65">⚠ The API key also needs to be set in <strong style="color:var(--slate)">Netlify → Environment Variables</strong> as <code style="font-family:var(--m)">FORGE_MAIL_API_KEY</code> for server-side sync to work.</p>
+          <p style="font-size:10px;color:var(--muted);margin-top:9px;line-height:1.65">⚠ Also set <code style="font-family:var(--m);color:var(--dim)">FORGE_MAIL_API_KEY</code> in Netlify → Environment Variables for server-side sync.</p>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ SETTINGS ═══════════════════════════════════════════ -->
+<!-- ══ SETTINGS ══ -->
 <div class="page" id="page-settings">
   <div class="ph"><div class="pt">Settings</div></div>
   <div class="g2">
+
+    <!-- PRICING PANEL — 4 tiers -->
     <div class="panel">
-      <div class="p-head"><div class="p-title">Plans</div></div>
+      <div class="p-head"><div class="p-title">Plans & Pricing</div><a href="sales.html" style="font-size:11px;color:var(--teal);text-decoration:none">Full comparison →</a></div>
       <div class="p-body">
-        <p style="font-size:11px;color:var(--slate2);margin-bottom:14px;line-height:1.6">Start free, upgrade when your campaigns are running. No contracts.</p>
-        <div class="price-grid">
-          <div class="pc">
-            <div class="pc-name">Free</div>
-            <div class="pc-price">$0</div>
-            <div class="pc-desc">Test the system</div>
-            <ul class="pc-feats">
-              <li><span class="ck">✓</span>5 AI funnel builds/month</li>
-              <li><span class="ck">✓</span>10 cloaked links</li>
-              <li><span class="ck">✓</span>Lead capture</li>
-              <li><span class="ck">✓</span>Basic analytics</li>
-            </ul>
-            <button class="btn btn-g btn-w" style="font-size:11px" disabled>Current plan</button>
+        <p style="font-size:11px;color:var(--muted);margin-bottom:13px;line-height:1.6">Upgrade anytime. Cancel monthly plans at any time. Lifetime is one payment — no renewals ever.</p>
+
+        <!-- STARTER $19 -->
+        <div style="border:1px solid var(--line);border-radius:var(--r2);padding:13px;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px">
+            <div><div style="font-size:12px;font-weight:600">Starter</div><div style="font-size:10px;color:var(--muted);margin-top:1px">Test with real traffic</div></div>
+            <div style="font-family:var(--m);font-size:17px;font-weight:500">$19<span style="font-size:10px;color:var(--muted)">/mo</span></div>
           </div>
-          <div class="pc featured">
-            <div class="pc-badge">POPULAR</div>
-            <div class="pc-name" style="color:var(--teal)">Pro</div>
-            <div class="pc-price" style="color:var(--teal)">$49<sub>/mo</sub></div>
-            <div class="pc-desc">Active affiliates</div>
-            <ul class="pc-feats">
-              <li><span class="ck">✓</span>Unlimited AI builds</li>
-              <li><span class="ck">✓</span>Unlimited links</li>
-              <li><span class="ck">✓</span>Forge Mail automation</li>
-              <li><span class="ck">✓</span>Revenue attribution</li>
-              <li><span class="ck">✓</span>Priority support</li>
-            </ul>
-            <button class="btn btn-p btn-w" style="font-size:11px" onclick="toast('Add Stripe to checkout.html to activate billing','info')">Upgrade to Pro</button>
+          <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:9px">
+            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>10 AI funnel builds/month</div>
+            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>25 cloaked links + lead capture</div>
+            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>TrafficZest pipeline</div>
           </div>
-          <div class="pc">
-            <div class="pc-name">Scale</div>
-            <div class="pc-price">$99<sub>/mo</sub></div>
-            <div class="pc-desc">High-volume campaigns</div>
-            <ul class="pc-feats">
-              <li><span class="ck">✓</span>Everything in Pro</li>
-              <li><span class="ck">✓</span>Multiple workspaces</li>
-              <li><span class="ck">✓</span>API access</li>
-              <li><span class="ck">✓</span>Custom domains</li>
-            </ul>
-            <button class="btn btn-s btn-w" style="font-size:11px" onclick="toast('Add Stripe to checkout.html to activate billing','info')">Upgrade to Scale</button>
+          <button class="btn btn-g btn-w" style="font-size:11px" onclick="toast('Connect Stripe in checkout.html to activate billing','info')">Upgrade to Starter — $19/mo</button>
+        </div>
+
+        <!-- PRO $49 -->
+        <div style="border:2px solid var(--teal-bdr);border-radius:var(--r2);padding:13px;background:var(--teal-bg);margin-bottom:8px;position:relative">
+          <div style="position:absolute;top:-9px;left:11px;background:var(--teal);color:var(--ink);font-family:var(--m);font-size:9px;font-weight:700;padding:2px 8px;border-radius:9px">POPULAR</div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px">
+            <div><div style="font-size:12px;font-weight:600;color:var(--teal)">Pro</div><div style="font-size:10px;color:var(--muted);margin-top:1px">For active affiliates</div></div>
+            <div style="font-family:var(--m);font-size:17px;font-weight:500;color:var(--teal)">$49<span style="font-size:10px;color:var(--muted)">/mo</span></div>
           </div>
+          <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:9px">
+            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>Unlimited AI builds + links</div>
+            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>Full Forge Mail automation</div>
+            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>Revenue attribution + priority support</div>
+          </div>
+          <button class="btn btn-p btn-w" style="font-size:11px" onclick="toast('Connect Stripe in checkout.html to activate billing','info')">Upgrade to Pro — $49/mo</button>
+        </div>
+
+        <!-- SCALE $99 -->
+        <div style="border:1px solid var(--line);border-radius:var(--r2);padding:13px;margin-bottom:8px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px">
+            <div><div style="font-size:12px;font-weight:600">Scale</div><div style="font-size:10px;color:var(--muted);margin-top:1px">High-volume campaigns</div></div>
+            <div style="font-family:var(--m);font-size:17px;font-weight:500">$99<span style="font-size:10px;color:var(--muted)">/mo</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:9px">
+            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>Everything in Pro</div>
+            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>Multiple workspaces + API access</div>
+            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>Custom domains + dedicated support</div>
+          </div>
+          <button class="btn btn-g btn-w" style="font-size:11px" onclick="toast('Connect Stripe in checkout.html to activate billing','info')">Upgrade to Scale — $99/mo</button>
+        </div>
+
+        <!-- LIFETIME $997 -->
+        <div style="border:1px solid rgba(240,165,0,.3);border-radius:var(--r2);padding:13px;background:rgba(240,165,0,.05);position:relative">
+          <div style="position:absolute;top:-9px;left:11px;background:var(--gold);color:var(--ink);font-family:var(--m);font-size:9px;font-weight:700;padding:2px 8px;border-radius:9px">BEST VALUE</div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px">
+            <div><div style="font-size:12px;font-weight:600;color:var(--gold)">Lifetime</div><div style="font-size:10px;color:var(--muted);margin-top:1px">Pay once. Own forever.</div></div>
+            <div style="font-family:var(--m);font-size:17px;font-weight:500;color:var(--gold)">$997<span style="font-size:10px;color:var(--muted)"> once</span></div>
+          </div>
+          <!-- Math breakdown -->
+          <div style="background:rgba(0,0,0,.2);border-radius:6px;padding:8px;margin-bottom:8px;font-family:var(--m);font-size:10px">
+            <div style="display:flex;justify-content:space-between;color:var(--muted);padding:2px 0"><span>Pro × 24 months</span><span style="text-decoration:line-through">$1,176</span></div>
+            <div style="display:flex;justify-content:space-between;color:var(--muted);padding:2px 0"><span>Scale × 12 months</span><span style="text-decoration:line-through">$1,188</span></div>
+            <div style="display:flex;justify-content:space-between;color:var(--gold);padding:3px 0;border-top:1px solid rgba(240,165,0,.15);margin-top:3px;font-weight:700"><span>Lifetime — total, forever</span><span>$997</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:9px">
+            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--gold)">✓</span>Everything in Scale, forever</div>
+            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--gold)">✓</span>All future updates included</div>
+            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--gold)">✓</span>Pays for itself vs Pro in 21 months</div>
+          </div>
+          <button class="btn btn-w" style="background:var(--gold);color:var(--ink);font-size:11px;font-weight:700" onclick="toast('Connect Stripe in checkout.html to activate billing','info')">Get Lifetime Access — $997</button>
         </div>
       </div>
     </div>
+
+    <!-- RIGHT COLUMN -->
     <div class="gc">
       <div class="panel">
         <div class="p-head"><div class="p-title">Environment Variables</div></div>
         <div class="p-body">
-          <p style="font-size:10px;color:var(--slate2);margin-bottom:11px;line-height:1.6">Set these in <strong style="color:var(--slate)">Netlify → Site Settings → Environment Variables</strong>. Never store keys in code.</p>
+          <p style="font-size:10px;color:var(--muted);margin-bottom:11px;line-height:1.6">Set in <strong style="color:var(--dim)">Netlify → Site Settings → Environment Variables</strong>. Never store keys in code.</p>
           <div class="slist">
             <div class="sr"><span class="sr-l mono" style="font-size:10px">ANTHROPIC_API_KEY</span><span class="bdg bdg-m">Netlify env</span></div>
             <div class="sr"><span class="sr-l mono" style="font-size:10px">SUPABASE_URL</span><span class="bdg bdg-m">Netlify env</span></div>
@@ -718,7 +585,7 @@ body{
       <div class="panel">
         <div class="p-head"><div class="p-title">Database Tables</div></div>
         <div class="p-body">
-          <p style="font-size:10px;color:var(--slate2);margin-bottom:11px;line-height:1.6">Run <strong style="color:var(--slate)">schema.sql</strong> in Supabase SQL Editor if any tables show missing.</p>
+          <p style="font-size:10px;color:var(--muted);margin-bottom:11px;line-height:1.6">Run <strong style="color:var(--dim)">schema.sql</strong> in Supabase SQL Editor if any tables show missing.</p>
           <div class="slist" id="tbl-list">
             <div class="sr"><span class="sr-l">funnels</span><span class="bdg bdg-m">—</span></div>
             <div class="sr"><span class="sr-l">leads</span><span class="bdg bdg-m">—</span></div>
@@ -752,170 +619,125 @@ body{
 
 <div id="toast"></div>
 
-<!-- ── ALL JAVASCRIPT ─────────────────────────────────── -->
 <script type="module">
 import { supabase } from './supabase.js'
-window._sb = supabase   // expose for console debugging
+window._sb = supabase
 
-// ── CLOCK ─────────────────────────────────────────────
+// CLOCK
 setInterval(() => {
   document.getElementById('clock').textContent = new Date().toTimeString().slice(0,8)
 }, 1000)
 
-// ── NAV ───────────────────────────────────────────────
+// NAV
 window.nav = function(id, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('on'))
   document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'))
-  const pg = document.getElementById('page-' + id)
-  if (pg) pg.classList.add('on')
+  document.getElementById('page-' + id)?.classList.add('on')
   if (el) {
     el.classList.add('on')
   } else {
-    // highlight matching nav item when called programmatically
     document.querySelectorAll('.ni').forEach(n => {
       if (n.getAttribute('onclick')?.includes(`'${id}'`)) n.classList.add('on')
     })
   }
-  const dispatch = {
-    overview:    loadOverview,
-    leads:       loadLeads,
-    links:       loadLinks,
-    conversions: loadConversions,
-    traffic:     loadTraffic,
-    settings:    checkTables
-  }
-  dispatch[id]?.()
+  const fns = { overview: loadOverview, leads: loadLeads, links: loadLinks, conversions: loadConversions, traffic: loadTraffic, settings: checkTables }
+  fns[id]?.()
 }
 
-// ── DATE RANGE ────────────────────────────────────────
-let currentRange = '7d'
+// RANGE
+let range = '7d'
 window.setRange = function(r) {
-  currentRange = r
+  range = r
   document.getElementById('ov-rng').textContent = r === '24h' ? '24 hours' : r === '30d' ? '30 days' : '7 days'
   loadOverview()
 }
-window.refreshAll = function() { loadOverview(); syncIntegrationStatus(); toast('Refreshed','ok') }
+window.refreshAll = function() { loadOverview(); syncStatus(); toast('Refreshed', 'ok') }
 
-// ── OVERVIEW ──────────────────────────────────────────
+// OVERVIEW
 async function loadOverview() {
   try {
-    const from = getFrom(currentRange)
+    const from = getFrom(range)
     const [evR, ldR, lkR, cvR, fnR] = await Promise.all([
-      _sb.from('events').select('type,value,funnel_id').gte('created_at', from),
+      _sb.from('events').select('type,value').gte('created_at', from),
       _sb.from('leads').select('email,funnel_id,created_at').gte('created_at', from).order('created_at',{ascending:false}).limit(10),
       _sb.from('links').select('slug,label,clicks').order('clicks',{ascending:false}).limit(6),
       _sb.from('conversions').select('revenue').gte('created_at', from),
       _sb.from('funnels').select('id')
     ])
-
-    const events  = evR.data  || []
-    const leads   = ldR.data  || []
-    const links   = lkR.data  || []
-    const convs   = cvR.data  || []
-    const funnels = fnR.data  || []
-
+    const events = evR.data||[], leads = ldR.data||[], links = lkR.data||[], convs = cvR.data||[], funnels = fnR.data||[]
     const clicks  = events.filter(e => e.type === 'click').length
-    const revenue = convs.reduce((s, c) => s + (c.revenue || 0), 0)
+    const revenue = convs.reduce((s,c) => s + (c.revenue||0), 0)
 
-    setText('k-rev',     '$' + revenue.toFixed(2))
-    setText('k-leads',   leads.length)
-    setText('k-clicks',  clicks)
-    setText('k-funnels', funnels.length)
-    setText('sb-ct',     leads.length)
-    setText('ld-ct-bdg', leads.length + ' leads')
+    set('k-rev',     '$' + revenue.toFixed(2))
+    set('k-leads',   leads.length)
+    set('k-clicks',  clicks)
+    set('k-funnels', funnels.length)
+    set('sb-ct',     leads.length)
+    set('ld-ct-bdg', leads.length + ' leads')
 
-    // Leads table
-    const lb = document.getElementById('ov-leads')
-    lb.innerHTML = leads.length
-      ? leads.map(l => `<tr>
-          <td>${esc(l.email)}</td>
-          <td><span class="bdg bdg-b">${esc(l.funnel_id || 'default')}</span></td>
-          <td class="mono cs">${ago(l.created_at)}</td>
-        </tr>`).join('')
+    document.getElementById('ov-leads').innerHTML = leads.length
+      ? leads.map(l => `<tr><td>${esc(l.email)}</td><td><span class="bdg bdg-b">${esc(l.funnel_id||'default')}</span></td><td class="mono cs">${ago(l.created_at)}</td></tr>`).join('')
       : emptyRow(3, '◎', 'No leads in this period.')
 
-    // Links bar chart
-    const maxC = Math.max(1, ...links.map(l => l.clicks || 0))
+    const maxC = Math.max(1, ...links.map(l => l.clicks||0))
     document.getElementById('ov-bars').innerHTML = links.length
-      ? links.map(l => `<div class="bar-r">
-          <div class="bar-lbl">/l/${esc(l.slug)}</div>
-          <div class="bar-tr"><div class="bar-f" style="width:${Math.max(3, Math.round(((l.clicks||0)/maxC)*100))}%"></div></div>
-          <div class="bar-v">${l.clicks || 0}</div>
-        </div>`).join('')
+      ? links.map(l => `<div class="bar-r"><div class="bar-lbl">/l/${esc(l.slug)}</div><div class="bar-tr"><div class="bar-f" style="width:${Math.max(3,Math.round(((l.clicks||0)/maxC)*100))}%"></div></div><div class="bar-v">${l.clicks||0}</div></div>`).join('')
       : '<div class="empty" style="padding:6px 0"><p style="font-size:11px">No links yet</p></div>'
 
     addFeed(`Loaded — ${leads.length} leads, ${clicks} clicks, $${revenue.toFixed(2)}`, 'ok')
-  } catch (e) {
-    addFeed('Load error: ' + e.message, 'w')
-  }
+  } catch(e) { addFeed('Error: ' + e.message, 'w') }
 }
 
-// ── AI FUNNELS ────────────────────────────────────────
+// AI FUNNELS
 let savedCopy = null
 
 window.buildFunnel = async function() {
   const niche = document.getElementById('ai-niche').value.trim()
   if (!niche) { toast('Enter what you are promoting', 'err'); return }
-
   const btn = document.getElementById('ai-btn')
-  btnLoading(btn, true, 'Generating…')
+  btnLoad(btn, true, 'Generating…')
   setFB('ai-fb', '', '')
-  setText('ai-bdg', 'generating…')
+  set('ai-bdg', 'generating…')
   document.getElementById('ai-bdg').className = 'bdg bdg-m'
-
   try {
     const res = await fetch('/.netlify/functions/ai', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prompt: niche,
-        type: 'funnel',
-        source: document.getElementById('ai-src').value
-      })
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ prompt: niche, type: 'funnel', source: document.getElementById('ai-src').value })
     })
     const data = await res.json()
     if (data.error) throw new Error(data.error)
-
-    const c = data.result
-    savedCopy = c
-
+    const c = data.result; savedCopy = c
     document.getElementById('o-hl').textContent   = c.headline      || ''
     document.getElementById('o-sh').textContent   = c.subheadline   || ''
     document.getElementById('o-hk').textContent   = c.hook          || ''
     document.getElementById('o-cta').textContent  = c.cta           || ''
     document.getElementById('o-subj').textContent = c.emailSubject  || ''
     document.getElementById('o-body').textContent = c.emailBody     || ''
-    document.getElementById('o-ul').innerHTML = (c.bullets || []).map(b => `<li>${esc(b)}</li>`).join('')
-
+    document.getElementById('o-ul').innerHTML = (c.bullets||[]).map(b => `<li>${esc(b)}</li>`).join('')
     document.getElementById('ai-empty').style.display = 'none'
     document.getElementById('ai-out').classList.add('on')
     document.getElementById('dep-btn').disabled = false
-    setText('ai-bdg', '✓ ready')
+    set('ai-bdg', '✓ ready')
     document.getElementById('ai-bdg').className = 'bdg bdg-t'
     addFeed('Copy generated: ' + niche, 'ok')
     toast('Copy ready', 'ok')
-
-  } catch (e) {
+  } catch(e) {
     setFB('ai-fb', 'err', '⚠ ' + e.message)
-    setText('ai-bdg', 'error')
+    set('ai-bdg', 'error')
     document.getElementById('ai-bdg').className = 'bdg bdg-r'
   }
-
-  btnLoading(btn, false, 'Generate with AI')
+  btnLoad(btn, false, 'Generate with AI')
 }
 
 window.deployFunnel = async function() {
   const name = document.getElementById('ai-slug').value.trim() || document.getElementById('ai-niche').value.trim()
   const link = document.getElementById('ai-url').value.trim()
   if (!name) { toast('Enter a funnel slug first', 'err'); return }
-
   const btn = document.getElementById('dep-btn')
-  btnLoading(btn, true, 'Deploying…')
-
+  btnLoad(btn, true, 'Deploying…')
   try {
     const res = await fetch('/.netlify/functions/createPage', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ name, link, copy: savedCopy })
     })
     const data = await res.json()
@@ -924,34 +746,26 @@ window.deployFunnel = async function() {
     addFeed('Funnel deployed: ' + name, 'ok')
     toast('Funnel is live', 'ok')
     loadOverview()
-  } catch (e) {
-    setFB('dep-fb', 'err', '⚠ ' + e.message)
-  }
-
-  btnLoading(btn, false, 'Deploy Funnel')
+  } catch(e) { setFB('dep-fb', 'err', '⚠ ' + e.message) }
+  btnLoad(btn, false, 'Deploy Funnel')
 }
 
-// ── LINK CLOAKER ──────────────────────────────────────
+// LINK CLOAKER
 window.createLink = async function() {
   const url   = document.getElementById('lnk-url').value.trim()
   const slug  = document.getElementById('lnk-slug').value.trim() || undefined
   const label = document.getElementById('lnk-lbl').value.trim()  || undefined
-
   if (!url) { toast('Enter a destination URL', 'err'); return }
   try { new URL(url) } catch { toast('URL must start with https://', 'err'); return }
-
   const fb = document.getElementById('lnk-fb')
   fb.className = 'fb on fb-info'; fb.textContent = 'Creating…'
-
   try {
     const res = await fetch('/.netlify/functions/createLink', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ url, slug, label })
     })
     const data = await res.json()
     if (data.error) throw new Error(data.error)
-
     setFB('lnk-fb', 'ok', '✓ Created', data.short_link)
     document.getElementById('lnk-url').value  = ''
     document.getElementById('lnk-slug').value = ''
@@ -959,202 +773,156 @@ window.createLink = async function() {
     addFeed('Link created: /l/' + data.slug, 'ok')
     loadLinks()
     toast('Link created', 'ok')
-  } catch (e) {
-    setFB('lnk-fb', 'err', '⚠ ' + e.message)
-  }
+  } catch(e) { setFB('lnk-fb', 'err', '⚠ ' + e.message) }
 }
 
 window.loadLinks = async function() {
   try {
-    const { data: links } = await _sb.from('links').select('*').order('clicks', { ascending: false })
+    const { data: links } = await _sb.from('links').select('*').order('clicks',{ascending:false})
     const list  = links || []
-    const total = list.reduce((s, l) => s + (l.clicks || 0), 0)
-    setText('l-tot', list.length)
-    setText('l-clk', total)
-    setText('l-top', list[0] ? '/l/' + list[0].slug : '—')
-
+    const total = list.reduce((s,l) => s + (l.clicks||0), 0)
+    set('l-tot', list.length)
+    set('l-clk', total)
+    set('l-top', list[0] ? '/l/' + list[0].slug : '—')
     document.getElementById('links-body').innerHTML = list.length
       ? list.map(l => `<tr>
           <td class="mono ct">/l/${esc(l.slug)}</td>
-          <td class="cs">${esc(l.label || '—')}</td>
-          <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
-            <a href="${esc(l.original_url || '#')}" target="_blank" style="color:var(--cobalt);text-decoration:none;font-size:11px">${esc(l.original_url || '—')}</a>
-          </td>
-          <td class="mono cg">${l.clicks || 0}</td>
+          <td class="cs">${esc(l.label||'—')}</td>
+          <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><a href="${esc(l.original_url||'#')}" target="_blank" style="color:var(--blue);text-decoration:none;font-size:11px">${esc(l.original_url||'—')}</a></td>
+          <td class="mono cg">${l.clicks||0}</td>
         </tr>`).join('')
       : emptyRow(4, '⌖', 'No links yet.')
-  } catch (e) { console.error(e) }
+  } catch(e) { console.error(e) }
 }
 
-// ── LEADS ─────────────────────────────────────────────
+// LEADS
 async function loadLeads() {
   try {
-    const { data: leads } = await _sb.from('leads').select('*').order('created_at', { ascending: false })
-    const list  = leads || []
-    const fmOk  = !!localStorage.getItem('fm_ok')
-    setText('ld-ct-bdg', list.length + ' leads')
-    setText('sb-ct', list.length)
-
+    const { data: leads } = await _sb.from('leads').select('*').order('created_at',{ascending:false})
+    const list = leads || []
+    const fmOk = !!localStorage.getItem('fm_ok')
+    set('ld-ct-bdg', list.length + ' leads')
+    set('sb-ct', list.length)
     document.getElementById('leads-body').innerHTML = list.length
       ? list.map(l => `<tr>
           <td>${esc(l.email)}</td>
-          <td><span class="bdg bdg-b">${esc(l.funnel_id || 'default')}</span></td>
+          <td><span class="bdg bdg-b">${esc(l.funnel_id||'default')}</span></td>
           <td>${fmOk ? '<span class="bdg bdg-t">Synced</span>' : '<span class="bdg bdg-m">—</span>'}</td>
           <td class="mono cs">${ago(l.created_at)}</td>
         </tr>`).join('')
       : emptyRow(4, '◎', 'No leads yet.')
-  } catch (e) { console.error(e) }
+  } catch(e) { console.error(e) }
 }
 
-// ── CONVERSIONS ───────────────────────────────────────
+// CONVERSIONS
 async function loadConversions() {
   try {
-    const { data: convs } = await _sb.from('conversions').select('*').order('created_at', { ascending: false })
+    const { data: convs } = await _sb.from('conversions').select('*').order('created_at',{ascending:false})
     const list  = convs || []
-    const total = list.reduce((s, c) => s + (c.revenue || 0), 0)
+    const total = list.reduce((s,c) => s + (c.revenue||0), 0)
     const avg   = list.length ? total / list.length : 0
-
-    setText('cv-rev', '$' + total.toFixed(2))
-    setText('cv-cnt', list.length)
-    setText('cv-avg', '$' + avg.toFixed(0))
-    setText('k-rev',  '$' + total.toFixed(2))
-
+    set('cv-rev', '$' + total.toFixed(2))
+    set('cv-cnt', list.length)
+    set('cv-avg', '$' + avg.toFixed(0))
+    set('k-rev',  '$' + total.toFixed(2))
     document.getElementById('conv-body').innerHTML = list.length
       ? list.map(c => `<tr>
-          <td>${esc(c.email || '—')}</td>
-          <td><span class="bdg bdg-b">${esc(c.funnel_name || '—')}</span></td>
-          <td class="mono ct">$${(c.revenue || 0).toFixed(2)}</td>
+          <td>${esc(c.email||'—')}</td>
+          <td><span class="bdg bdg-b">${esc(c.funnel_name||'—')}</span></td>
+          <td class="mono ct">$${(c.revenue||0).toFixed(2)}</td>
           <td class="mono cs">${ago(c.created_at)}</td>
         </tr>`).join('')
       : emptyRow(4, '◉', 'No sales logged yet.')
-
-    // Bar chart by funnel
     const byF = {}
-    list.forEach(c => { const k = c.funnel_name || 'unknown'; byF[k] = (byF[k] || 0) + (c.revenue || 0) })
-    const entries = Object.entries(byF).sort((a, b) => b[1] - a[1]).slice(0, 5)
-    const maxV    = entries[0]?.[1] || 1
-    document.getElementById('cv-bars').innerHTML = entries.length
-      ? entries.map(([k, v]) => `<div class="bar-r">
-          <div class="bar-lbl">${esc(k)}</div>
-          <div class="bar-tr"><div class="bar-f" style="width:${Math.max(3, Math.round((v / maxV) * 100))}%"></div></div>
-          <div class="bar-v">$${v.toFixed(0)}</div>
-        </div>`).join('')
+    list.forEach(c => { const k = c.funnel_name||'unknown'; byF[k] = (byF[k]||0) + (c.revenue||0) })
+    const ent = Object.entries(byF).sort((a,b) => b[1]-a[1]).slice(0,5)
+    const mx  = ent[0]?.[1]||1
+    document.getElementById('cv-bars').innerHTML = ent.length
+      ? ent.map(([k,v]) => `<div class="bar-r"><div class="bar-lbl">${esc(k)}</div><div class="bar-tr"><div class="bar-f" style="width:${Math.max(3,Math.round((v/mx)*100))}%"></div></div><div class="bar-v">$${v.toFixed(0)}</div></div>`).join('')
       : '<div class="empty" style="padding:6px 0"><p style="font-size:11px">No data yet</p></div>'
-  } catch (e) { console.error(e) }
+  } catch(e) { console.error(e) }
 }
 
-// ── LOG SALE ──────────────────────────────────────────
+// LOG SALE
 window.logSale = async function() {
   const email  = document.getElementById('mc-em').value.trim() || null
   const funnel = document.getElementById('mc-fn').value.trim() || 'default'
   const amount = parseFloat(document.getElementById('mc-am').value) || 0
   if (amount <= 0) { setFB('mc-fb', 'err', '⚠ Enter a valid commission amount'); return }
-
   try {
-    await _sb.from('conversions').insert([{
-      email, funnel_name: funnel, revenue: amount,
-      created_at: new Date().toISOString()
-    }])
-    await _sb.from('events').insert([{
-      type: 'conversion', value: amount, funnel_id: funnel,
-      created_at: new Date().toISOString()
-    }])
-
-    // Non-blocking Forge Mail conversion ping
-    if (email) {
-      fetch('/.netlify/functions/track', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, funnel, value: amount, type: 'conversion' })
-      }).catch(() => {})
-    }
-
+    await _sb.from('conversions').insert([{ email, funnel_name: funnel, revenue: amount, created_at: new Date().toISOString() }])
+    await _sb.from('events').insert([{ type: 'conversion', value: amount, funnel_id: funnel, created_at: new Date().toISOString() }])
+    if (email) fetch('/.netlify/functions/track', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ email, funnel, value: amount, type: 'conversion' })
+    }).catch(() => {})
     closeModal('m-conv')
     document.getElementById('mc-em').value = ''
     document.getElementById('mc-fn').value = ''
     document.getElementById('mc-am').value = ''
-    loadConversions()
-    loadOverview()
+    loadConversions(); loadOverview()
     addFeed('Sale logged: $' + amount + ' — ' + funnel, 'ok')
     toast('Sale saved', 'ok')
-  } catch (e) {
-    setFB('mc-fb', 'err', '⚠ ' + e.message)
-  }
+  } catch(e) { setFB('mc-fb', 'err', '⚠ ' + e.message) }
 }
 
-// ── TRAFFIC ───────────────────────────────────────────
+// TRAFFIC
 async function loadTraffic() {
   try {
-    const { data: events } = await _sb.from('events').select('*').order('created_at', { ascending: false }).limit(100)
+    const { data: events } = await _sb.from('events').select('*').order('created_at',{ascending:false}).limit(100)
     const list = events || []
-
     document.getElementById('ev-body').innerHTML = list.length
       ? list.map(e => `<tr>
-          <td><span class="bdg ${e.type === 'conversion' ? 'bdg-t' : e.type === 'lead' ? 'bdg-b' : 'bdg-m'}">${esc(e.type)}</span></td>
-          <td class="mono">${esc(e.funnel_id || '—')}</td>
-          <td class="mono ct">${e.value || 1}</td>
+          <td><span class="bdg ${e.type==='conversion'?'bdg-t':e.type==='lead'?'bdg-b':'bdg-m'}">${esc(e.type)}</span></td>
+          <td class="mono">${esc(e.funnel_id||'—')}</td>
+          <td class="mono ct">${e.value||1}</td>
           <td class="mono cs">${ago(e.created_at)}</td>
         </tr>`).join('')
-      : emptyRow(4, '◌', 'No events recorded yet.')
-
-    const byType = {}
-    list.forEach(e => { byType[e.type] = (byType[e.type] || 0) + 1 })
-    const entries = Object.entries(byType).sort((a, b) => b[1] - a[1])
-    const maxV    = entries[0]?.[1] || 1
-    document.getElementById('ev-bars').innerHTML = entries.length
-      ? entries.map(([k, v]) => `<div class="bar-r">
-          <div class="bar-lbl">${esc(k)}</div>
-          <div class="bar-tr"><div class="bar-f" style="width:${Math.max(3, Math.round((v / maxV) * 100))}%"></div></div>
-          <div class="bar-v">${v}</div>
-        </div>`).join('')
-      : '<div class="empty" style="padding:6px 0"><p style="font-size:11px">No data yet</p></div>'
-  } catch (e) { console.error(e) }
+      : emptyRow(4, '◌', 'No events yet.')
+    const byT = {}
+    list.forEach(e => { byT[e.type] = (byT[e.type]||0) + 1 })
+    const ent = Object.entries(byT).sort((a,b) => b[1]-a[1])
+    const mx  = ent[0]?.[1]||1
+    document.getElementById('ev-bars').innerHTML = ent.length
+      ? ent.map(([k,v]) => `<div class="bar-r"><div class="bar-lbl">${esc(k)}</div><div class="bar-tr"><div class="bar-f" style="width:${Math.max(3,Math.round((v/mx)*100))}%"></div></div><div class="bar-v">${v}</div></div>`).join('')
+      : '<div class="empty" style="padding:6px 0"><p style="font-size:11px">No data</p></div>'
+  } catch(e) { console.error(e) }
 }
 
-// ── INTEGRATIONS ──────────────────────────────────────
+// INTEGRATIONS
 window.saveTZ = function() {
-  const url  = document.getElementById('tz-url').value.trim()
-  const dest = document.getElementById('tz-dest').value.trim()
-  if (!url) { toast('Enter your TrafficZest campaign URL', 'err'); return }
+  const url = document.getElementById('tz-url').value.trim()
+  if (!url) { toast('Enter your TrafficZest URL', 'err'); return }
   localStorage.setItem('tz_url', url)
-  localStorage.setItem('tz_dest', dest)
+  localStorage.setItem('tz_dest', document.getElementById('tz-dest').value.trim())
   localStorage.setItem('tz_ok', '1')
   setFB('tz-fb', 'ok', '✓ Configuration saved.')
-  syncIntegrationStatus()
-  addFeed('TrafficZest configured', 'ok')
-  toast('Saved', 'ok')
+  syncStatus(); addFeed('TrafficZest configured', 'ok'); toast('Saved', 'ok')
 }
 
 window.saveFM = function() {
-  const key  = document.getElementById('fm-key').value.trim()
-  const list = document.getElementById('fm-list').value.trim()
+  const key = document.getElementById('fm-key').value.trim()
   if (!key) { toast('Enter your Forge Mail API key', 'err'); return }
   localStorage.setItem('fm_ok', '1')
-  localStorage.setItem('fm_list', list)
-  setFB('fm-fb', 'ok', '✓ Saved. Also set FORGE_MAIL_API_KEY in Netlify → Environment Variables for server-side sync.')
-  document.getElementById('fm-bdg').textContent  = 'Connected'
-  document.getElementById('fm-bdg').className    = 'bdg bdg-t'
-  syncIntegrationStatus()
-  addFeed('Forge Mail connected', 'ok')
-  toast('Connected', 'ok')
+  localStorage.setItem('fm_list', document.getElementById('fm-list').value.trim())
+  setFB('fm-fb', 'ok', '✓ Saved. Also set FORGE_MAIL_API_KEY in Netlify → Environment Variables.')
+  document.getElementById('fm-bdg').textContent = 'Connected'
+  document.getElementById('fm-bdg').className   = 'bdg bdg-t'
+  syncStatus(); addFeed('Forge Mail connected', 'ok'); toast('Connected', 'ok')
 }
 
-function syncIntegrationStatus() {
-  const tzOk = !!localStorage.getItem('tz_ok')
-  const fmOk = !!localStorage.getItem('fm_ok')
-  document.getElementById('pi-tz').className = 'si-pill ' + (tzOk ? 'on' : 'off')
-  document.getElementById('pi-fm').className = 'si-pill ' + (fmOk ? 'on' : 'off')
-  if (tzOk) { document.getElementById('tz-bdg').textContent = 'Configured'; document.getElementById('tz-bdg').className = 'bdg bdg-t' }
-  if (fmOk) {
-    document.getElementById('fm-bdg').textContent = 'Connected'; document.getElementById('fm-bdg').className = 'bdg bdg-t'
-    document.getElementById('fm-sync').textContent = document.getElementById('sb-ct')?.textContent || '0'
-    document.getElementById('fm-last').textContent = 'Recently'
-  }
+function syncStatus() {
+  const tz = !!localStorage.getItem('tz_ok')
+  const fm = !!localStorage.getItem('fm_ok')
+  document.getElementById('pi-tz').className = 'si-pill ' + (tz ? 'on' : 'off')
+  document.getElementById('pi-fm').className = 'si-pill ' + (fm ? 'on' : 'off')
+  if (tz) { document.getElementById('tz-bdg').textContent = 'Configured'; document.getElementById('tz-bdg').className = 'bdg bdg-t' }
+  if (fm) { document.getElementById('fm-bdg').textContent = 'Connected'; document.getElementById('fm-bdg').className = 'bdg bdg-t'; set('fm-sync', document.getElementById('sb-ct')?.textContent||'0'); set('fm-last','Recently') }
 }
 
-// ── TABLE CHECKER ─────────────────────────────────────
+// TABLE CHECK
 window.checkTables = async function() {
-  const tables = ['funnels', 'leads', 'events', 'links', 'conversions']
+  const tables = ['funnels','leads','events','links','conversions']
   const rows   = document.querySelectorAll('#tbl-list .sr')
   for (let i = 0; i < tables.length; i++) {
     const span = rows[i]?.querySelector('.bdg')
@@ -1163,79 +931,42 @@ window.checkTables = async function() {
       const { error } = await _sb.from(tables[i]).select('id').limit(1)
       span.className   = error ? 'bdg bdg-r' : 'bdg bdg-t'
       span.textContent = error ? '✗ Missing — run schema.sql' : '✓ Ready'
-    } catch {
-      span.className = 'bdg bdg-r'; span.textContent = '✗ Error'
-    }
+    } catch { span.className = 'bdg bdg-r'; span.textContent = '✗ Error' }
   }
 }
 
-// ── MODALS ────────────────────────────────────────────
+// MODALS
 window.openModal  = id => document.getElementById(id).classList.add('on')
-window.closeModal = id => {
-  document.getElementById(id).classList.remove('on')
-  document.getElementById('mc-fb').className = 'fb'
-}
-window.closeBD = (e, id) => { if (e.target === document.getElementById(id)) closeModal(id) }
+window.closeModal = id => { document.getElementById(id).classList.remove('on'); document.getElementById('mc-fb').className = 'fb' }
+window.closeBD    = (e, id) => { if (e.target === document.getElementById(id)) closeModal(id) }
 
-// ── UTILITIES ─────────────────────────────────────────
-function setText(id, val) {
-  const el = document.getElementById(id)
-  if (el) el.textContent = val
-}
-function esc(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
-}
-function ago(iso) {
-  if (!iso) return '—'
-  const m = Math.floor((Date.now() - new Date(iso)) / 60000)
-  if (m < 1)    return 'now'
-  if (m < 60)   return m + 'm'
-  if (m < 1440) return Math.floor(m / 60) + 'h'
-  return Math.floor(m / 1440) + 'd'
-}
-function getFrom(r) {
-  const d = new Date()
-  if (r === '24h') d.setHours(d.getHours() - 24)
-  else if (r === '30d') d.setDate(d.getDate() - 30)
-  else d.setDate(d.getDate() - 7)
-  return d.toISOString()
-}
-function emptyRow(cols, icon, msg) {
-  return `<tr><td colspan="${cols}"><div class="empty"><div class="empty-ic">${icon}</div><p>${msg}</p></div></td></tr>`
-}
-function btnLoading(btn, on, lbl) {
-  btn.disabled = on
-  btn.innerHTML = on ? `<span class="spin-ico"></span>${lbl}` : lbl
-}
+// UTILS
+function set(id, val) { const el = document.getElementById(id); if (el) el.textContent = val }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+function ago(iso) { if (!iso) return '—'; const m = Math.floor((Date.now()-new Date(iso))/60000); if (m<1) return 'now'; if (m<60) return m+'m'; if (m<1440) return Math.floor(m/60)+'h'; return Math.floor(m/1440)+'d' }
+function getFrom(r) { const d = new Date(); if (r==='24h') d.setHours(d.getHours()-24); else if (r==='30d') d.setDate(d.getDate()-30); else d.setDate(d.getDate()-7); return d.toISOString() }
+function emptyRow(cols, icon, msg) { return `<tr><td colspan="${cols}"><div class="empty"><div class="empty-ic">${icon}</div><p>${msg}</p></div></td></tr>` }
+function btnLoad(btn, on, lbl) { btn.disabled = on; btn.innerHTML = on ? `<span class="spin-ico"></span>${lbl}` : lbl }
 function setFB(id, type, msg, link) {
-  const el = document.getElementById(id)
-  if (!el) return
+  const el = document.getElementById(id); if (!el) return
   el.className = type ? `fb on fb-${type}` : 'fb'
-  el.innerHTML = esc(msg) + (link
-    ? `<div class="lk-row"><code>${esc(link)}</code><span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(link)}').then(()=>toast('Copied','ok'))">Copy</span></div>`
-    : '')
+  el.innerHTML = esc(msg) + (link ? `<div class="lk-row"><code>${esc(link)}</code><span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(link)}').then(()=>toast('Copied','ok'))">Copy</span></div>` : '')
 }
-function addFeed(msg, type = 'info') {
+function addFeed(msg, type='info') {
   const feed = document.getElementById('feed')
-  const ts   = new Date().toTimeString().slice(0, 8)
-  const div  = document.createElement('div')
-  div.className = 'fl'
-  div.innerHTML = `<span class="fl-ts">${ts}</span><span class="fl-${type}">${esc(msg)}</span>`
-  feed.appendChild(div)
-  feed.scrollTop = feed.scrollHeight
+  const ts   = new Date().toTimeString().slice(0,8)
+  const d    = document.createElement('div'); d.className = 'fl'
+  d.innerHTML = `<span class="fl-ts">${ts}</span><span class="fl-${type}">${esc(msg)}</span>`
+  feed.appendChild(d); feed.scrollTop = feed.scrollHeight
 }
-window.toast = function(msg, type = 'ok') {
+window.toast = function(msg, type='ok') {
   const el = document.getElementById('toast')
-  el.textContent = msg
-  el.className   = 'on ' + type
-  clearTimeout(el._t)
-  el._t = setTimeout(() => el.className = '', 2800)
+  el.textContent = msg; el.className = 'on ' + type
+  clearTimeout(el._t); el._t = setTimeout(() => el.className = '', 2800)
 }
 
-// ── INIT ──────────────────────────────────────────────
-loadOverview()
-loadLinks()
-syncIntegrationStatus()
+// INIT
+loadOverview(); loadLinks(); syncStatus()
 setInterval(loadOverview, 30000)
 </script>
 </body>
