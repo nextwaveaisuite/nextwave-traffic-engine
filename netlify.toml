@@ -2,12 +2,21 @@
   functions = "netlify/functions"
   publish = "."
 
+# Short link redirects — /l/abc123 → l.js function
 [[redirects]]
   from = "/l/*"
   to = "/.netlify/functions/l"
   status = 200
 
+# Dynamic funnel pages — reads slug and loads copy from Supabase
 [[redirects]]
   from = "/funnel/*"
-  to = "/sales.html"
+  to = "/funnel.html"
   status = 200
+
+# SPA fallback — must be last
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
