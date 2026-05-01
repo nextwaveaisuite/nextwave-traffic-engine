@@ -55,13 +55,14 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 }
 .f-eyebrow::before{content:'';width:5px;height:5px;background:var(--teal);border-radius:50%;animation:pip 1.5s ease infinite}
 @keyframes pip{0%,100%{opacity:1}50%{opacity:.2}}
+.f-header{text-align:center;margin-bottom:32px}
 .f-headline{
   font-size:clamp(32px,6vw,60px);font-weight:700;
   line-height:1.05;letter-spacing:-1.5px;
   margin-bottom:12px;
 }
 .f-headline em{font-style:normal;color:var(--teal)}
-.f-rule{width:44px;height:2px;background:linear-gradient(90deg,var(--teal),var(--blue));margin:18px 0;border-radius:2px}
+.f-rule{width:44px;height:2px;background:linear-gradient(90deg,var(--teal),var(--blue));margin:18px auto;border-radius:2px}
 .f-subheadline{font-size:clamp(16px,2.5vw,20px);color:var(--dim);font-weight:300;line-height:1.7;margin-bottom:0}
 .f-subheadline strong{color:var(--body);font-weight:500}
 
@@ -216,11 +217,12 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 <!-- FUNNEL CONTENT -->
 <div class="funnel-wrap" id="funnel-wrap">
 
-  <div class="f-eyebrow" id="f-eyebrow">SPECIAL OFFER</div>
-
-  <h1 class="f-headline" id="f-headline">Loading…</h1>
-  <div class="f-rule"></div>
-  <p class="f-subheadline" id="f-subheadline"></p>
+  <div class="f-header">
+    <div class="f-eyebrow" id="f-eyebrow">SPECIAL OFFER</div>
+    <h1 class="f-headline" id="f-headline">Loading…</h1>
+    <div class="f-rule"></div>
+    <p class="f-subheadline" id="f-subheadline"></p>
+  </div>
 
   <div class="f-hook" id="f-hook"></div>
 
