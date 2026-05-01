@@ -3,377 +3,1240 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NextWave — Dashboard</title>
+<title>NextWave — Revenue Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── RESET ─────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
 
-  :root {
-    --bg:        #070b16;
-    --surface:   #0f172a;
-    --surface2:  #1e293b;
-    --border:    #1e293b;
-    --accent:    #00ff88;
-    --accent2:   #00ccff;
-    --warn:      #f59e0b;
-    --danger:    #ef4444;
-    --text:      #e2e8f0;
-    --muted:     #64748b;
-    --radius:    10px;
-  }
+/* ── DESIGN TOKENS ─────────────────────────────────────── */
+:root{
+  --ink:      #0c0f1a;
+  --ink2:     #111520;
+  --ink3:     #161b2e;
+  --ink4:     #1d2540;
+  --line:     #232e4a;
+  --line2:    rgba(255,255,255,.04);
+  --teal:     #19e6b0;
+  --teal-bg:  rgba(25,230,176,.07);
+  --teal-bdr: rgba(25,230,176,.18);
+  --cobalt:   #4f8ef7;
+  --cobalt-bg:rgba(79,142,247,.08);
+  --gold:     #f0a500;
+  --gold-bg:  rgba(240,165,0,.08);
+  --rose:     #f25c7a;
+  --rose-bg:  rgba(242,92,122,.08);
+  --slate:    #8fa3c4;
+  --slate2:   #3d5275;
+  --body:     #dce8f5;
+  --f:        'DM Sans',sans-serif;
+  --m:        'DM Mono',monospace;
+  --rad:      7px;
+  --rad2:     11px;
+}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Segoe UI', system-ui, Arial, sans-serif;
-    min-height: 100vh;
-    display: flex;
-  }
+/* ── BASE ──────────────────────────────────────────────── */
+body{
+  background:var(--ink);
+  color:var(--body);
+  font-family:var(--f);
+  font-size:13px;
+  line-height:1.5;
+  display:flex;
+  flex-direction:column;
+}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px}
 
-  .sidebar {
-    width: 220px;
-    min-height: 100vh;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    padding: 24px 0;
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-  }
-  .logo {
-    padding: 0 20px 24px;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--accent);
-  }
-  .logo span { color: var(--text); }
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 11px 20px;
-    cursor: pointer;
-    font-size: 14px;
-    color: var(--muted);
-    border-left: 3px solid transparent;
-    transition: all .15s;
-  }
-  .nav-item:hover { color: var(--text); background: rgba(255,255,255,.04); }
-  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(0,255,136,.06); }
-  .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+/* ── TOPBAR ────────────────────────────────────────────── */
+.topbar{
+  height:50px;min-height:50px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px;
+  background:var(--ink2);
+  border-bottom:1px solid var(--line);
+  z-index:50;
+}
+.brand{display:flex;align-items:center;gap:9px;text-decoration:none}
+.brand-ico{
+  width:26px;height:26px;border-radius:5px;
+  background:var(--teal);
+  display:flex;align-items:center;justify-content:center;
+}
+.brand-ico svg{width:14px;height:14px;fill:#0c0f1a}
+.brand-name{font-family:var(--m);font-size:12px;font-weight:500;color:var(--body);letter-spacing:.5px}
+.brand-name b{color:var(--teal)}
+.topbar-mid{display:flex;align-items:center;gap:6px}
+.live-pip{width:6px;height:6px;background:var(--teal);border-radius:50%;animation:pip 2s ease infinite}
+@keyframes pip{0%,100%{opacity:1}50%{opacity:.25}}
+.live-txt{font-family:var(--m);font-size:10px;color:var(--teal);letter-spacing:.8px}
+.topbar-right{display:flex;align-items:center;gap:7px}
+.t-time{font-family:var(--m);font-size:10px;color:var(--slate2);padding:4px 9px;border:1px solid var(--line);border-radius:var(--rad);background:var(--ink3)}
+.t-btn{
+  width:30px;height:30px;border-radius:var(--rad);
+  background:none;border:1px solid var(--line);
+  color:var(--slate);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;transition:all .12s;
+}
+.t-btn:hover{background:var(--ink3);color:var(--body);border-color:var(--line2)}
 
-  .main { flex: 1; overflow-y: auto; padding: 32px; }
+/* ── APP SHELL ─────────────────────────────────────────── */
+.shell{display:flex;flex:1;overflow:hidden}
 
-  .page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 28px;
-  }
-  .page-title { font-size: 22px; font-weight: 700; }
-  .page-title small { font-size: 13px; color: var(--muted); font-weight: 400; margin-left: 10px; }
-  .range-selector { display: flex; gap: 8px; }
-  .range-btn {
-    padding: 6px 14px;
-    font-size: 12px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: var(--surface2);
-    color: var(--muted);
-    cursor: pointer;
-    transition: all .15s;
-  }
-  .range-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
+/* ── SIDEBAR ───────────────────────────────────────────── */
+.sidebar{
+  width:210px;min-width:210px;flex-shrink:0;
+  background:var(--ink2);
+  border-right:1px solid var(--line);
+  display:flex;flex-direction:column;
+  overflow-y:auto;
+}
+.sg{padding:14px 0 4px}
+.sg-lbl{
+  font-family:var(--m);font-size:9px;
+  letter-spacing:1.4px;text-transform:uppercase;
+  color:var(--slate2);padding:0 13px 5px;
+}
+.ni{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 13px;font-size:12px;font-weight:500;
+  color:var(--slate);cursor:pointer;
+  border-left:2px solid transparent;
+  transition:all .1s;user-select:none;
+}
+.ni:hover{color:var(--body);background:rgba(255,255,255,.025)}
+.ni.on{color:var(--teal);border-left-color:var(--teal);background:var(--teal-bg)}
+.ni-ic{font-size:13px;width:16px;text-align:center;flex-shrink:0}
+.ni-ct{
+  margin-left:auto;
+  background:var(--teal);color:var(--ink);
+  font-family:var(--m);font-size:9px;font-weight:500;
+  padding:1px 5px;border-radius:10px;line-height:1.5;
+}
 
-  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
-  .stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-  }
-  .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
-  .stat-value { font-size: 32px; font-weight: 700; margin: 8px 0 4px; }
-  .stat-sub   { font-size: 12px; color: var(--muted); }
-  .stat-card.green .stat-value { color: var(--accent); }
-  .stat-card.blue  .stat-value { color: var(--accent2); }
-  .stat-card.gold  .stat-value { color: var(--warn); }
-  .stat-card.red   .stat-value { color: var(--danger); }
+/* sidebar integrations */
+.si-row{padding:10px 12px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:5px}
+.si-pill{
+  display:flex;align-items:center;gap:7px;
+  padding:6px 9px;border-radius:var(--rad);
+  border:1px solid var(--line);background:var(--ink3);
+  font-size:11px;font-weight:500;cursor:pointer;transition:all .12s;
+}
+.si-pill.on{border-color:var(--teal-bdr);background:var(--teal-bg);color:var(--teal)}
+.si-pill.off{color:var(--slate2)}
+.si-pip{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.si-pill.on .si-pip{background:var(--teal)}
+.si-pill.off .si-pip{background:var(--slate2);opacity:.4}
 
-  .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
-  .panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 22px;
-  }
-  .panel.full { grid-column: 1 / -1; }
-  .panel-title {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 18px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .badge {
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 20px;
-    background: rgba(0,255,136,.15);
-    color: var(--accent);
-  }
+/* sidebar plan */
+.s-plan{margin:0 10px 10px;padding:11px;background:var(--ink3);border:1px solid var(--line);border-radius:var(--rad2)}
+.s-plan-lbl{font-family:var(--m);font-size:9px;color:var(--slate2);letter-spacing:.8px;margin-bottom:3px}
+.s-plan-name{font-size:11px;font-weight:600;margin-bottom:7px}
+.s-bar{height:2px;background:var(--line);border-radius:2px;overflow:hidden;margin-bottom:5px}
+.s-bar-f{height:100%;background:var(--teal);border-radius:2px;width:40%}
+.s-plan-meta{font-size:10px;color:var(--slate2);margin-bottom:9px}
+.s-upgrade{
+  display:block;padding:6px;
+  background:var(--teal);color:var(--ink);
+  font-size:11px;font-weight:700;border-radius:5px;
+  text-align:center;text-decoration:none;transition:opacity .12s;
+}
+.s-upgrade:hover{opacity:.85}
 
-  .form-row { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
-  .form-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 150px; }
-  label { font-size: 12px; color: var(--muted); }
-  input, textarea, select {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--text);
-    padding: 10px 12px;
-    font-size: 14px;
-    width: 100%;
-    outline: none;
-    transition: border-color .15s;
-  }
-  input:focus, textarea:focus { border-color: var(--accent); }
+/* ── MAIN ──────────────────────────────────────────────── */
+.main{flex:1;overflow-y:auto;background:var(--ink)}
+.page{display:none;padding:22px;flex-direction:column;min-height:100%}
+.page.on{display:flex}
 
-  .btn {
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: none;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity .15s, transform .1s;
-    white-space: nowrap;
-  }
-  .btn:hover { opacity: .88; }
-  .btn:active { transform: scale(.97); }
-  .btn:disabled { opacity: .4; cursor: not-allowed; }
-  .btn-primary   { background: var(--accent); color: #000; }
-  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+/* ── PAGE HEADER ───────────────────────────────────────── */
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-shrink:0}
+.pt{font-size:15px;font-weight:700;letter-spacing:-.2px}
+.pt .ps{font-size:10px;color:var(--slate2);font-weight:400;margin-left:5px;font-family:var(--m)}
+.pa{display:flex;gap:6px;align-items:center}
 
-  .result-box {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px;
-    font-size: 13px;
-    line-height: 1.6;
-    margin-top: 12px;
-    display: none;
-  }
-  .result-box.visible { display: block; }
-  .result-box.success { border-color: var(--accent); }
-  .result-box.error   { border-color: var(--danger); color: var(--danger); }
+/* ── BUTTONS ───────────────────────────────────────────── */
+.btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:6px 13px;border-radius:var(--rad);border:none;
+  font-size:12px;font-weight:600;font-family:var(--f);
+  cursor:pointer;transition:all .12s;white-space:nowrap;text-decoration:none;
+}
+.btn:hover{opacity:.86;transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.3;cursor:not-allowed;transform:none}
+.btn-p{background:var(--teal);color:var(--ink)}.btn-p:hover{opacity:1;background:#15ccA0}
+.btn-s{background:var(--ink3);color:var(--body);border:1px solid var(--line)}
+.btn-g{background:transparent;color:var(--slate);border:1px solid var(--line)}.btn-g:hover{color:var(--body);opacity:1}
+.btn-sm{padding:4px 9px;font-size:11px}
+.btn-w{width:100%}
+.spin-ico{width:11px;height:11px;border:1.5px solid rgba(12,15,26,.25);border-top-color:var(--ink);border-radius:50%;animation:sp .5s linear infinite;display:inline-block;flex-shrink:0}
+@keyframes sp{to{transform:rotate(360deg)}}
 
-  .copy-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--bg);
-    border-radius: 6px;
-    padding: 8px 12px;
-    margin-top: 8px;
-    font-size: 13px;
-  }
-  .copy-link code { flex: 1; color: var(--accent); word-break: break-all; }
-  .copy-btn {
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 4px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    cursor: pointer;
-  }
-  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+/* ── KPI ROW ───────────────────────────────────────────── */
+.krow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;flex-shrink:0}
+.kc{
+  background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--rad2);padding:14px;
+  position:relative;overflow:hidden;
+}
+.kc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kt::after{background:linear-gradient(90deg,var(--teal),transparent)}
+.kb::after{background:linear-gradient(90deg,var(--cobalt),transparent)}
+.kg::after{background:linear-gradient(90deg,var(--gold),transparent)}
+.kr::after{background:linear-gradient(90deg,var(--rose),transparent)}
+.k-lbl{font-family:var(--m);font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:var(--slate2);margin-bottom:8px}
+.k-val{font-family:var(--m);font-size:24px;font-weight:500;line-height:1;margin-bottom:4px}
+.kt .k-val{color:var(--teal)}.kb .k-val{color:var(--cobalt)}.kg .k-val{color:var(--gold)}.kr .k-val{color:var(--rose)}
+.k-sub{font-size:10px;color:var(--slate2)}
 
-  .copy-output { display: none; }
-  .copy-output.visible { display: block; }
-  .copy-field { margin-bottom: 14px; }
-  .copy-field-label { font-size: 11px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
-  .copy-field-value {
-    background: var(--bg);
-    border-radius: 6px;
-    padding: 10px 12px;
-    font-size: 14px;
-    line-height: 1.5;
-  }
-  .copy-field-value.headline { font-size: 18px; font-weight: 700; color: var(--accent); }
-  .bullets-list { list-style: none; padding: 0; }
-  .bullets-list li::before { content: '✔ '; color: var(--accent); }
-  .bullets-list li { padding: 3px 0; font-size: 14px; }
+/* ── PANELS ────────────────────────────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.gm{display:grid;grid-template-columns:1.55fr 1fr;gap:12px}
+.gc{display:flex;flex-direction:column;gap:12px}
 
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th {
-    text-align: left;
-    padding: 10px 12px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: .5px;
-    color: var(--muted);
-    border-bottom: 1px solid var(--border);
-  }
-  td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,.04); }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: rgba(255,255,255,.02); }
-  .tag {
-    display: inline-block;
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 20px;
-    background: rgba(0,204,255,.15);
-    color: var(--accent2);
-  }
+.panel{
+  background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--rad2);display:flex;flex-direction:column;overflow:hidden;
+}
+.p-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;border-bottom:1px solid var(--line);
+  flex-shrink:0;min-height:40px;
+}
+.p-title{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;color:var(--body)}
+.p-icon{font-size:12px;color:var(--slate2)}
+.p-body{padding:12px 14px;flex:1;overflow-y:auto}
+.p-body.np{padding:0}
 
-  .click-bar { display: flex; align-items: center; gap: 8px; }
-  .click-bar-fill {
-    height: 4px;
-    border-radius: 2px;
-    background: var(--accent);
-    min-width: 4px;
-  }
+/* ── FORM ──────────────────────────────────────────────── */
+.fld{margin-bottom:11px}.fld:last-child{margin-bottom:0}
+.lbl{
+  display:block;font-family:var(--m);font-size:9px;
+  letter-spacing:.4px;text-transform:uppercase;
+  color:var(--slate2);margin-bottom:4px;
+}
+.inp,.sel,.txta{
+  width:100%;background:var(--ink3);border:1px solid var(--line);
+  border-radius:var(--rad);color:var(--body);
+  padding:7px 10px;font-size:12px;font-family:var(--f);
+  outline:none;transition:border-color .12s;
+}
+.inp:focus,.sel:focus,.txta:focus{border-color:rgba(25,230,176,.35);background:var(--ink4)}
+.inp::placeholder,.txta::placeholder{color:var(--slate2)}
+.txta{resize:vertical;min-height:68px;line-height:1.5}
+.sel{cursor:pointer;appearance:none}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 
-  .spinner {
-    display: inline-block;
-    width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,.2);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin .6s linear infinite;
-    vertical-align: middle;
-    margin-right: 6px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+/* ── TABLE ─────────────────────────────────────────────── */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{
+  text-align:left;padding:7px 13px;
+  font-family:var(--m);font-size:9px;font-weight:500;
+  letter-spacing:.4px;text-transform:uppercase;
+  color:var(--slate2);border-bottom:1px solid var(--line);
+  white-space:nowrap;
+}
+.tbl td{
+  padding:8px 13px;border-bottom:1px solid var(--line2);
+  font-size:12px;color:var(--slate);vertical-align:middle;
+}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover td{background:rgba(255,255,255,.012);color:var(--body)}
+.tbl td:first-child{color:var(--body)}
+.mono{font-family:var(--m);font-size:10px}
+.ct{color:var(--teal)!important}
+.cb{color:var(--cobalt)!important}
+.cg{color:var(--gold)!important}
+.cs{color:var(--slate2)!important}
 
-  #toast {
-    position: fixed;
-    bottom: 24px; right: 24px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 18px;
-    font-size: 13px;
-    display: none;
-    z-index: 9999;
-  }
-  #toast.show { display: block; }
-  #toast.success { border-color: var(--accent); }
-  #toast.error   { border-color: var(--danger); color: var(--danger); }
+/* ── BADGE ─────────────────────────────────────────────── */
+.bdg{
+  display:inline-flex;align-items:center;
+  font-family:var(--m);font-size:9px;font-weight:500;
+  padding:2px 6px;border-radius:9px;letter-spacing:.2px;
+}
+.bdg-t{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bdr)}
+.bdg-b{background:var(--cobalt-bg);color:var(--cobalt);border:1px solid rgba(79,142,247,.2)}
+.bdg-g{background:var(--gold-bg);color:var(--gold);border:1px solid rgba(240,165,0,.2)}
+.bdg-r{background:var(--rose-bg);color:var(--rose);border:1px solid rgba(242,92,122,.2)}
+.bdg-m{background:rgba(255,255,255,.04);color:var(--slate2);border:1px solid var(--line)}
 
-  .page-section { display: none; }
-  .page-section.active { display: block; }
+/* ── FEEDBACK ──────────────────────────────────────────── */
+.fb{padding:9px 11px;border-radius:var(--rad);font-size:12px;line-height:1.5;margin-top:9px;display:none}
+.fb.on{display:block}
+.fb-ok{background:var(--teal-bg);border:1px solid var(--teal-bdr);color:var(--teal)}
+.fb-err{background:var(--rose-bg);border:1px solid rgba(242,92,122,.2);color:var(--rose)}
+.fb-info{background:var(--cobalt-bg);border:1px solid rgba(79,142,247,.2);color:var(--cobalt)}
+.lk-row{display:flex;align-items:center;gap:7px;background:var(--ink3);border:1px solid var(--line);border-radius:var(--rad);padding:6px 9px;margin-top:7px}
+.lk-row code{flex:1;font-family:var(--m);font-size:10px;color:var(--teal);word-break:break-all}
+.cp-btn{font-size:9px;padding:3px 7px;border-radius:4px;background:var(--ink4);border:1px solid var(--line);color:var(--slate);cursor:pointer;font-family:var(--m);flex-shrink:0;transition:all .1s}
+.cp-btn:hover{border-color:var(--teal);color:var(--teal)}
 
-  @media (max-width: 900px) {
-    .stats-grid { grid-template-columns: 1fr 1fr; }
-    .panels { grid-template-columns: 1fr; }
-  }
-  @media (max-width: 600px) {
-    .sidebar { display: none; }
-    .main { padding: 20px; }
-    .stats-grid { grid-template-columns: 1fr; }
-  }
+/* ── AI OUTPUT ─────────────────────────────────────────── */
+.ai-blk{display:none}.ai-blk.on{display:block}
+.ai-sec{margin-bottom:12px}
+.ai-sec-lbl{font-family:var(--m);font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--slate2);margin-bottom:4px}
+.ai-sec-val{background:var(--ink3);border:1px solid var(--line);border-radius:var(--rad);padding:9px 11px;font-size:12px;line-height:1.55}
+.ai-sec-val.hl{font-size:14px;font-weight:600;color:var(--teal)}
+.ai-ul{list-style:none}
+.ai-ul li{padding:3px 0;font-size:12px;color:var(--slate);display:flex;gap:5px}
+.ai-ul li::before{content:'→';color:var(--teal);flex-shrink:0;font-family:var(--m)}
+
+/* ── BARS ──────────────────────────────────────────────── */
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar-r{display:flex;align-items:center;gap:9px}
+.bar-lbl{width:96px;font-size:11px;color:var(--slate);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.bar-tr{flex:1;height:4px;background:var(--ink4);border-radius:2px;overflow:hidden}
+.bar-f{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--cobalt));transition:width .5s ease}
+.bar-v{width:34px;text-align:right;font-family:var(--m);font-size:10px;color:var(--slate2);flex-shrink:0}
+
+/* ── STAT LIST ─────────────────────────────────────────── */
+.slist{display:flex;flex-direction:column}
+.sr{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line2)}
+.sr:last-child{border-bottom:none}
+.sr-l{font-size:12px;color:var(--slate)}
+.sr-v{font-family:var(--m);font-size:11px;font-weight:500;color:var(--body)}
+
+/* ── FEED ──────────────────────────────────────────────── */
+.feed{font-family:var(--m);font-size:10px;line-height:1.9;overflow-y:auto;max-height:150px}
+.fl{display:flex;gap:7px}.fl-ts{color:var(--slate2);flex-shrink:0}
+.fl-ok{color:var(--teal)}.fl-info{color:var(--cobalt)}.fl-w{color:var(--gold)}
+
+/* ── EMPTY STATE ───────────────────────────────────────── */
+.empty{text-align:center;padding:28px 16px;color:var(--slate2)}
+.empty-ic{font-size:24px;opacity:.35;margin-bottom:7px}
+.empty p{font-size:11px;line-height:1.6}
+
+/* ── MODAL ─────────────────────────────────────────────── */
+.modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-wrap.on{display:flex}
+.modal{background:var(--ink2);border:1px solid var(--line);border-radius:var(--rad2);padding:22px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto}
+.modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.modal-t{font-size:13px;font-weight:700}
+.modal-x{background:none;border:none;color:var(--slate2);font-size:17px;cursor:pointer;line-height:1;padding:2px 4px;border-radius:4px}
+.modal-x:hover{color:var(--body);background:var(--ink3)}
+
+/* ── TOAST ─────────────────────────────────────────────── */
+#toast{
+  position:fixed;bottom:18px;right:18px;
+  background:var(--ink2);border:1px solid var(--line);
+  border-radius:var(--rad2);padding:9px 13px;
+  font-size:11px;display:none;z-index:9999;
+  max-width:250px;box-shadow:0 8px 20px rgba(0,0,0,.45);
+  font-family:var(--m);
+}
+#toast.on{display:flex;align-items:center;gap:7px;animation:tu .12s ease}
+#toast.ok{border-color:var(--teal-bdr);color:var(--teal)}
+#toast.err{border-color:rgba(242,92,122,.3);color:var(--rose)}
+#toast.info{border-color:rgba(79,142,247,.3);color:var(--cobalt)}
+@keyframes tu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ── PRICING CARDS ─────────────────────────────────────── */
+.price-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:0}
+.pc{background:var(--ink3);border:1px solid var(--line);border-radius:var(--rad2);padding:16px;position:relative}
+.pc.featured{border-color:var(--teal-bdr);background:var(--teal-bg)}
+.pc-badge{position:absolute;top:-9px;left:14px;background:var(--teal);color:var(--ink);font-family:var(--m);font-size:9px;font-weight:500;padding:2px 9px;border-radius:9px}
+.pc-name{font-size:11px;font-weight:600;margin-bottom:3px}
+.pc-price{font-family:var(--m);font-size:22px;font-weight:500;color:var(--body);line-height:1;margin-bottom:3px}
+.pc-price sub{font-size:11px;color:var(--slate2);font-family:var(--f)}
+.pc-desc{font-size:10px;color:var(--slate2);margin-bottom:12px}
+.pc-feats{list-style:none;margin-bottom:13px}
+.pc-feats li{display:flex;gap:6px;font-size:11px;color:var(--slate);padding:3px 0;border-bottom:1px solid var(--line2)}
+.pc-feats li:last-child{border-bottom:none}
+.pc-feats .ck{color:var(--teal);flex-shrink:0}
+
+/* ── RESPONSIVE ────────────────────────────────────────── */
+@media(max-width:1080px){.krow{grid-template-columns:1fr 1fr}}
+@media(max-width:860px){.sidebar{display:none}.g2,.g3,.gm{grid-template-columns:1fr}.price-grid{grid-template-columns:1fr}}
+@media(max-width:580px){.krow{grid-template-columns:1fr 1fr}.page{padding:14px}}
 </style>
 </head>
 <body>
 
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="/" class="brand">
+    <div class="brand-ico"><svg viewBox="0 0 14 14"><path d="M1 11 L4.5 3.5 L8 8 L10.5 4.5 L13 11 Z"/></svg></div>
+    <div class="brand-name"><b>NEXT</b>WAVE</div>
+  </a>
+  <div class="topbar-mid"><div class="live-pip"></div><span class="live-txt">LIVE</span></div>
+  <div class="topbar-right">
+    <span class="t-time" id="clock">--:--:--</span>
+    <button class="t-btn" title="Refresh all data" onclick="refreshAll()">↻</button>
+  </div>
+</div>
+
+<div class="shell">
+
+<!-- SIDEBAR -->
 <nav class="sidebar">
-  <div class="logo">NextWave <span>Engine</span></div>
-  <div class="nav-item active" onclick="showPage('overview', this)">
-    <span class="nav-icon">📊</span> Overview
+  <div class="sg">
+    <div class="sg-lbl">Overview</div>
+    <div class="ni on" onclick="nav('overview',this)"><span class="ni-ic">▤</span>Dashboard</div>
   </div>
-  <div class="nav-item" onclick="showPage('funnels', this)">
-    <span class="nav-icon">🤖</span> AI Funnels
+  <div class="sg">
+    <div class="sg-lbl">Tools</div>
+    <div class="ni" onclick="nav('funnels',this)"><span class="ni-ic">◈</span>AI Funnels</div>
+    <div class="ni" onclick="nav('links',this)"><span class="ni-ic">⌖</span>Link Cloaker</div>
+    <div class="ni" onclick="nav('leads',this)"><span class="ni-ic">◎</span>Leads<span class="ni-ct" id="sb-ct">0</span></div>
   </div>
-  <div class="nav-item" onclick="showPage('links', this)">
-    <span class="nav-icon">🔗</span> Link Shortener
+  <div class="sg">
+    <div class="sg-lbl">Revenue</div>
+    <div class="ni" onclick="nav('conversions',this)"><span class="ni-ic">◉</span>Conversions</div>
+    <div class="ni" onclick="nav('traffic',this)"><span class="ni-ic">◌</span>Traffic</div>
   </div>
-  <div class="nav-item" onclick="showPage('leads', this)">
-    <span class="nav-icon">👥</span> Leads
+  <div class="sg">
+    <div class="sg-lbl">Connect</div>
+    <div class="ni" onclick="nav('integrations',this)"><span class="ni-ic">⊕</span>Integrations</div>
+    <div class="ni" onclick="nav('settings',this)"><span class="ni-ic">◧</span>Settings</div>
+  </div>
+  <div style="flex:1"></div>
+  <div class="si-row">
+    <div class="si-pill off" id="pi-tz" onclick="nav('integrations',null)"><div class="si-pip"></div>TrafficZest</div>
+    <div class="si-pill off" id="pi-fm" onclick="nav('integrations',null)"><div class="si-pip"></div>Forge Mail</div>
+  </div>
+  <div class="s-plan">
+    <div class="s-plan-lbl">PLAN</div>
+    <div class="s-plan-name">Free Tier</div>
+    <div class="s-bar"><div class="s-bar-f"></div></div>
+    <div class="s-plan-meta">5 of 5 AI builds/mo</div>
+    <a href="#" class="s-upgrade" onclick="nav('settings',null);return false">Upgrade — from $49/mo</a>
   </div>
 </nav>
 
+<!-- MAIN -->
 <main class="main">
 
-  <!-- OVERVIEW -->
-  <div class="page-section active" id="page-overview">
-    <div class="page-header">
-      <div class="page-title">Dashboard <small id="overview-updated">Loading…</small></div>
-      <div class="range-selector">
-        <button class="range-btn active" onclick="setRange('24h', this)">24h</button>
-        <button class="range-btn" onclick="setRange('7d', this)">7 days</button>
-        <button class="range-btn" onclick="setRange('30d', this)">30 days</button>
+<!-- ══ DASHBOARD ═══════════════════════════════════════ -->
+<div class="page on" id="page-overview">
+  <div class="ph">
+    <div class="pt">Dashboard <span class="ps" id="ov-rng">7 days</span></div>
+    <div class="pa">
+      <button class="btn btn-g btn-sm" onclick="setRange('24h',this)">24h</button>
+      <button class="btn btn-g btn-sm" onclick="setRange('7d',this)">7d</button>
+      <button class="btn btn-g btn-sm" onclick="setRange('30d',this)">30d</button>
+    </div>
+  </div>
+  <div class="krow">
+    <div class="kc kt"><div class="k-lbl">Revenue Tracked</div><div class="k-val" id="k-rev">$0.00</div><div class="k-sub">logged commissions</div></div>
+    <div class="kc kb"><div class="k-lbl">Leads Captured</div><div class="k-val" id="k-leads">0</div><div class="k-sub">opted-in emails</div></div>
+    <div class="kc kg"><div class="k-lbl">Link Clicks</div><div class="k-val" id="k-clicks">0</div><div class="k-sub">across all links</div></div>
+    <div class="kc kr"><div class="k-lbl">Active Funnels</div><div class="k-val" id="k-funnels">0</div><div class="k-sub">deployed pages</div></div>
+  </div>
+  <div class="gm" style="flex:1;min-height:0">
+    <div class="panel">
+      <div class="p-head"><div class="p-title"><span class="p-icon">◎</span>Recent Leads</div><button class="btn btn-g btn-sm" onclick="nav('leads',null)">View all</button></div>
+      <div class="p-body np">
+        <table class="tbl"><thead><tr><th>Email</th><th>Funnel</th><th>When</th></tr></thead>
+        <tbody id="ov-leads">
+          <tr><td colspan="3"><div class="empty"><div class="empty-ic">◎</div><p>No leads yet.<br>Share a funnel link to start.</p></div></td></tr>
+        </tbody></table>
       </div>
     </div>
-
-    <div class="stats-grid">
-      <div class="stat-card green">
-        <div class="stat-label">Leads Captured</div>
-        <div class="stat-value" id="stat-leads">—</div>
-        <div class="stat-sub">emails collected</div>
-      </div>
-      <div class="stat-card blue">
-        <div class="stat-label">Link Clicks</div>
-        <div class="stat-value" id="stat-clicks">—</div>
-        <div class="stat-sub">tracked visits</div>
-      </div>
-      <div class="stat-card gold">
-        <div class="stat-label">Conversions</div>
-        <div class="stat-value" id="stat-conversions">—</div>
-        <div class="stat-sub">tracked purchases</div>
-      </div>
-      <div class="stat-card red">
-        <div class="stat-label">Revenue Tracked</div>
-        <div class="stat-value" id="stat-revenue">—</div>
-        <div class="stat-sub">via conversion events</div>
-      </div>
-    </div>
-
-    <div class="panels">
+    <div class="gc">
       <div class="panel">
-        <div class="panel-title">📬 Recent Leads <span class="badge" id="leads-count-badge">0</span></div>
-        <div style="overflow-x:auto">
-          <table>
-            <thead><tr><th>Email</th><th>Funnel</th><th>Time</th></tr></thead>
-            <tbody id="recent-leads-table">
-              <tr><td colspan="3" style="color:var(--muted)">Loading…</td></tr>
-            </tbody>
-          </table>
+        <div class="p-head"><div class="p-title"><span class="p-icon">⌖</span>Top Links by Clicks</div></div>
+        <div class="p-body"><div class="bars" id="ov-bars"><div class="empty" style="padding:6px 0"><p style="font-size:11px">No links yet</p></div></div></div>
+      </div>
+      <div class="panel" style="flex:1">
+        <div class="p-head"><div class="p-title"><span class="p-icon">◌</span>Activity Log</div></div>
+        <div class="p-body"><div class="feed" id="feed"><div class="fl"><span class="fl-ts">--:--:--</span><span class="fl-ok">System ready</span></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ AI FUNNELS ════════════════════════════════════════ -->
+<div class="page" id="page-funnels">
+  <div class="ph"><div class="pt">AI Funnels <span class="ps">powered by Claude</span></div></div>
+  <div class="gm" style="flex:1;min-height:0">
+    <div class="gc">
+      <div class="panel">
+        <div class="p-head"><div class="p-title"><span class="p-icon">◈</span>Build Funnel Copy</div></div>
+        <div class="p-body">
+          <div class="fld"><label class="lbl">What are you promoting?</label><input class="inp" id="ai-niche" placeholder="e.g. weight loss supplement, email course, SaaS tool…" /></div>
+          <div class="fld"><label class="lbl">Destination / Affiliate URL</label><input class="inp" id="ai-url" placeholder="https://your-offer.com/link" /></div>
+          <div class="r2">
+            <div class="fld"><label class="lbl">Traffic source</label>
+              <select class="sel" id="ai-src">
+                <option value="trafficzest">TrafficZest</option>
+                <option value="solo-ads">Solo Ads</option>
+                <option value="cold-traffic">Cold Traffic</option>
+                <option value="email-list">Email List</option>
+              </select>
+            </div>
+            <div class="fld"><label class="lbl">Funnel slug</label><input class="inp" id="ai-slug" placeholder="my-offer" /></div>
+          </div>
+          <button class="btn btn-p btn-w" id="ai-btn" onclick="buildFunnel()">Generate with AI</button>
+          <div class="fb" id="ai-fb"></div>
         </div>
       </div>
       <div class="panel">
-        <div class="panel-title">🔗 Top Links <span class="badge" id="links-count-badge">0</span></div>
-        <div style="overflow-x:auto">
-          <table>
-            <thead><tr><th>Slug</th><th>Clicks</th></tr></thead>
-            <tbody id="top-links-table">
-              <tr><td colspan="2" style="color:var(--muted)">Loading…</td></tr>
-            </tbody>
-          </table>
+        <div class="p-head"><div class="p-title"><span class="p-icon">▶</span>Deploy to Live URL</div></div>
+        <div class="p-body">
+          <p style="font-size:11px;color:var(--slate2);margin-bottom:11px;line-height:1.6">Generate copy above first. Once ready, deploy creates a live funnel URL in your account.</p>
+          <button class="btn btn-s btn-w" id="dep-btn" onclick="deployFunnel()" disabled>Deploy Funnel</button>
+          <div class="fb" id="dep-fb"></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="p-head"><div class="p-title"><span class="p-icon">▤</span>Generated Copy</div><span class="bdg bdg-m" id="ai-bdg">waiting</span></div>
+      <div class="p-body">
+        <div class="empty" id="ai-empty"><div class="empty-ic">◈</div><p>Enter your niche and click Generate.<br>AI builds your funnel copy here.</p></div>
+        <div class="ai-blk" id="ai-out">
+          <div class="ai-sec"><div class="ai-sec-lbl">Headline</div><div class="ai-sec-val hl" id="o-hl"></div></div>
+          <div class="ai-sec"><div class="ai-sec-lbl">Subheadline</div><div class="ai-sec-val" id="o-sh"></div></div>
+          <div class="ai-sec"><div class="ai-sec-lbl">Hook</div><div class="ai-sec-val" id="o-hk"></div></div>
+          <div class="ai-sec"><div class="ai-sec-lbl">Benefits</div><ul class="ai-ul ai-sec-val" id="o-ul"></ul></div>
+          <div class="ai-sec"><div class="ai-sec-lbl">Call to Action</div><div class="ai-sec-val" style="color:var(--teal);font-weight:600" id="o-cta"></div></div>
+          <div class="ai-sec"><div class="ai-sec-lbl">Email Subject</div><div class="ai-sec-val" id="o-subj"></div></div>
+          <div class="ai-sec"><div class="ai-sec-lbl">Email Body</div><div class="ai-sec-val" style="white-space:pre-wrap;font-size:11px" id="o-body"></div></div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- AI FUNNELS -->
-  <div class="page-section" id="page-funnels">
-    <div class="page-header">
-      <div class="page-title">🤖 AI Funnel Builder</div>
-    </div>
-    <div class="panels">
+<!-- ══ LINK CLOAKER ══════════════════════════════════════ -->
+<div class="page" id="page-links">
+  <div class="ph"><div class="pt">Link Cloaker <span class="ps">track every click</span></div></div>
+  <div class="gm" style="flex:1;min-height:0">
+    <div class="gc">
       <div class="panel">
-        <div class="panel-title">Generate Funnel Copy</div>
-        <div class="form-group" style="margin-bottom:12px">
-          <label>What are you promoting?</label>
-          <input id="ai-prompt" placeholder="e.g. weight loss supplement, make money online course…" />
+        <div class="p-head"><div class="p-title"><span class="p-icon">⌖</span>Create Cloaked Link</div></div>
+        <div class="p-body">
+          <div class="fld"><label class="lbl">Destination URL (your affiliate link)</label><input class="inp" id="lnk-url" placeholder="https://yournetwork.com/offer?ref=yourcode" /></div>
+          <div class="r2">
+            <div class="fld"><label class="lbl">Custom slug (optional)</label><input class="inp" id="lnk-slug" placeholder="promo-jan" /></div>
+            <div class="fld"><label class="lbl">Label / campaign</label><input class="inp" id="lnk-lbl" placeholder="TZ Campaign 1" /></div>
+          </div>
+          <button class="btn btn-p btn-w" onclick="createLink()">Create Cloaked Link</button>
+          <div class="fb" id="lnk-fb"></div>
         </div>
-        <div class="form-group" style="margin-bottom:16px">
-          <label>Affiliate Link</label>
-          <input id="ai-affiliate-link" placeholder="https://your-affiliate-link.com" />
+      </div>
+      <div class="panel">
+        <div class="p-head"><div class="p-title">Summary</div></div>
+        <div class="p-body">
+          <div class="slist">
+            <div class="sr"><span class="sr-l">Total links created</span><span class="sr-v" id="l-tot">0</span></div>
+            <div class="sr"><span class="sr-l">Total clicks tracked</span><span class="sr-v cg" id="l-clk">0</span></div>
+            <div class="sr"><span class="sr-l">Top performing link</span><span class="sr-v ct mono" id="l-top">—</span></div>
+          </div>
         </div>
-        <button class="btn btn-primary" id="ai-gen-btn" onclick="generateFunnel()">
-          ✨ Generate
+      </div>
+    </div>
+    <div class="panel">
+      <div class="p-head"><div class="p-title"><span class="p-icon">▤</span>All Links</div><button class="btn btn-g btn-sm" onclick="loadLinks()">↻</button></div>
+      <div class="p-body np">
+        <table class="tbl"><thead><tr><th>Short link</th><th>Label</th><th>Destination</th><th>Clicks</th></tr></thead>
+        <tbody id="links-body">
+          <tr><td colspan="4"><div class="empty"><div class="empty-ic">⌖</div><p>No cloaked links yet.</p></div></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ LEADS ═════════════════════════════════════════════ -->
+<div class="page" id="page-leads">
+  <div class="ph">
+    <div class="pt">Leads</div>
+    <div class="pa"><span class="bdg bdg-t" id="ld-ct-bdg">0 leads</span></div>
+  </div>
+  <div class="panel" style="flex:1;min-height:0">
+    <div class="p-body np" style="overflow-y:auto">
+      <table class="tbl"><thead><tr><th>Email</th><th>Funnel</th><th>Forge Mail</th><th>Captured</th></tr></thead>
+      <tbody id="leads-body">
+        <tr><td colspan="4"><div class="empty"><div class="empty-ic">◎</div><p>No leads yet.<br>Share a funnel link to start building your list.</p></div></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONVERSIONS ═══════════════════════════════════════ -->
+<div class="page" id="page-conversions">
+  <div class="ph">
+    <div class="pt">Conversions</div>
+    <div class="pa"><button class="btn btn-p btn-sm" onclick="openModal('m-conv')">+ Log Sale</button></div>
+  </div>
+  <div class="krow" style="grid-template-columns:repeat(3,1fr);margin-bottom:12px">
+    <div class="kc kt"><div class="k-lbl">Total Revenue</div><div class="k-val" id="cv-rev">$0.00</div><div class="k-sub">logged commissions</div></div>
+    <div class="kc kb"><div class="k-lbl">Sales Logged</div><div class="k-val" id="cv-cnt">0</div><div class="k-sub">conversion events</div></div>
+    <div class="kc kg"><div class="k-lbl">Avg Commission</div><div class="k-val" id="cv-avg">$0</div><div class="k-sub">per sale</div></div>
+  </div>
+  <div class="gm" style="flex:1;min-height:0">
+    <div class="panel">
+      <div class="p-head"><div class="p-title"><span class="p-icon">◉</span>Sale Log</div></div>
+      <div class="p-body np">
+        <table class="tbl"><thead><tr><th>Email</th><th>Offer / Funnel</th><th>Amount</th><th>When</th></tr></thead>
+        <tbody id="conv-body">
+          <tr><td colspan="4"><div class="empty"><div class="empty-ic">◉</div><p>No sales logged yet.<br>Use "Log Sale" to record a commission.</p></div></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="p-head"><div class="p-title">Revenue by Funnel</div></div>
+      <div class="p-body"><div class="bars" id="cv-bars"><div class="empty" style="padding:6px 0"><p style="font-size:11px">No data yet</p></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TRAFFIC ════════════════════════════════════════════ -->
+<div class="page" id="page-traffic">
+  <div class="ph"><div class="pt">Traffic Events</div></div>
+  <div class="g2" style="flex:1;min-height:0">
+    <div class="panel">
+      <div class="p-head"><div class="p-title"><span class="p-icon">◌</span>Recent Events</div></div>
+      <div class="p-body np">
+        <table class="tbl"><thead><tr><th>Type</th><th>Funnel</th><th>Value</th><th>When</th></tr></thead>
+        <tbody id="ev-body">
+          <tr><td colspan="4"><div class="empty"><p>No events recorded yet</p></div></td></tr>
+        </tbody></table>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="p-head"><div class="p-title">Event Types</div></div>
+      <div class="p-body"><div class="bars" id="ev-bars"><div class="empty" style="padding:6px 0"><p style="font-size:11px">No data yet</p></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ INTEGRATIONS ═══════════════════════════════════════ -->
+<div class="page" id="page-integrations">
+  <div class="ph"><div class="pt">Integrations</div></div>
+  <div class="g2">
+    <div class="panel">
+      <div class="p-head"><div class="p-title">⚡ TrafficZest</div><span class="bdg bdg-m" id="tz-bdg">Not configured</span></div>
+      <div class="p-body">
+        <p style="font-size:12px;color:var(--slate);line-height:1.65;margin-bottom:13px">Point your TrafficZest campaign URL at a NextWave cloaked link. Each click is tracked, each opt-in is captured, and leads sync to Forge Mail automatically.</p>
+        <div class="fld"><label class="lbl">Your TrafficZest campaign URL</label><input class="inp" id="tz-url" placeholder="https://trafficzest.com/c/your-campaign" /></div>
+        <div class="fld"><label class="lbl">Traffic destination (your cloaked link)</label><input class="inp" id="tz-dest" placeholder="https://nextwave-traffic-engine.netlify.app/l/my-funnel" /></div>
+        <button class="btn btn-p btn-w" onclick="saveTZ()">Save Configuration</button>
+        <div class="fb" id="tz-fb"></div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line)">
+          <div style="font-family:var(--m);font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--slate2);margin-bottom:9px">Setup steps</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;gap:8px;font-size:11px;color:var(--slate)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">1.</span>Create a cloaked link in the Link Cloaker tab</div>
+            <div style="display:flex;gap:8px;font-size:11px;color:var(--slate)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">2.</span>Paste that cloaked link as your TrafficZest destination</div>
+            <div style="display:flex;gap:8px;font-size:11px;color:var(--slate)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">3.</span>Visitors land on your funnel and opt in — lead is captured</div>
+            <div style="display:flex;gap:8px;font-size:11px;color:var(--slate)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">4.</span>Lead syncs to Forge Mail — your sequence fires automatically</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="p-head"><div class="p-title">✉ Forge Mail</div><span class="bdg bdg-m" id="fm-bdg">Not configured</span></div>
+      <div class="p-body">
+        <p style="font-size:12px;color:var(--slate);line-height:1.65;margin-bottom:13px">Every lead captured through your funnels syncs to Forge Mail automatically, tagged with their funnel name and traffic source.</p>
+        <div class="fld"><label class="lbl">Forge Mail API key</label><input class="inp" id="fm-key" type="password" placeholder="Your Forge Mail API key" /></div>
+        <div class="fld"><label class="lbl">Default list name</label><input class="inp" id="fm-list" placeholder="nextwave-leads" /></div>
+        <button class="btn btn-p btn-w" onclick="saveFM()">Save & Connect</button>
+        <div class="fb" id="fm-fb"></div>
+        <div style="margin-top:13px">
+          <div class="slist">
+            <div class="sr"><span class="sr-l">Leads synced (approx)</span><span class="sr-v ct" id="fm-sync">0</span></div>
+            <div class="sr"><span class="sr-l">Last activity</span><span class="sr-v mono cs" id="fm-last">Never</span></div>
+          </div>
+          <p style="font-size:10px;color:var(--slate2);margin-top:9px;line-height:1.65">⚠ The API key also needs to be set in <strong style="color:var(--slate)">Netlify → Environment Variables</strong> as <code style="font-family:var(--m)">FORGE_MAIL_API_KEY</code> for server-side sync to work.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SETTINGS ═══════════════════════════════════════════ -->
+<div class="page" id="page-settings">
+  <div class="ph"><div class="pt">Settings</div></div>
+  <div class="g2">
+    <div class="panel">
+      <div class="p-head"><div class="p-title">Plans</div></div>
+      <div class="p-body">
+        <p style="font-size:11px;color:var(--slate2);margin-bottom:14px;line-height:1.6">Start free, upgrade when your campaigns are running. No contracts.</p>
+        <div class="price-grid">
+          <div class="pc">
+            <div class="pc-name">Free</div>
+            <div class="pc-price">$0</div>
+            <div class="pc-desc">Test the system</div>
+            <ul class="pc-feats">
+              <li><span class="ck">✓</span>5 AI funnel builds/month</li>
+              <li><span class="ck">✓</span>10 cloaked links</li>
+              <li><span class="ck">✓</span>Lead capture</li>
+              <li><span class="ck">✓</span>Basic analytics</li>
+            </ul>
+            <button class="btn btn-g btn-w" style="font-size:11px" disabled>Current plan</button>
+          </div>
+          <div class="pc featured">
+            <div class="pc-badge">POPULAR</div>
+            <div class="pc-name" style="color:var(--teal)">Pro</div>
+            <div class="pc-price" style="color:var(--teal)">$49<sub>/mo</sub></div>
+            <div class="pc-desc">Active affiliates</div>
+            <ul class="pc-feats">
+              <li><span class="ck">✓</span>Unlimited AI builds</li>
+              <li><span class="ck">✓</span>Unlimited links</li>
+              <li><span class="ck">✓</span>Forge Mail automation</li>
+              <li><span class="ck">✓</span>Revenue attribution</li>
+              <li><span class="ck">✓</span>Priority support</li>
+            </ul>
+            <button class="btn btn-p btn-w" style="font-size:11px" onclick="toast('Add Stripe to checkout.html to activate billing','info')">Upgrade to Pro</button>
+          </div>
+          <div class="pc">
+            <div class="pc-name">Scale</div>
+            <div class="pc-price">$99<sub>/mo</sub></div>
+            <div class="pc-desc">High-volume campaigns</div>
+            <ul class="pc-feats">
+              <li><span class="ck">✓</span>Everything in Pro</li>
+              <li><span class="ck">✓</span>Multiple workspaces</li>
+              <li><span class="ck">✓</span>API access</li>
+              <li><span class="ck">✓</span>Custom domains</li>
+            </ul>
+            <button class="btn btn-s btn-w" style="font-size:11px" onclick="toast('Add Stripe to checkout.html to activate billing','info')">Upgrade to Scale</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="gc">
+      <div class="panel">
+        <div class="p-head"><div class="p-title">Environment Variables</div></div>
+        <div class="p-body">
+          <p style="font-size:10px;color:var(--slate2);margin-bottom:11px;line-height:1.6">Set these in <strong style="color:var(--slate)">Netlify → Site Settings → Environment Variables</strong>. Never store keys in code.</p>
+          <div class="slist">
+            <div class="sr"><span class="sr-l mono" style="font-size:10px">ANTHROPIC_API_KEY</span><span class="bdg bdg-m">Netlify env</span></div>
+            <div class="sr"><span class="sr-l mono" style="font-size:10px">SUPABASE_URL</span><span class="bdg bdg-m">Netlify env</span></div>
+            <div class="sr"><span class="sr-l mono" style="font-size:10px">SUPABASE_SERVICE_KEY</span><span class="bdg bdg-m">Netlify env</span></div>
+            <div class="sr"><span class="sr-l mono" style="font-size:10px">FORGE_MAIL_API_KEY</span><span class="bdg bdg-m">Netlify env</span></div>
+            <div class="sr"><span class="sr-l mono" style="font-size:10px">SITE_URL</span><span class="bdg bdg-m">Netlify env</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="p-head"><div class="p-title">Database Tables</div></div>
+        <div class="p-body">
+          <p style="font-size:10px;color:var(--slate2);margin-bottom:11px;line-height:1.6">Run <strong style="color:var(--slate)">schema.sql</strong> in Supabase SQL Editor if any tables show missing.</p>
+          <div class="slist" id="tbl-list">
+            <div class="sr"><span class="sr-l">funnels</span><span class="bdg bdg-m">—</span></div>
+            <div class="sr"><span class="sr-l">leads</span><span class="bdg bdg-m">—</span></div>
+            <div class="sr"><span class="sr-l">events</span><span class="bdg bdg-m">—</span></div>
+            <div class="sr"><span class="sr-l">links</span><span class="bdg bdg-m">—</span></div>
+            <div class="sr"><span class="sr-l">conversions</span><span class="bdg bdg-m">—</span></div>
+          </div>
+          <button class="btn btn-g btn-sm btn-w" style="margin-top:9px" onclick="checkTables()">Check Tables</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<!-- MODAL: Log Sale -->
+<div class="modal-wrap" id="m-conv" onclick="closeBD(event,'m-conv')">
+  <div class="modal">
+    <div class="modal-h"><div class="modal-t">Log a Sale</div><button class="modal-x" onclick="closeModal('m-conv')">×</button></div>
+    <div class="fld"><label class="lbl">Buyer email (optional)</label><input class="inp" id="mc-em" placeholder="buyer@email.com" /></div>
+    <div class="r2">
+      <div class="fld"><label class="lbl">Offer / funnel</label><input class="inp" id="mc-fn" placeholder="offer-name" /></div>
+      <div class="fld"><label class="lbl">Commission ($)</label><input class="inp" id="mc-am" type="number" placeholder="47.00" min="0.01" step="0.01" /></div>
+    </div>
+    <button class="btn btn-p btn-w" onclick="logSale()">Save Sale</button>
+    <div class="fb" id="mc-fb"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- ── ALL JAVASCRIPT ─────────────────────────────────── -->
+<script type="module">
+import { supabase } from './supabase.js'
+window._sb = supabase   // expose for console debugging
+
+// ── CLOCK ─────────────────────────────────────────────
+setInterval(() => {
+  document.getElementById('clock').textContent = new Date().toTimeString().slice(0,8)
+}, 1000)
+
+// ── NAV ───────────────────────────────────────────────
+window.nav = function(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'))
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'))
+  const pg = document.getElementById('page-' + id)
+  if (pg) pg.classList.add('on')
+  if (el) {
+    el.classList.add('on')
+  } else {
+    // highlight matching nav item when called programmatically
+    document.querySelectorAll('.ni').forEach(n => {
+      if (n.getAttribute('onclick')?.includes(`'${id}'`)) n.classList.add('on')
+    })
+  }
+  const dispatch = {
+    overview:    loadOverview,
+    leads:       loadLeads,
+    links:       loadLinks,
+    conversions: loadConversions,
+    traffic:     loadTraffic,
+    settings:    checkTables
+  }
+  dispatch[id]?.()
+}
+
+// ── DATE RANGE ────────────────────────────────────────
+let currentRange = '7d'
+window.setRange = function(r) {
+  currentRange = r
+  document.getElementById('ov-rng').textContent = r === '24h' ? '24 hours' : r === '30d' ? '30 days' : '7 days'
+  loadOverview()
+}
+window.refreshAll = function() { loadOverview(); syncIntegrationStatus(); toast('Refreshed','ok') }
+
+// ── OVERVIEW ──────────────────────────────────────────
+async function loadOverview() {
+  try {
+    const from = getFrom(currentRange)
+    const [evR, ldR, lkR, cvR, fnR] = await Promise.all([
+      _sb.from('events').select('type,value,funnel_id').gte('created_at', from),
+      _sb.from('leads').select('email,funnel_id,created_at').gte('created_at', from).order('created_at',{ascending:false}).limit(10),
+      _sb.from('links').select('slug,label,clicks').order('clicks',{ascending:false}).limit(6),
+      _sb.from('conversions').select('revenue').gte('created_at', from),
+      _sb.from('funnels').select('id')
+    ])
+
+    const events  = evR.data  || []
+    const leads   = ldR.data  || []
+    const links   = lkR.data  || []
+    const convs   = cvR.data  || []
+    const funnels = fnR.data  || []
+
+    const clicks  = events.filter(e => e.type === 'click').length
+    const revenue = convs.reduce((s, c) => s + (c.revenue || 0), 0)
+
+    setText('k-rev',     '$' + revenue.toFixed(2))
+    setText('k-leads',   leads.length)
+    setText('k-clicks',  clicks)
+    setText('k-funnels', funnels.length)
+    setText('sb-ct',     leads.length)
+    setText('ld-ct-bdg', leads.length + ' leads')
+
+    // Leads table
+    const lb = document.getElementById('ov-leads')
+    lb.innerHTML = leads.length
+      ? leads.map(l => `<tr>
+          <td>${esc(l.email)}</td>
+          <td><span class="bdg bdg-b">${esc(l.funnel_id || 'default')}</span></td>
+          <td class="mono cs">${ago(l.created_at)}</td>
+        </tr>`).join('')
+      : emptyRow(3, '◎', 'No leads in this period.')
+
+    // Links bar chart
+    const maxC = Math.max(1, ...links.map(l => l.clicks || 0))
+    document.getElementById('ov-bars').innerHTML = links.length
+      ? links.map(l => `<div class="bar-r">
+          <div class="bar-lbl">/l/${esc(l.slug)}</div>
+          <div class="bar-tr"><div class="bar-f" style="width:${Math.max(3, Math.round(((l.clicks||0)/maxC)*100))}%"></div></div>
+          <div class="bar-v">${l.clicks || 0}</div>
+        </div>`).join('')
+      : '<div class="empty" style="padding:6px 0"><p style="font-size:11px">No links yet</p></div>'
+
+    addFeed(`Loaded — ${leads.length} leads, ${clicks} clicks, $${revenue.toFixed(2)}`, 'ok')
+  } catch (e) {
+    addFeed('Load error: ' + e.message, 'w')
+  }
+}
+
+// ── AI FUNNELS ────────────────────────────────────────
+let savedCopy = null
+
+window.buildFunnel = async function() {
+  const niche = document.getElementById('ai-niche').value.trim()
+  if (!niche) { toast('Enter what you are promoting', 'err'); return }
+
+  const btn = document.getElementById('ai-btn')
+  btnLoading(btn, true, 'Generating…')
+  setFB('ai-fb', '', '')
+  setText('ai-bdg', 'generating…')
+  document.getElementById('ai-bdg').className = 'bdg bdg-m'
+
+  try {
+    const res = await fetch('/.netlify/functions/ai', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: niche,
+        type: 'funnel',
+        source: document.getElementById('ai-src').value
+      })
+    })
+    const data = await res.json()
+    if (data.error) throw new Error(data.error)
+
+    const c = data.result
+    savedCopy = c
+
+    document.getElementById('o-hl').textContent   = c.headline      || ''
+    document.getElementById('o-sh').textContent   = c.subheadline   || ''
+    document.getElementById('o-hk').textContent   = c.hook          || ''
+    document.getElementById('o-cta').textContent  = c.cta           || ''
+    document.getElementById('o-subj').textContent = c.emailSubject  || ''
+    document.getElementById('o-body').textContent = c.emailBody     || ''
+    document.getElementById('o-ul').innerHTML = (c.bullets || []).map(b => `<li>${esc(b)}</li>`).join('')
+
+    document.getElementById('ai-empty').style.display = 'none'
+    document.getElementById('ai-out').classList.add('on')
+    document.getElementById('dep-btn').disabled = false
+    setText('ai-bdg', '✓ ready')
+    document.getElementById('ai-bdg').className = 'bdg bdg-t'
+    addFeed('Copy generated: ' + niche, 'ok')
+    toast('Copy ready', 'ok')
+
+  } catch (e) {
+    setFB('ai-fb', 'err', '⚠ ' + e.message)
+    setText('ai-bdg', 'error')
+    document.getElementById('ai-bdg').className = 'bdg bdg-r'
+  }
+
+  btnLoading(btn, false, 'Generate with AI')
+}
+
+window.deployFunnel = async function() {
+  const name = document.getElementById('ai-slug').value.trim() || document.getElementById('ai-niche').value.trim()
+  const link = document.getElementById('ai-url').value.trim()
+  if (!name) { toast('Enter a funnel slug first', 'err'); return }
+
+  const btn = document.getElementById('dep-btn')
+  btnLoading(btn, true, 'Deploying…')
+
+  try {
+    const res = await fetch('/.netlify/functions/createPage', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, link, copy: savedCopy })
+    })
+    const data = await res.json()
+    if (data.error) throw new Error(data.error)
+    setFB('dep-fb', 'ok', '✓ Live', data.url)
+    addFeed('Funnel deployed: ' + name, 'ok')
+    toast('Funnel is live', 'ok')
+    loadOverview()
+  } catch (e) {
+    setFB('dep-fb', 'err', '⚠ ' + e.message)
+  }
+
+  btnLoading(btn, false, 'Deploy Funnel')
+}
+
+// ── LINK CLOAKER ──────────────────────────────────────
+window.createLink = async function() {
+  const url   = document.getElementById('lnk-url').value.trim()
+  const slug  = document.getElementById('lnk-slug').value.trim() || undefined
+  const label = document.getElementById('lnk-lbl').value.trim()  || undefined
+
+  if (!url) { toast('Enter a destination URL', 'err'); return }
+  try { new URL(url) } catch { toast('URL must start with https://', 'err'); return }
+
+  const fb = document.getElementById('lnk-fb')
+  fb.className = 'fb on fb-info'; fb.textContent = 'Creating…'
+
+  try {
+    const res = await fetch('/.netlify/functions/createLink', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url, slug, label })
+    })
+    const data = await res.json()
+    if (data.error) throw new Error(data.error)
+
+    setFB('lnk-fb', 'ok', '✓ Created', data.short_link)
+    document.getElementById('lnk-url').value  = ''
+    document.getElementById('lnk-slug').value = ''
+    document.getElementById('lnk-lbl').value  = ''
+    addFeed('Link created: /l/' + data.slug, 'ok')
+    loadLinks()
+    toast('Link created', 'ok')
+  } catch (e) {
+    setFB('lnk-fb', 'err', '⚠ ' + e.message)
+  }
+}
+
+window.loadLinks = async function() {
+  try {
+    const { data: links } = await _sb.from('links').select('*').order('clicks', { ascending: false })
+    const list  = links || []
+    const total = list.reduce((s, l) => s + (l.clicks || 0), 0)
+    setText('l-tot', list.length)
+    setText('l-clk', total)
+    setText('l-top', list[0] ? '/l/' + list[0].slug : '—')
+
+    document.getElementById('links-body').innerHTML = list.length
+      ? list.map(l => `<tr>
+          <td class="mono ct">/l/${esc(l.slug)}</td>
+          <td class="cs">${esc(l.label || '—')}</td>
+          <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+            <a href="${esc(l.original_url || '#')}" target="_blank" style="color:var(--cobalt);text-decoration:none;font-size:11px">${esc(l.original_url || '—')}</a>
+          </td>
+          <td class="mono cg">${l.clicks || 0}</td>
+        </tr>`).join('')
+      : emptyRow(4, '⌖', 'No links yet.')
+  } catch (e) { console.error(e) }
+}
+
+// ── LEADS ─────────────────────────────────────────────
+async function loadLeads() {
+  try {
+    const { data: leads } = await _sb.from('leads').select('*').order('created_at', { ascending: false })
+    const list  = leads || []
+    const fmOk  = !!localStorage.getItem('fm_ok')
+    setText('ld-ct-bdg', list.length + ' leads')
+    setText('sb-ct', list.length)
+
+    document.getElementById('leads-body').innerHTML = list.length
+      ? list.map(l => `<tr>
+          <td>${esc(l.email)}</td>
+          <td><span class="bdg bdg-b">${esc(l.funnel_id || 'default')}</span></td>
+          <td>${fmOk ? '<span class="bdg bdg-t">Synced</span>' : '<span class="bdg bdg-m">—</span>'}</td>
+          <td class="mono cs">${ago(l.created_at)}</td>
+        </tr>`).join('')
+      : emptyRow(4, '◎', 'No leads yet.')
+  } catch (e) { console.error(e) }
+}
+
+// ── CONVERSIONS ───────────────────────────────────────
+async function loadConversions() {
+  try {
+    const { data: convs } = await _sb.from('conversions').select('*').order('created_at', { ascending: false })
+    const list  = convs || []
+    const total = list.reduce((s, c) => s + (c.revenue || 0), 0)
+    const avg   = list.length ? total / list.length : 0
+
+    setText('cv-rev', '$' + total.toFixed(2))
+    setText('cv-cnt', list.length)
+    setText('cv-avg', '$' + avg.toFixed(0))
+    setText('k-rev',  '$' + total.toFixed(2))
+
+    document.getElementById('conv-body').innerHTML = list.length
+      ? list.map(c => `<tr>
+          <td>${esc(c.email || '—')}</td>
+          <td><span class="bdg bdg-b">${esc(c.funnel_name || '—')}</span></td>
+          <td class="mono ct">$${(c.revenue || 0).toFixed(2)}</td>
+          <td class="mono cs">${ago(c.created_at)}</td>
+        </tr>`).join('')
+      : emptyRow(4, '◉', 'No sales logged yet.')
+
+    // Bar chart by funnel
+    const byF = {}
+    list.forEach(c => { const k = c.funnel_name || 'unknown'; byF[k] = (byF[k] || 0) + (c.revenue || 0) })
+    const entries = Object.entries(byF).sort((a, b) => b[1] - a[1]).slice(0, 5)
+    const maxV    = entries[0]?.[1] || 1
+    document.getElementById('cv-bars').innerHTML = entries.length
+      ? entries.map(([k, v]) => `<div class="bar-r">
+          <div class="bar-lbl">${esc(k)}</div>
+          <div class="bar-tr"><div class="bar-f" style="width:${Math.max(3, Math.round((v / maxV) * 100))}%"></div></div>
+          <div class="bar-v">$${v.toFixed(0)}</div>
+        </div>`).join('')
+      : '<div class="empty" style="padding:6px 0"><p style="font-size:11px">No data yet</p></div>'
+  } catch (e) { console.error(e) }
+}
+
+// ── LOG SALE ──────────────────────────────────────────
+window.logSale = async function() {
+  const email  = document.getElementById('mc-em').value.trim() || null
+  const funnel = document.getElementById('mc-fn').value.trim() || 'default'
+  const amount = parseFloat(document.getElementById('mc-am').value) || 0
+  if (amount <= 0) { setFB('mc-fb', 'err', '⚠ Enter a valid commission amount'); return }
+
+  try {
+    await _sb.from('conversions').insert([{
+      email, funnel_name: funnel, revenue: amount,
+      created_at: new Date().toISOString()
+    }])
+    await _sb.from('events').insert([{
+      type: 'conversion', value: amount, funnel_id: funnel,
+      created_at: new Date().toISOString()
+    }])
+
+    // Non-blocking Forge Mail conversion ping
+    if (email) {
+      fetch('/.netlify/functions/track', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, funnel, value: amount, type: 'conversion' })
+      }).catch(() => {})
+    }
+
+    closeModal('m-conv')
+    document.getElementById('mc-em').value = ''
+    document.getElementById('mc-fn').value = ''
+    document.getElementById('mc-am').value = ''
+    loadConversions()
+    loadOverview()
+    addFeed('Sale logged: $' + amount + ' — ' + funnel, 'ok')
+    toast('Sale saved', 'ok')
+  } catch (e) {
+    setFB('mc-fb', 'err', '⚠ ' + e.message)
+  }
+}
+
+// ── TRAFFIC ───────────────────────────────────────────
+async function loadTraffic() {
+  try {
+    const { data: events } = await _sb.from('events').select('*').order('created_at', { ascending: false }).limit(100)
+    const list = events || []
+
+    document.getElementById('ev-body').innerHTML = list.length
+      ? list.map(e => `<tr>
+          <td><span class="bdg ${e.type === 'conversion' ? 'bdg-t' : e.type === 'lead' ? 'bdg-b' : 'bdg-m'}">${esc(e.type)}</span></td>
+          <td class="mono">${esc(e.funnel_id || '—')}</td>
+          <td class="mono ct">${e.value || 1}</td>
+          <td class="mono cs">${ago(e.created_at)}</td>
+        </tr>`).join('')
+      : emptyRow(4, '◌', 'No events recorded yet.')
+
+    const byType = {}
+    list.forEach(e => { byType[e.type] = (byType[e.type] || 0) + 1 })
+    const entries = Object.entries(byType).sort((a, b) => b[1] - a[1])
+    const maxV    = entries[0]?.[1] || 1
+    document.getElementById('ev-bars').innerHTML = entries.length
+      ? entries.map(([k, v]) => `<div class="bar-r">
+          <div class="bar-lbl">${esc(k)}</div>
+          <div class="bar-tr"><div class="bar-f" style="width:${Math.max(3, Math.round((v / maxV) * 100))}%"></div></div>
+          <div class="bar-v">${v}</div>
+        </div>`).join('')
+      : '<div class="empty" style="padding:6px 0"><p style="font-size:11px">No data yet</p></div>'
+  } catch (e) { console.error(e) }
+}
+
+// ── INTEGRATIONS ──────────────────────────────────────
+window.saveTZ = function() {
+  const url  = document.getElementById('tz-url').value.trim()
+  const dest = document.getElementById('tz-dest').value.trim()
+  if (!url) { toast('Enter your TrafficZest campaign URL', 'err'); return }
+  localStorage.setItem('tz_url', url)
+  localStorage.setItem('tz_dest', dest)
+  localStorage.setItem('tz_ok', '1')
+  setFB('tz-fb', 'ok', '✓ Configuration saved.')
+  syncIntegrationStatus()
+  addFeed('TrafficZest configured', 'ok')
+  toast('Saved', 'ok')
+}
+
+window.saveFM = function() {
+  const key  = document.getElementById('fm-key').value.trim()
+  const list = document.getElementById('fm-list').value.trim()
+  if (!key) { toast('Enter your Forge Mail API key', 'err'); return }
+  localStorage.setItem('fm_ok', '1')
+  localStorage.setItem('fm_list', list)
+  setFB('fm-fb', 'ok', '✓ Saved. Also set FORGE_MAIL_API_KEY in Netlify → Environment Variables for server-side sync.')
+  document.getElementById('fm-bdg').textContent  = 'Connected'
+  document.getElementById('fm-bdg').className    = 'bdg bdg-t'
+  syncIntegrationStatus()
+  addFeed('Forge Mail connected', 'ok')
+  toast('Connected', 'ok')
+}
+
+function syncIntegrationStatus() {
+  const tzOk = !!localStorage.getItem('tz_ok')
+  const fmOk = !!localStorage.getItem('fm_ok')
+  document.getElementById('pi-tz').className = 'si-pill ' + (tzOk ? 'on' : 'off')
+  document.getElementById('pi-fm').className = 'si-pill ' + (fmOk ? 'on' : 'off')
+  if (tzOk) { document.getElementById('tz-bdg').textContent = 'Configured'; document.getElementById('tz-bdg').className = 'bdg bdg-t' }
+  if (fmOk) {
+    document.getElementById('fm-bdg').textContent = 'Connected'; document.getElementById('fm-bdg').className = 'bdg bdg-t'
+    document.getElementById('fm-sync').textContent = document.getElementById('sb-ct')?.textContent || '0'
+    document.getElementById('fm-last').textContent = 'Recently'
+  }
+}
+
+// ── TABLE CHECKER ─────────────────────────────────────
+window.checkTables = async function() {
+  const tables = ['funnels', 'leads', 'events', 'links', 'conversions']
+  const rows   = document.querySelectorAll('#tbl-list .sr')
+  for (let i = 0; i < tables.length; i++) {
+    const span = rows[i]?.querySelector('.bdg')
+    if (!span) continue
+    try {
+      const { error } = await _sb.from(tables[i]).select('id').limit(1)
+      span.className   = error ? 'bdg bdg-r' : 'bdg bdg-t'
+      span.textContent = error ? '✗ Missing — run schema.sql' : '✓ Ready'
+    } catch {
+      span.className = 'bdg bdg-r'; span.textContent = '✗ Error'
+    }
+  }
+}
+
+// ── MODALS ────────────────────────────────────────────
+window.openModal  = id => document.getElementById(id).classList.add('on')
+window.closeModal = id => {
+  document.getElementById(id).classList.remove('on')
+  document.getElementById('mc-fb').className = 'fb'
+}
+window.closeBD = (e, id) => { if (e.target === document.getElementById(id)) closeModal(id) }
+
+// ── UTILITIES ─────────────────────────────────────────
+function setText(id, val) {
+  const el = document.getElementById(id)
+  if (el) el.textContent = val
+}
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+}
+function ago(iso) {
+  if (!iso) return '—'
+  const m = Math.floor((Date.now() - new Date(iso)) / 60000)
+  if (m < 1)    return 'now'
+  if (m < 60)   return m + 'm'
+  if (m < 1440) return Math.floor(m / 60) + 'h'
+  return Math.floor(m / 1440) + 'd'
+}
+function getFrom(r) {
+  const d = new Date()
+  if (r === '24h') d.setHours(d.getHours() - 24)
+  else if (r === '30d') d.setDate(d.getDate() - 30)
+  else d.setDate(d.getDate() - 7)
+  return d.toISOString()
+}
+function emptyRow(cols, icon, msg) {
+  return `<tr><td colspan="${cols}"><div class="empty"><div class="empty-ic">${icon}</div><p>${msg}</p></div></td></tr>`
+}
+function btnLoading(btn, on, lbl) {
+  btn.disabled = on
+  btn.innerHTML = on ? `<span class="spin-ico"></span>${lbl}` : lbl
+}
+function setFB(id, type, msg, link) {
+  const el = document.getElementById(id)
+  if (!el) return
+  el.className = type ? `fb on fb-${type}` : 'fb'
+  el.innerHTML = esc(msg) + (link
+    ? `<div class="lk-row"><code>${esc(link)}</code><span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(link)}').then(()=>toast('Copied','ok'))">Copy</span></div>`
+    : '')
+}
+function addFeed(msg, type = 'info') {
+  const feed = document.getElementById('feed')
+  const ts   = new Date().toTimeString().slice(0, 8)
+  const div  = document.createElement('div')
+  div.className = 'fl'
+  div.innerHTML = `<span class="fl-ts">${ts}</span><span class="fl-${type}">${esc(msg)}</span>`
+  feed.appendChild(div)
+  feed.scrollTop = feed.scrollHeight
+}
+window.toast = function(msg, type = 'ok') {
+  const el = document.getElementById('toast')
+  el.textContent = msg
+  el.className   = 'on ' + type
+  clearTimeout(el._t)
+  el._t = setTimeout(() => el.className = '', 2800)
+}
+
+// ── INIT ──────────────────────────────────────────────
+loadOverview()
+loadLinks()
+syncIntegrationStatus()
+setInterval(loadOverview, 30000)
+</script>
+</body>
+</html>
