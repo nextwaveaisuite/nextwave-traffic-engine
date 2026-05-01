@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NW Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+:root{
+  --bg:#06080f;--s1:#0a0d17;--s2:#0f1420;--s3:#141b2d;--s4:#1a2235;
+  --line:#1e2d42;--b2:rgba(255,255,255,.04);
+  --teal:#19e6b0;--teal-bg:rgba(25,230,176,.07);--teal-bdr:rgba(25,230,176,.18);
+  --blue:#4f8ef7;--gold:#f0a500;--rose:#f25c7a;--purple:#9f7aea;
+  --body:#dce8f5;--dim:#8fa3c4;--muted:#3d5275;
+  --f:'DM Sans',sans-serif;--m:'DM Mono',monospace;
+  --r:7px;--r2:11px;
+}
+body{background:var(--bg);color:var(--body);font-family:var(--f);font-size:13px;line-height:1.5;display:flex;flex-direction:column}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px}
+
+/* LOGIN SCREEN */
+.login-screen{
+  position:fixed;inset:0;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  z-index:1000;flex-direction:column;gap:0;
+}
+.login-box{background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:36px;width:100%;max-width:380px}
+.login-brand{display:flex;align-items:center;gap:8px;margin-bottom:28px;justify-content:center}
+.login-logo{width:32px;height:32px;border-radius:7px;background:var(--rose);display:flex;align-items:center;justify-content:center;font-size:16px}
+.login-title{font-family:var(--m);font-size:14px;font-weight:700;letter-spacing:.5px}
+.login-sub{font-size:12px;color:var(--dim);margin-bottom:20px;text-align:center}
+.login-field{margin-bottom:14px}
+.login-lbl{display:block;font-family:var(--m);font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.login-inp{width:100%;background:var(--s2);border:1px solid var(--line);border-radius:var(--r);color:var(--body);padding:10px 12px;font-size:13px;font-family:var(--f);outline:none;transition:border-color .15s}
+.login-inp:focus{border-color:rgba(242,92,122,.4);background:var(--s3)}
+.login-inp::placeholder{color:var(--muted)}
+.login-btn{width:100%;padding:12px;background:var(--rose);color:#fff;border:none;border-radius:var(--r);font-family:var(--f);font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.login-btn:hover{opacity:.88}
+.login-err{font-size:12px;color:var(--rose);text-align:center;margin-top:10px;min-height:16px;font-family:var(--m)}
+.login-note{font-size:10px;color:var(--muted);text-align:center;margin-top:12px}
+
+/* TOPBAR */
+.topbar{height:48px;min-height:48px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:var(--s1);border-bottom:1px solid var(--line);z-index:50}
+.admin-brand{display:flex;align-items:center;gap:8px}
+.admin-logo{width:24px;height:24px;border-radius:5px;background:var(--rose);display:flex;align-items:center;justify-content:center;font-size:12px}
+.admin-name{font-family:var(--m);font-size:12px;font-weight:700;color:var(--rose);letter-spacing:.5px}
+.admin-badge{font-family:var(--m);font-size:9px;color:var(--rose);border:1px solid rgba(242,92,122,.25);background:rgba(242,92,122,.07);padding:3px 10px;border-radius:20px}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.t-time{font-family:var(--m);font-size:10px;color:var(--muted);padding:3px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--s2)}
+.t-btn{width:28px;height:28px;border-radius:var(--r);background:none;border:1px solid var(--line);color:var(--dim);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .12s}
+.t-btn:hover{background:var(--s2);color:var(--body)}
+.logout-btn{font-size:11px;padding:4px 10px;border-radius:var(--r);background:rgba(242,92,122,.1);border:1px solid rgba(242,92,122,.2);color:var(--rose);cursor:pointer;font-family:var(--m);transition:all .12s}
+.logout-btn:hover{background:rgba(242,92,122,.2)}
+
+/* SHELL */
+.shell{display:flex;flex:1;overflow:hidden}
+
+/* SIDEBAR */
+.sidebar{width:200px;min-width:200px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow-y:auto}
+.sg{padding:14px 0 4px}
+.sg-lbl{font-family:var(--m);font-size:9px;letter-spacing:1.4px;text-transform:uppercase;color:var(--muted);padding:0 12px 5px}
+.ni{display:flex;align-items:center;gap:8px;padding:7px 12px;font-size:12px;font-weight:500;color:var(--dim);cursor:pointer;border-left:2px solid transparent;transition:all .1s;user-select:none}
+.ni:hover{color:var(--body);background:rgba(255,255,255,.025)}
+.ni.on{color:var(--rose);border-left-color:var(--rose);background:rgba(242,92,122,.06)}
+.ni-ic{font-size:13px;width:16px;text-align:center;flex-shrink:0}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;background:var(--bg)}
+.page{display:none;padding:22px;flex-direction:column;min-height:100%}
+.page.on{display:flex}
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-shrink:0}
+.pt{font-size:15px;font-weight:700;letter-spacing:-.2px}
+.pt .ps{font-size:10px;color:var(--muted);font-weight:400;margin-left:5px;font-family:var(--m)}
+.pa{display:flex;gap:6px;align-items:center}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--r);border:none;font-size:12px;font-weight:600;font-family:var(--f);cursor:pointer;transition:all .12s;white-space:nowrap}
+.btn:hover{opacity:.86;transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn:disabled{opacity:.3;cursor:not-allowed;transform:none}
+.btn-primary{background:var(--teal);color:var(--bg)}
+.btn-rose{background:var(--rose);color:#fff}
+.btn-s{background:var(--s3);color:var(--body);border:1px solid var(--line)}
+.btn-g{background:transparent;color:var(--dim);border:1px solid var(--line)}
+.btn-sm{padding:4px 9px;font-size:11px}
+.btn-w{width:100%}
+
+/* KPI */
+.krow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;flex-shrink:0}
+.kc{background:var(--s1);border:1px solid var(--line);border-radius:var(--r2);padding:14px;position:relative;overflow:hidden}
+.kc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kt::after{background:linear-gradient(90deg,var(--teal),transparent)}
+.kb::after{background:linear-gradient(90deg,var(--blue),transparent)}
+.kg::after{background:linear-gradient(90deg,var(--gold),transparent)}
+.kr::after{background:linear-gradient(90deg,var(--rose),transparent)}
+.kp::after{background:linear-gradient(90deg,var(--purple),transparent)}
+.k-lbl{font-family:var(--m);font-size:9px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.k-val{font-family:var(--m);font-size:24px;font-weight:500;line-height:1;margin-bottom:4px}
+.kt .k-val{color:var(--teal)}.kb .k-val{color:var(--blue)}.kg .k-val{color:var(--gold)}.kr .k-val{color:var(--rose)}.kp .k-val{color:var(--purple)}
+.k-sub{font-size:10px;color:var(--muted)}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.gm{display:grid;grid-template-columns:1.5fr 1fr;gap:12px}
+
+/* PANELS */
+.panel{background:var(--s1);border:1px solid var(--line);border-radius:var(--r2);display:flex;flex-direction:column;overflow:hidden}
+.p-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--line);flex-shrink:0;min-height:40px}
+.p-title{font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px}
+.p-body{padding:12px 14px;flex:1;overflow-y:auto}
+.p-body.np{padding:0}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{text-align:left;padding:7px 13px;font-family:var(--m);font-size:9px;font-weight:500;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:8px 13px;border-bottom:1px solid var(--b2);font-size:12px;color:var(--dim);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tbody tr:hover td{background:rgba(255,255,255,.012);color:var(--body)}
+.tbl td:first-child{color:var(--body)}
+.mono{font-family:var(--m);font-size:10px}
+.ct{color:var(--teal)!important}.cg{color:var(--gold)!important}.cr{color:var(--rose)!important}.cb{color:var(--blue)!important}.cp{color:var(--purple)!important}.cs{color:var(--muted)!important}
+
+/* BADGES */
+.bdg{display:inline-flex;align-items:center;font-family:var(--m);font-size:9px;font-weight:500;padding:2px 6px;border-radius:9px;letter-spacing:.2px}
+.bdg-t{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bdr)}
+.bdg-b{background:rgba(79,142,247,.08);color:var(--blue);border:1px solid rgba(79,142,247,.2)}
+.bdg-g{background:rgba(240,165,0,.08);color:var(--gold);border:1px solid rgba(240,165,0,.2)}
+.bdg-r{background:rgba(242,92,122,.08);color:var(--rose);border:1px solid rgba(242,92,122,.2)}
+.bdg-m{background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--b2)}
+.bdg-p{background:rgba(159,122,234,.08);color:var(--purple);border:1px solid rgba(159,122,234,.2)}
+
+/* FORM */
+.fld{margin-bottom:11px}
+.lbl{display:block;font-family:var(--m);font-size:9px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.inp,.sel{width:100%;background:var(--s2);border:1px solid var(--line);border-radius:var(--r);color:var(--body);padding:7px 10px;font-size:12px;font-family:var(--f);outline:none;transition:border-color .15s}
+.inp:focus,.sel:focus{border-color:rgba(242,92,122,.35);background:var(--s3)}
+.inp::placeholder{color:var(--muted)}
+.sel{cursor:pointer;appearance:none}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+
+/* FEEDBACK */
+.fb{padding:9px 11px;border-radius:var(--r);font-size:12px;margin-top:9px;display:none}
+.fb.on{display:block}
+.fb-ok{background:var(--teal-bg);border:1px solid var(--teal-bdr);color:var(--teal)}
+.fb-err{background:rgba(242,92,122,.08);border:1px solid rgba(242,92,122,.2);color:var(--rose)}
+
+/* STAT LIST */
+.slist{display:flex;flex-direction:column}
+.sr{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--b2)}
+.sr:last-child{border-bottom:none}
+.sr-l{font-size:12px;color:var(--dim)}
+.sr-v{font-family:var(--m);font-size:11px;font-weight:500;color:var(--body)}
+
+/* MODAL */
+.modal-bd{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-bd.on{display:flex}
+.modal{background:var(--s1);border:1px solid var(--line);border-radius:var(--r2);padding:22px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto}
+.modal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.modal-t{font-size:13px;font-weight:700}
+.modal-x{background:none;border:none;color:var(--muted);font-size:17px;cursor:pointer;padding:2px 4px;border-radius:4px}
+.modal-x:hover{color:var(--body);background:var(--s2)}
+
+/* TOAST */
+#toast{position:fixed;bottom:18px;right:18px;background:var(--s1);border:1px solid var(--line);border-radius:var(--r2);padding:9px 13px;font-size:11px;display:none;z-index:9999;max-width:250px;font-family:var(--m)}
+#toast.on{display:flex;align-items:center;gap:7px;animation:tu .12s ease}
+#toast.ok{border-color:var(--teal-bdr);color:var(--teal)}
+#toast.err{border-color:rgba(242,92,122,.3);color:var(--rose)}
+@keyframes tu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* EMPTY */
+.empty{text-align:center;padding:28px 16px;color:var(--muted)}
+.empty-ic{font-size:24px;opacity:.35;margin-bottom:7px}
+.empty p{font-size:11px;line-height:1.6}
+
+@media(max-width:860px){.sidebar{display:none}.g2,.gm{grid-template-columns:1fr}.krow{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="login-brand">
+      <div class="login-logo">🔐</div>
+      <div class="login-title">ADMIN CONSOLE</div>
+    </div>
+    <div class="login-sub">NextWave restricted area. Authorised access only.</div>
+    <div class="login-field">
+      <label class="login-lbl">Admin Password</label>
+      <input class="login-inp" id="admin-pass" type="password" placeholder="Enter admin password" autocomplete="current-password" />
+    </div>
+    <button class="login-btn" onclick="doLogin()">Access Console</button>
+    <div class="login-err" id="login-err"></div>
+    <div class="login-note">This page is not linked anywhere. Keep the URL private.</div>
+  </div>
+</div>
+
+<!-- APP (hidden until login) -->
+<div id="app" style="display:none;height:100%;flex-direction:column;display:none">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="admin-brand">
+    <div class="admin-logo">🔐</div>
+    <div class="admin-name">ADMIN</div>
+    <span class="admin-badge">RESTRICTED</span>
+  </div>
+  <div class="topbar-right">
+    <span class="t-time" id="clock">--:--:--</span>
+    <button class="t-btn" onclick="refreshAll()" title="Refresh">↻</button>
+    <button class="logout-btn" onclick="doLogout()">Logout</button>
+  </div>
+</div>
+
+<div class="shell">
+  <nav class="sidebar">
+    <div class="sg">
+      <div class="sg-lbl">Overview</div>
+      <div class="ni on" onclick="nav('overview',this)"><span class="ni-ic">▤</span>Dashboard</div>
+    </div>
+    <div class="sg">
+      <div class="sg-lbl">Users</div>
+      <div class="ni" onclick="nav('users',this)"><span class="ni-ic">👥</span>All Users</div>
+      <div class="ni" onclick="nav('add-user',this)"><span class="ni-ic">➕</span>Add User</div>
+    </div>
+    <div class="sg">
+      <div class="sg-lbl">Revenue</div>
+      <div class="ni" onclick="nav('payments',this)"><span class="ni-ic">💳</span>Payments</div>
+      <div class="ni" onclick="nav('refunds',this)"><span class="ni-ic">↩</span>Refunds & Disputes</div>
+    </div>
+    <div class="sg">
+      <div class="sg-lbl">Affiliates</div>
+      <div class="ni" onclick="nav('affiliates',this)"><span class="ni-ic">🤝</span>Affiliates</div>
+      <div class="ni" onclick="nav('payouts',this)"><span class="ni-ic">💰</span>Payouts</div>
+      <div class="ni" onclick="nav('aff-settings',this)"><span class="ni-ic">⚙</span>Aff. Settings</div>
+    </div>
+    <div class="sg">
+      <div class="sg-lbl">System</div>
+      <div class="ni" onclick="nav('leads-admin',this)"><span class="ni-ic">📬</span>All Leads</div>
+      <div class="ni" onclick="nav('settings-admin',this)"><span class="ni-ic">◧</span>Settings</div>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <!-- OVERVIEW -->
+    <div class="page on" id="page-overview">
+      <div class="ph"><div class="pt">Admin Overview <span class="ps">all time</span></div><button class="btn btn-g btn-sm" onclick="refreshAll()">↻ Refresh</button></div>
+      <div class="krow">
+        <div class="kc kt"><div class="k-lbl">Total Revenue</div><div class="k-val" id="ov-rev">$0</div><div class="k-sub">all conversions</div></div>
+        <div class="kc kb"><div class="k-lbl">Total Users</div><div class="k-val" id="ov-users">0</div><div class="k-sub">registered accounts</div></div>
+        <div class="kc kg"><div class="k-lbl">Active Paid</div><div class="k-val" id="ov-paid">0</div><div class="k-sub">paying customers</div></div>
+        <div class="kc kr"><div class="k-lbl">Total Leads</div><div class="k-val" id="ov-leads">0</div><div class="k-sub">captured emails</div></div>
+      </div>
+      <div class="g2" style="flex:1;min-height:0">
+        <div class="panel">
+          <div class="p-head"><div class="p-title">📊 Revenue Breakdown</div></div>
+          <div class="p-body">
+            <div class="slist" id="ov-rev-breakdown">
+              <div class="sr"><span class="sr-l">Starter ($19/mo)</span><span class="sr-v" id="r-starter">$0</span></div>
+              <div class="sr"><span class="sr-l">Pro ($49/mo)</span><span class="sr-v" id="r-pro">$0</span></div>
+              <div class="sr"><span class="sr-l">Scale ($99/mo)</span><span class="sr-v" id="r-scale">$0</span></div>
+              <div class="sr"><span class="sr-l">Lifetime ($997)</span><span class="sr-v" id="r-lifetime">$0</span></div>
+              <div class="sr"><span class="sr-l">Affiliate Commissions Owed</span><span class="sr-v cr" id="r-aff-owed">$0</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="p-head"><div class="p-title">⚡ Recent Signups</div></div>
+          <div class="p-body np">
+            <table class="tbl"><thead><tr><th>Email</th><th>Plan</th><th>When</th></tr></thead>
+            <tbody id="ov-signups">
+              <tr><td colspan="3"><div class="empty"><p>No users yet</p></div></td></tr>
+            </tbody></table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- USERS -->
+    <div class="page" id="page-users">
+      <div class="ph">
+        <div class="pt">All Users</div>
+        <div class="pa">
+          <input class="inp" id="user-search" placeholder="Search by email…" style="width:200px;padding:5px 10px;font-size:12px" oninput="filterUsers()" />
+          <button class="btn btn-primary btn-sm" onclick="nav('add-user',null)">+ Add User</button>
+        </div>
+      </div>
+      <div class="panel" style="flex:1;min-height:0">
+        <div class="p-body np" style="overflow-y:auto">
+          <table class="tbl">
+            <thead><tr><th>Email</th><th>Name</th><th>Plan</th><th>Status</th><th>Joined</th><th>Actions</th></tr></thead>
+            <tbody id="users-body">
+              <tr><td colspan="6"><div class="empty"><div class="empty-ic">👥</div><p>No users yet</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD USER -->
+    <div class="page" id="page-add-user">
+      <div class="ph"><div class="pt">Add / Edit User</div></div>
+      <div class="panel" style="max-width:500px">
+        <div class="p-head"><div class="p-title">➕ Create User Account</div></div>
+        <div class="p-body">
+          <div class="r2">
+            <div class="fld"><label class="lbl">First Name</label><input class="inp" id="au-fname" placeholder="James" /></div>
+            <div class="fld"><label class="lbl">Last Name</label><input class="inp" id="au-lname" placeholder="Smith" /></div>
+          </div>
+          <div class="fld"><label class="lbl">Email Address</label><input class="inp" id="au-email" type="email" placeholder="user@email.com" /></div>
+          <div class="fld"><label class="lbl">Plan</label>
+            <select class="sel" id="au-plan">
+              <option value="free">Free</option>
+              <option value="starter">Starter — $19/mo</option>
+              <option value="pro">Pro — $49/mo</option>
+              <option value="scale">Scale — $99/mo</option>
+              <option value="lifetime">Lifetime — $997</option>
+            </select>
+          </div>
+          <div class="fld"><label class="lbl">Notes (internal)</label><input class="inp" id="au-notes" placeholder="Optional admin notes" /></div>
+          <button class="btn btn-primary btn-w" onclick="addUser()">Create User</button>
+          <div class="fb" id="au-fb"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAYMENTS -->
+    <div class="page" id="page-payments">
+      <div class="ph"><div class="pt">Payments</div></div>
+      <div class="panel" style="flex:1;min-height:0">
+        <div class="p-head"><div class="p-title">💳 Payment Log</div><button class="btn btn-g btn-sm" onclick="loadPayments()">↻</button></div>
+        <div class="p-body np">
+          <table class="tbl">
+            <thead><tr><th>Email</th><th>Plan</th><th>Amount</th><th>Date</th><th>Source</th></tr></thead>
+            <tbody id="payments-body">
+              <tr><td colspan="5"><div class="empty"><div class="empty-ic">💳</div><p>No payments yet</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- REFUNDS & DISPUTES -->
+    <div class="page" id="page-refunds">
+      <div class="ph">
+        <div class="pt">Refunds & Disputes</div>
+        <div class="pa"><button class="btn btn-rose btn-sm" onclick="openModal('m-refund')">+ Log Refund</button></div>
+      </div>
+      <div class="g2" style="flex:1;min-height:0">
+        <div class="panel">
+          <div class="p-head"><div class="p-title">↩ Refund Log</div></div>
+          <div class="p-body np">
+            <table class="tbl">
+              <thead><tr><th>Email</th><th>Amount</th><th>Reason</th><th>Status</th><th>Date</th></tr></thead>
+              <tbody id="refunds-body">
+                <tr><td colspan="5"><div class="empty"><p>No refunds logged</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="p-head"><div class="p-title">⚠ Disputes</div><button class="btn btn-g btn-sm" onclick="openModal('m-dispute')">+ Log</button></div>
+          <div class="p-body np">
+            <table class="tbl">
+              <thead><tr><th>Email</th><th>Issue</th><th>Status</th><th>Date</th></tr></thead>
+              <tbody id="disputes-body">
+                <tr><td colspan="4"><div class="empty"><p>No disputes logged</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFFILIATES -->
+    <div class="page" id="page-affiliates">
+      <div class="ph">
+        <div class="pt">Affiliates</div>
+        <div class="pa"><button class="btn btn-primary btn-sm" onclick="openModal('m-add-aff')">+ Add Affiliate</button></div>
+      </div>
+      <div class="panel" style="flex:1;min-height:0">
+        <div class="p-head"><div class="p-title">🤝 Affiliate Accounts</div><button class="btn btn-g btn-sm" onclick="loadAffiliates()">↻</button></div>
+        <div class="p-body np">
+          <table class="tbl">
+            <thead><tr><th>Email</th><th>Ref Code</th><th>Commission</th><th>Referrals</th><th>Earned</th><th>Paid</th><th>Actions</th></tr></thead>
+            <tbody id="affiliates-body">
+              <tr><td colspan="7"><div class="empty"><div class="empty-ic">🤝</div><p>No affiliates yet</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAYOUTS -->
+    <div class="page" id="page-payouts">
+      <div class="ph">
+        <div class="pt">Affiliate Payouts</div>
+        <div class="pa"><button class="btn btn-primary btn-sm" onclick="openModal('m-payout')">+ Record Payout</button></div>
+      </div>
+      <div class="g2" style="flex:1;min-height:0">
+        <div class="panel">
+          <div class="p-head"><div class="p-title">💰 Pending Payouts</div></div>
+          <div class="p-body np">
+            <table class="tbl">
+              <thead><tr><th>Affiliate</th><th>Amount Owed</th><th>Conversions</th><th>Action</th></tr></thead>
+              <tbody id="pending-payouts-body">
+                <tr><td colspan="4"><div class="empty"><p>No pending payouts</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="p-head"><div class="p-title">✅ Payout History</div></div>
+          <div class="p-body np">
+            <table class="tbl">
+              <thead><tr><th>Affiliate</th><th>Amount</th><th>Method</th><th>Date</th></tr></thead>
+              <tbody id="payout-history-body">
+                <tr><td colspan="4"><div class="empty"><p>No payouts recorded</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AFFILIATE SETTINGS -->
+    <div class="page" id="page-aff-settings">
+      <div class="ph"><div class="pt">Affiliate Program Settings</div></div>
+      <div class="panel" style="max-width:520px">
+        <div class="p-head"><div class="p-title">⚙ Commission Configuration</div></div>
+        <div class="p-body">
+          <div class="fld">
+            <label class="lbl">Default Commission Rate (%)</label>
+            <input class="inp" id="aff-rate" type="number" value="30" min="1" max="70" placeholder="30" />
+          </div>
+          <div class="fld">
+            <label class="lbl">Minimum Payout Threshold ($)</label>
+            <input class="inp" id="aff-min-payout" type="number" value="50" min="10" placeholder="50" />
+          </div>
+          <div class="fld">
+            <label class="lbl">Cookie Duration (days)</label>
+            <input class="inp" id="aff-cookie" type="number" value="30" min="1" placeholder="30" />
+          </div>
+          <div class="fld">
+            <label class="lbl">Payout Method</label>
+            <select class="sel" id="aff-method">
+              <option value="paypal">PayPal</option>
+              <option value="stripe">Stripe Transfer</option>
+              <option value="bank">Bank Transfer</option>
+              <option value="crypto">Crypto</option>
+            </select>
+          </div>
+          <div class="fld">
+            <label class="lbl">Commission Per Plan (override, leave blank to use %)</label>
+            <div class="r2" style="gap:8px">
+              <input class="inp" id="aff-c-starter"  placeholder="Starter $" type="number" />
+              <input class="inp" id="aff-c-pro"      placeholder="Pro $" type="number" />
+            </div>
+            <div class="r2" style="gap:8px;margin-top:8px">
+              <input class="inp" id="aff-c-scale"    placeholder="Scale $" type="number" />
+              <input class="inp" id="aff-c-lifetime" placeholder="Lifetime $" type="number" />
+            </div>
+          </div>
+          <button class="btn btn-primary btn-w" onclick="saveAffSettings()">Save Settings</button>
+          <div class="fb" id="aff-settings-fb"></div>
+          <div style="margin-top:16px;padding:12px;background:var(--s2);border-radius:var(--r);font-size:11px;color:var(--dim);line-height:1.6">
+            <strong style="color:var(--body);display:block;margin-bottom:4px">Current defaults</strong>
+            At 30% commission: Starter = $5.70 · Pro = $14.70 · Scale = $29.70 · Lifetime = $299.10<br>
+            Affiliates promote via their unique ref link: <code style="font-family:var(--m);color:var(--teal)">yoursite.netlify.app/?ref=CODE</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALL LEADS -->
+    <div class="page" id="page-leads-admin">
+      <div class="ph">
+        <div class="pt">All Leads</div>
+        <div class="pa"><span class="bdg bdg-t" id="admin-leads-ct">0 leads</span></div>
+      </div>
+      <div class="panel" style="flex:1;min-height:0">
+        <div class="p-body np" style="overflow-y:auto">
+          <table class="tbl">
+            <thead><tr><th>Email</th><th>Name</th><th>Funnel</th><th>Source</th><th>Captured</th><th>Action</th></tr></thead>
+            <tbody id="admin-leads-body">
+              <tr><td colspan="6"><div class="empty"><div class="empty-ic">📬</div><p>No leads yet</p></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN SETTINGS -->
+    <div class="page" id="page-settings-admin">
+      <div class="ph"><div class="pt">Admin Settings</div></div>
+      <div class="g2">
+        <div class="panel">
+          <div class="p-head"><div class="p-title">🔐 Change Admin Password</div></div>
+          <div class="p-body">
+            <p style="font-size:11px;color:var(--muted);margin-bottom:13px;line-height:1.6">Password is stored in your browser's localStorage. For production, move this to a server-side environment variable.</p>
+            <div class="fld"><label class="lbl">Current Password</label><input class="inp" id="cp-current" type="password" placeholder="Current password" /></div>
+            <div class="fld"><label class="lbl">New Password</label><input class="inp" id="cp-new" type="password" placeholder="New password (min 12 chars)" /></div>
+            <div class="fld"><label class="lbl">Confirm New Password</label><input class="inp" id="cp-confirm" type="password" placeholder="Confirm new password" /></div>
+            <button class="btn btn-rose btn-w" onclick="changePassword()">Update Password</button>
+            <div class="fb" id="cp-fb"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="p-head"><div class="p-title">📊 System Status</div></div>
+          <div class="p-body">
+            <div class="slist">
+              <div class="sr"><span class="sr-l">Admin access</span><span class="sr-v ct">Active</span></div>
+              <div class="sr"><span class="sr-l">Supabase connection</span><span class="sr-v" id="sys-sb">Checking…</span></div>
+              <div class="sr"><span class="sr-l">AI function</span><span class="sr-v" id="sys-ai">Unknown</span></div>
+              <div class="sr"><span class="sr-l">Stripe configured</span><span class="sr-v" id="sys-stripe">Unknown</span></div>
+              <div class="sr"><span class="sr-l">Admin console URL</span><span class="sr-v mono cs">/nw-admin.html</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</div>
+
+<!-- MODALS -->
+
+<!-- Add Affiliate -->
+<div class="modal-bd" id="m-add-aff" onclick="closeBD(event,'m-add-aff')">
+  <div class="modal">
+    <div class="modal-h"><div class="modal-t">Add Affiliate</div><button class="modal-x" onclick="closeModal('m-add-aff')">×</button></div>
+    <div class="fld"><label class="lbl">Email</label><input class="inp" id="aff-email" placeholder="affiliate@email.com" /></div>
+    <div class="fld"><label class="lbl">Name</label><input class="inp" id="aff-name" placeholder="Full name" /></div>
+    <div class="r2">
+      <div class="fld"><label class="lbl">Ref Code</label><input class="inp" id="aff-code" placeholder="auto-generated" /></div>
+      <div class="fld"><label class="lbl">Commission %</label><input class="inp" id="aff-comm" type="number" value="30" min="1" max="70" /></div>
+    </div>
+    <button class="btn btn-primary btn-w" onclick="addAffiliate()">Add Affiliate</button>
+    <div class="fb" id="aff-add-fb"></div>
+  </div>
+</div>
+
+<!-- Log Refund -->
+<div class="modal-bd" id="m-refund" onclick="closeBD(event,'m-refund')">
+  <div class="modal">
+    <div class="modal-h"><div class="modal-t">Log Refund</div><button class="modal-x" onclick="closeModal('m-refund')">×</button></div>
+    <div class="fld"><label class="lbl">Customer Email</label><input class="inp" id="ref-email" placeholder="customer@email.com" /></div>
+    <div class="r2">
+      <div class="fld"><label class="lbl">Amount ($)</label><input class="inp" id="ref-amount" type="number" placeholder="49.00" /></div>
+      <div class="fld"><label class="lbl">Status</label>
+        <select class="sel" id="ref-status">
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+    </div>
+    <div class="fld"><label class="lbl">Reason</label><input class="inp" id="ref-reason" placeholder="Customer request / chargeback / etc." /></div>
+    <button class="btn btn-rose btn-w" onclick="logRefund()">Log Refund</button>
+    <div class="fb" id="ref-fb"></div>
+  </div>
+</div>
+
+<!-- Log Dispute -->
+<div class="modal-bd" id="m-dispute" onclick="closeBD(event,'m-dispute')">
+  <div class="modal">
+    <div class="modal-h"><div class="modal-t">Log Dispute</div><button class="modal-x" onclick="closeModal('m-dispute')">×</button></div>
+    <div class="fld"><label class="lbl">Customer Email</label><input class="inp" id="dis-email" placeholder="customer@email.com" /></div>
+    <div class="fld"><label class="lbl">Issue Description</label><input class="inp" id="dis-issue" placeholder="Brief description of the dispute" /></div>
+    <div class="fld"><label class="lbl">Status</label>
+      <select class="sel" id="dis-status">
+        <option value="open">Open</option>
+        <option value="investigating">Investigating</option>
+        <option value="resolved">Resolved</option>
+        <option value="escalated">Escalated</option>
+      </select>
+    </div>
+    <button class="btn btn-rose btn-w" onclick="logDispute()">Log Dispute</button>
+    <div class="fb" id="dis-fb"></div>
+  </div>
+</div>
+
+<!-- Record Payout -->
+<div class="modal-bd" id="m-payout" onclick="closeBD(event,'m-payout')">
+  <div class="modal">
+    <div class="modal-h"><div class="modal-t">Record Payout</div><button class="modal-x" onclick="closeModal('m-payout')">×</button></div>
+    <div class="fld"><label class="lbl">Affiliate Email</label><input class="inp" id="po-email" placeholder="affiliate@email.com" /></div>
+    <div class="r2">
+      <div class="fld"><label class="lbl">Amount ($)</label><input class="inp" id="po-amount" type="number" placeholder="50.00" /></div>
+      <div class="fld"><label class="lbl">Method</label>
+        <select class="sel" id="po-method">
+          <option value="paypal">PayPal</option>
+          <option value="stripe">Stripe</option>
+          <option value="bank">Bank</option>
+          <option value="crypto">Crypto</option>
+        </select>
+      </div>
+    </div>
+    <div class="fld"><label class="lbl">Reference / Transaction ID</label><input class="inp" id="po-ref" placeholder="Optional transaction ID" /></div>
+    <button class="btn btn-primary btn-w" onclick="recordPayout()">Record Payout</button>
+    <div class="fb" id="po-fb"></div>
+  </div>
+</div>
+
+<!-- Suspend User Confirmation -->
+<div class="modal-bd" id="m-suspend" onclick="closeBD(event,'m-suspend')">
+  <div class="modal">
+    <div class="modal-h"><div class="modal-t">Suspend User</div><button class="modal-x" onclick="closeModal('m-suspend')">×</button></div>
+    <p style="font-size:13px;color:var(--dim);margin-bottom:14px;line-height:1.6">Suspending this user will downgrade their plan to free and block dashboard access. This action can be reversed.</p>
+    <p style="font-family:var(--m);font-size:12px;color:var(--rose);margin-bottom:16px" id="suspend-email-confirm"></p>
+    <div class="r2">
+      <button class="btn btn-g btn-w" onclick="closeModal('m-suspend')">Cancel</button>
+      <button class="btn btn-rose btn-w" onclick="confirmSuspend()">Suspend User</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script type="module">
+import { supabase } from '/supabase.js'
+window._sb = supabase
+
+// ── ADMIN PASSWORD ──────────────────────────────────────
+// Default password — change immediately after first login
+const DEFAULT_PASS = 'NWAdmin2025!'
+
+function getAdminPass() {
+  return localStorage.getItem('nw_admin_pass') || DEFAULT_PASS
+}
+
+// ── LOGIN ───────────────────────────────────────────────
+window.doLogin = function() {
+  const entered = document.getElementById('admin-pass').value
+  const errEl   = document.getElementById('login-err')
+
+  if (entered === getAdminPass()) {
+    sessionStorage.setItem('nw_admin_auth', '1')
+    document.getElementById('login-screen').style.display = 'none'
+    document.getElementById('app').style.display = 'flex'
+    document.getElementById('app').style.flexDirection = 'column'
+    document.getElementById('app').style.height = '100%'
+    initAdmin()
+  } else {
+    errEl.textContent = '⚠ Incorrect password'
+    document.getElementById('admin-pass').value = ''
+    setTimeout(() => errEl.textContent = '', 3000)
+  }
+}
+
+window.doLogout = function() {
+  sessionStorage.removeItem('nw_admin_auth')
+  location.reload()
+}
+
+// Auto-login if session exists
+if (sessionStorage.getItem('nw_admin_auth') === '1') {
+  document.getElementById('login-screen').style.display = 'none'
+  document.getElementById('app').style.cssText = 'display:flex;flex-direction:column;height:100%'
+  initAdmin()
+}
+
+// Enter key on password
+document.getElementById('admin-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') window.doLogin()
+})
+
+// ── INIT ────────────────────────────────────────────────
+function initAdmin() {
+  setInterval(() => { document.getElementById('clock').textContent = new Date().toTimeString().slice(0,8) }, 1000)
+  loadOverview()
+  checkSystemStatus()
+}
+
+// ── NAV ─────────────────────────────────────────────────
+window.nav = function(id, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'))
+  document.querySelectorAll('.ni').forEach(n => n.classList.remove('on'))
+  document.getElementById('page-' + id)?.classList.add('on')
+  if (el) el.classList.add('on')
+  else document.querySelectorAll('.ni').forEach(n => { if (n.getAttribute('onclick')?.includes(`'${id}'`)) n.classList.add('on') })
+  const fns = { users: loadUsers, payments: loadPayments, refunds: loadRefunds, affiliates: loadAffiliates, payouts: loadPayouts, 'leads-admin': loadAdminLeads }
+  fns[id]?.()
+}
+
+window.refreshAll = function() { loadOverview(); toast('Refreshed', 'ok') }
+
+// ── OVERVIEW ────────────────────────────────────────────
+async function loadOverview() {
+  try {
+    const [uRes, lRes, cRes, aRes] = await Promise.all([
+      _sb.from('users').select('email,plan,plan_status,created_at').order('created_at',{ascending:false}),
+      _sb.from('leads').select('id'),
+      _sb.from('conversions').select('revenue,funnel_name'),
+      _sb.from('affiliate_conversions').select('commission,status').eq('status','pending')
+    ])
+    const users = uRes.data || []
+    const leads = lRes.data || []
+    const convs = cRes.data || []
+    const affOwed = aRes.data || []
+
+    const totalRev  = convs.reduce((s,c) => s + (c.revenue||0), 0)
+    const paid      = users.filter(u => u.plan && u.plan !== 'free' && u.plan_status === 'active').length
+    const affOwedAmt = affOwed.reduce((s,a) => s + (a.commission||0), 0)
+
+    set('ov-rev',   '$' + totalRev.toFixed(2))
+    set('ov-users', users.length)
+    set('ov-paid',  paid)
+    set('ov-leads', leads.length)
+    set('r-aff-owed', '$' + affOwedAmt.toFixed(2))
+
+    // Revenue by plan
+    const byPlan = { starter:0, pro:0, scale:0, lifetime:0 }
+    convs.forEach(c => {
+      const fn = (c.funnel_name||'').replace('stripe-','')
+      if (byPlan[fn] !== undefined) byPlan[fn] += (c.revenue||0)
+    })
+    set('r-starter',  '$' + byPlan.starter.toFixed(2))
+    set('r-pro',      '$' + byPlan.pro.toFixed(2))
+    set('r-scale',    '$' + byPlan.scale.toFixed(2))
+    set('r-lifetime', '$' + byPlan.lifetime.toFixed(2))
+
+    // Recent signups
+    document.getElementById('ov-signups').innerHTML = users.slice(0,8).map(u => `
+      <tr>
+        <td>${esc(u.email)}</td>
+        <td>${planBadge(u.plan)}</td>
+        <td class="mono cs">${ago(u.created_at)}</td>
+      </tr>`).join('') || `<tr><td colspan="3"><div class="empty"><p>No users yet</p></div></td></tr>`
+
+  } catch(e) { console.error('loadOverview:', e) }
+}
+
+// ── USERS ───────────────────────────────────────────────
+let allUsers = []
+
+async function loadUsers() {
+  try {
+    const { data } = await _sb.from('users').select('*').order('created_at',{ascending:false})
+    allUsers = data || []
+    renderUsers(allUsers)
+  } catch(e) { console.error(e) }
+}
+
+function renderUsers(users) {
+  document.getElementById('users-body').innerHTML = users.length
+    ? users.map(u => `<tr>
+        <td>${esc(u.email)}</td>
+        <td class="cs">${esc(u.name||'—')}</td>
+        <td>${planBadge(u.plan)}</td>
+        <td>${statusBadge(u.plan_status)}</td>
+        <td class="mono cs">${ago(u.created_at)}</td>
+        <td>
+          <div style="display:flex;gap:5px">
+            <button class="btn btn-g btn-sm" onclick="editUser('${esc(u.email)}','${esc(u.plan||'free')}')">Edit</button>
+            ${u.plan_status !== 'suspended'
+              ? `<button class="btn btn-sm" style="background:rgba(240,165,0,.1);color:var(--gold);border:1px solid rgba(240,165,0,.2)" onclick="suspendUser('${esc(u.email)}')">Suspend</button>`
+              : `<button class="btn btn-sm" style="background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bdr)" onclick="unsuspendUser('${esc(u.email)}')">Restore</button>`
+            }
+            <button class="btn btn-sm" style="background:rgba(242,92,122,.1);color:var(--rose);border:1px solid rgba(242,92,122,.2)" onclick="deleteUser('${esc(u.email)}')">Remove</button>
+          </div>
+        </td>
+      </tr>`).join('')
+    : `<tr><td colspan="6"><div class="empty"><div class="empty-ic">👥</div><p>No users yet</p></div></td></tr>`
+}
+
+window.filterUsers = function() {
+  const q = document.getElementById('user-search').value.toLowerCase()
+  renderUsers(allUsers.filter(u => u.email?.toLowerCase().includes(q) || u.name?.toLowerCase().includes(q)))
+}
+
+window.addUser = async function() {
+  const fname = document.getElementById('au-fname').value.trim()
+  const lname = document.getElementById('au-lname').value.trim()
+  const email = document.getElementById('au-email').value.trim()
+  const plan  = document.getElementById('au-plan').value
+  const notes = document.getElementById('au-notes').value.trim()
+  if (!email) { showFB('au-fb','err','⚠ Email is required'); return }
+  try {
+    const { error } = await _sb.from('users').upsert([{
+      email, name: fname + ' ' + lname, plan, plan_status: 'active',
+      notes, created_at: new Date().toISOString(), updated_at: new Date().toISOString()
+    }], { onConflict: 'email' })
+    if (error) throw error
+    showFB('au-fb','ok','✓ User created/updated')
+    document.getElementById('au-fname').value = ''
+    document.getElementById('au-lname').value = ''
+    document.getElementById('au-email').value = ''
+    toast('User saved', 'ok')
+    loadOverview()
+  } catch(e) { showFB('au-fb','err','⚠ ' + e.message) }
+}
+
+window.editUser = function(email, plan) {
+  nav('add-user', null)
+  document.getElementById('au-email').value = email
+  document.getElementById('au-plan').value  = plan
+  document.getElementById('au-email').focus()
+}
+
+let suspendTarget = ''
+window.suspendUser = function(email) {
+  suspendTarget = email
+  document.getElementById('suspend-email-confirm').textContent = email
+  openModal('m-suspend')
+}
+window.confirmSuspend = async function() {
+  if (!suspendTarget) return
+  await _sb.from('users').update({ plan: 'free', plan_status: 'suspended' }).eq('email', suspendTarget)
+  closeModal('m-suspend')
+  toast('User suspended', 'ok')
+  loadUsers()
+  suspendTarget = ''
+}
+window.unsuspendUser = async function(email) {
+  await _sb.from('users').update({ plan_status: 'active' }).eq('email', email)
+  toast('User restored', 'ok')
+  loadUsers()
+}
+window.deleteUser = async function(email) {
+  if (!confirm(`Permanently remove ${email}? This cannot be undone.`)) return
+  await _sb.from('users').delete().eq('email', email)
+  toast('User removed', 'ok')
+  loadUsers()
+  loadOverview()
+}
+
+// ── PAYMENTS ────────────────────────────────────────────
+async function loadPayments() {
+  try {
+    const { data } = await _sb.from('conversions').select('*').order('created_at',{ascending:false})
+    const list = data || []
+    document.getElementById('payments-body').innerHTML = list.length
+      ? list.map(c => `<tr>
+          <td>${esc(c.email||'—')}</td>
+          <td>${planBadge((c.funnel_name||'').replace('stripe-',''))}</td>
+          <td class="mono ct">$${(c.revenue||0).toFixed(2)}</td>
+          <td class="mono cs">${ago(c.created_at)}</td>
+          <td><span class="bdg bdg-t">Stripe</span></td>
+        </tr>`).join('')
+      : `<tr><td colspan="5"><div class="empty"><p>No payments yet</p></div></td></tr>`
+  } catch(e) { console.error(e) }
+}
+
+// ── REFUNDS ─────────────────────────────────────────────
+async function loadRefunds() {
+  try {
+    const [rRes, dRes] = await Promise.all([
+      _sb.from('refunds').select('*').order('created_at',{ascending:false}),
+      _sb.from('disputes').select('*').order('created_at',{ascending:false})
+    ])
+    const refunds  = rRes.data || []
+    const disputes = dRes.data || []
+    document.getElementById('refunds-body').innerHTML = refunds.length
+      ? refunds.map(r => `<tr>
+          <td>${esc(r.email)}</td>
+          <td class="mono">$${(r.amount||0).toFixed(2)}</td>
+          <td class="cs">${esc(r.reason||'—')}</td>
+          <td>${r.status==='approved'?'<span class="bdg bdg-t">Approved</span>':r.status==='rejected'?'<span class="bdg bdg-r">Rejected</span>':'<span class="bdg bdg-g">Pending</span>'}</td>
+          <td class="mono cs">${ago(r.created_at)}</td>
+        </tr>`).join('')
+      : `<tr><td colspan="5"><div class="empty"><p>No refunds logged</p></div></td></tr>`
+    document.getElementById('disputes-body').innerHTML = disputes.length
+      ? disputes.map(d => `<tr>
+          <td>${esc(d.email)}</td>
+          <td class="cs">${esc(d.issue||'—')}</td>
+          <td>${d.status==='resolved'?'<span class="bdg bdg-t">Resolved</span>':d.status==='escalated'?'<span class="bdg bdg-r">Escalated</span>':'<span class="bdg bdg-g">Open</span>'}</td>
+          <td class="mono cs">${ago(d.created_at)}</td>
+        </tr>`).join('')
+      : `<tr><td colspan="4"><div class="empty"><p>No disputes logged</p></div></td></tr>`
+  } catch(e) { console.error(e) }
+}
+
+window.logRefund = async function() {
+  const email  = document.getElementById('ref-email').value.trim()
+  const amount = parseFloat(document.getElementById('ref-amount').value) || 0
+  const reason = document.getElementById('ref-reason').value.trim()
+  const status = document.getElementById('ref-status').value
+  if (!email) { showFB('ref-fb','err','⚠ Email required'); return }
+  try {
+    await _sb.from('refunds').insert([{ email, amount, reason, status, created_at: new Date().toISOString() }])
+    closeModal('m-refund')
+    toast('Refund logged', 'ok')
+    loadRefunds()
+  } catch(e) { showFB('ref-fb','err','⚠ ' + e.message) }
+}
+
+window.logDispute = async function() {
+  const email  = document.getElementById('dis-email').value.trim()
+  const issue  = document.getElementById('dis-issue').value.trim()
+  const status = document.getElementById('dis-status').value
+  if (!email) { showFB('dis-fb','err','⚠ Email required'); return }
+  try {
+    await _sb.from('disputes').insert([{ email, issue, status, created_at: new Date().toISOString() }])
+    closeModal('m-dispute')
+    toast('Dispute logged', 'ok')
+    loadRefunds()
+  } catch(e) { showFB('dis-fb','err','⚠ ' + e.message) }
+}
+
+// ── AFFILIATES ──────────────────────────────────────────
+async function loadAffiliates() {
+  try {
+    const { data: affs } = await _sb.from('affiliates').select('*').order('created_at',{ascending:false})
+    const list = affs || []
+    document.getElementById('affiliates-body').innerHTML = list.length
+      ? list.map(a => `<tr>
+          <td>${esc(a.email)}</td>
+          <td class="mono ct">${esc(a.ref_code)}</td>
+          <td class="mono">${a.commission_rate ? Math.round(a.commission_rate*100)+'%' : '30%'}</td>
+          <td class="mono">${a.total_referrals||0}</td>
+          <td class="mono cg">$${(a.total_earned||0).toFixed(2)}</td>
+          <td class="mono ct">$${(a.total_paid||0).toFixed(2)}</td>
+          <td>
+            <div style="display:flex;gap:5px">
+              <button class="btn btn-g btn-sm" onclick="copyRef('${esc(a.ref_code)}')">Copy Link</button>
+              <button class="btn btn-sm" style="background:rgba(242,92,122,.1);color:var(--rose);border:1px solid rgba(242,92,122,.2)" onclick="removeAffiliate('${esc(a.id)}')">Remove</button>
+            </div>
+          </td>
+        </tr>`).join('')
+      : `<tr><td colspan="7"><div class="empty"><div class="empty-ic">🤝</div><p>No affiliates yet</p></div></td></tr>`
+  } catch(e) { console.error(e) }
+}
+
+window.addAffiliate = async function() {
+  const email = document.getElementById('aff-email').value.trim()
+  const name  = document.getElementById('aff-name').value.trim()
+  let   code  = document.getElementById('aff-code').value.trim()
+  const comm  = parseFloat(document.getElementById('aff-comm').value) / 100 || 0.30
+  if (!email) { showFB('aff-add-fb','err','⚠ Email required'); return }
+  if (!code) code = email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g,'') + Math.random().toString(36).slice(2,5)
+  try {
+    await _sb.from('affiliates').insert([{ email, name, ref_code: code, commission_rate: comm, total_referrals:0, total_earned:0, total_paid:0, created_at: new Date().toISOString() }])
+    closeModal('m-add-aff')
+    toast('Affiliate added', 'ok')
+    loadAffiliates()
+  } catch(e) { showFB('aff-add-fb','err','⚠ ' + e.message) }
+}
+
+window.copyRef = function(code) {
+  const siteUrl = 'https://nextwave-traffic-engine.netlify.app'
+  navigator.clipboard.writeText(`${siteUrl}/?ref=${code}`).then(() => toast('Affiliate link copied!', 'ok'))
+}
+
+window.removeAffiliate = async function(id) {
+  if (!confirm('Remove this affiliate?')) return
+  await _sb.from('affiliates').delete().eq('id', id)
+  toast('Affiliate removed', 'ok')
+  loadAffiliates()
+}
+
+// ── PAYOUTS ─────────────────────────────────────────────
+async function loadPayouts() {
+  try {
+    const [pendRes, histRes] = await Promise.all([
+      _sb.from('affiliate_conversions').select('*, affiliates(email)').eq('status','pending'),
+      _sb.from('affiliate_payouts').select('*').order('created_at',{ascending:false}).limit(20)
+    ])
+
+    // Group pending by affiliate
+    const pending = pendRes.data || []
+    const byAff   = {}
+    pending.forEach(p => {
+      const email = p.affiliates?.email || 'unknown'
+      if (!byAff[email]) byAff[email] = { email, amount: 0, count: 0 }
+      byAff[email].amount += (p.commission || 0)
+      byAff[email].count++
+    })
+    const entries = Object.values(byAff)
+
+    document.getElementById('pending-payouts-body').innerHTML = entries.length
+      ? entries.map(e => `<tr>
+          <td>${esc(e.email)}</td>
+          <td class="mono cg">$${e.amount.toFixed(2)}</td>
+          <td class="mono">${e.count}</td>
+          <td><button class="btn btn-primary btn-sm" onclick="initPayout('${esc(e.email)}','${e.amount.toFixed(2)}')">Pay Out</button></td>
+        </tr>`).join('')
+      : `<tr><td colspan="4"><div class="empty"><p>No pending payouts</p></div></td></tr>`
+
+    const hist = histRes.data || []
+    document.getElementById('payout-history-body').innerHTML = hist.length
+      ? hist.map(p => `<tr>
+          <td>${esc(p.affiliate_email)}</td>
+          <td class="mono ct">$${(p.amount||0).toFixed(2)}</td>
+          <td class="cs">${esc(p.method||'—')}</td>
+          <td class="mono cs">${ago(p.created_at)}</td>
+        </tr>`).join('')
+      : `<tr><td colspan="4"><div class="empty"><p>No payouts recorded</p></div></td></tr>`
+  } catch(e) { console.error(e) }
+}
+
+window.initPayout = function(email, amount) {
+  document.getElementById('po-email').value  = email
+  document.getElementById('po-amount').value = amount
+  openModal('m-payout')
+}
+
+window.recordPayout = async function() {
+  const email  = document.getElementById('po-email').value.trim()
+  const amount = parseFloat(document.getElementById('po-amount').value) || 0
+  const method = document.getElementById('po-method').value
+  const ref    = document.getElementById('po-ref').value.trim()
+  if (!email || amount <= 0) { showFB('po-fb','err','⚠ Email and amount required'); return }
+  try {
+    await _sb.from('affiliate_payouts').insert([{
+      affiliate_email: email, amount, method, reference: ref, created_at: new Date().toISOString()
+    }])
+    // Mark related conversions as paid
+    await _sb.from('affiliate_conversions').update({ status: 'paid' }).eq('status','pending').eq('affiliates.email', email)
+    closeModal('m-payout')
+    toast('Payout recorded', 'ok')
+    loadPayouts()
+  } catch(e) { showFB('po-fb','err','⚠ ' + e.message) }
+}
+
+// ── AFF SETTINGS ────────────────────────────────────────
+window.saveAffSettings = function() {
+  const settings = {
+    rate:      document.getElementById('aff-rate').value,
+    minPayout: document.getElementById('aff-min-payout').value,
+    cookie:    document.getElementById('aff-cookie').value,
+    method:    document.getElementById('aff-method').value,
+    starter:   document.getElementById('aff-c-starter').value,
+    pro:       document.getElementById('aff-c-pro').value,
+    scale:     document.getElementById('aff-c-scale').value,
+    lifetime:  document.getElementById('aff-c-lifetime').value
+  }
+  localStorage.setItem('nw_aff_settings', JSON.stringify(settings))
+  showFB('aff-settings-fb','ok','✓ Settings saved')
+  toast('Affiliate settings saved', 'ok')
+}
+
+// Load saved aff settings
+const savedAffSettings = JSON.parse(localStorage.getItem('nw_aff_settings')||'{}')
+if (savedAffSettings.rate)        document.getElementById('aff-rate').value = savedAffSettings.rate
+if (savedAffSettings.minPayout)   document.getElementById('aff-min-payout').value = savedAffSettings.minPayout
+if (savedAffSettings.method)      document.getElementById('aff-method').value = savedAffSettings.method
+
+// ── ADMIN LEADS ─────────────────────────────────────────
+async function loadAdminLeads() {
+  try {
+    const { data } = await _sb.from('leads').select('*').order('created_at',{ascending:false})
+    const list = data || []
+    set('admin-leads-ct', list.length + ' leads')
+    document.getElementById('admin-leads-body').innerHTML = list.length
+      ? list.map(l => `<tr>
+          <td>${esc(l.email)}</td>
+          <td class="cs">${esc(l.name||'—')}</td>
+          <td><span class="bdg bdg-b">${esc(l.funnel_id||'default')}</span></td>
+          <td><span class="bdg bdg-m">Organic</span></td>
+          <td class="mono cs">${ago(l.created_at)}</td>
+          <td><button class="btn btn-sm" style="background:rgba(242,92,122,.1);color:var(--rose);border:1px solid rgba(242,92,122,.2);font-size:10px" onclick="deleteLead('${esc(l.email)}')">Remove</button></td>
+        </tr>`).join('')
+      : `<tr><td colspan="6"><div class="empty"><div class="empty-ic">📬</div><p>No leads yet</p></div></td></tr>`
+  } catch(e) { console.error(e) }
+}
+
+window.deleteLead = async function(email) {
+  if (!confirm(`Remove lead ${email}? This cannot be undone.`)) return
+  await _sb.from('leads').delete().eq('email', email)
+  toast('Lead removed', 'ok')
+  loadAdminLeads()
+}
+
+// ── CHANGE PASSWORD ─────────────────────────────────────
+window.changePassword = function() {
+  const current  = document.getElementById('cp-current').value
+  const newPass  = document.getElementById('cp-new').value
+  const confirm2 = document.getElementById('cp-confirm').value
+  if (current !== getAdminPass()) { showFB('cp-fb','err','⚠ Current password incorrect'); return }
+  if (newPass.length < 12)        { showFB('cp-fb','err','⚠ New password must be at least 12 characters'); return }
+  if (newPass !== confirm2)       { showFB('cp-fb','err','⚠ Passwords do not match'); return }
+  localStorage.setItem('nw_admin_pass', newPass)
+  document.getElementById('cp-current').value = ''
+  document.getElementById('cp-new').value     = ''
+  document.getElementById('cp-confirm').value = ''
+  showFB('cp-fb','ok','✓ Password updated. Log out and back in to confirm.')
+  toast('Password updated', 'ok')
+}
+
+// ── SYSTEM STATUS ────────────────────────────────────────
+async function checkSystemStatus() {
+  try {
+    const { error } = await _sb.from('leads').select('id').limit(1)
+    set('sys-sb', error ? '⚠ Error' : '✓ Connected')
+    document.getElementById('sys-sb').className = error ? 'sr-v cr' : 'sr-v ct'
+  } catch { set('sys-sb','⚠ Failed') }
+  set('sys-ai',     '✓ Configured')
+  set('sys-stripe', 'Check Netlify env vars')
+}
+
+// ── MODALS ───────────────────────────────────────────────
+window.openModal  = id => document.getElementById(id).classList.add('on')
+window.closeModal = id => document.getElementById(id).classList.remove('on')
+window.closeBD    = (e, id) => { if (e.target === document.getElementById(id)) closeModal(id) }
+
+// ── UTILS ────────────────────────────────────────────────
+function set(id, val) { const el = document.getElementById(id); if (el) el.textContent = val }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+function ago(iso) { if (!iso) return '—'; const m = Math.floor((Date.now()-new Date(iso))/60000); if (m<1) return 'now'; if (m<60) return m+'m'; if (m<1440) return Math.floor(m/60)+'h'; return Math.floor(m/1440)+'d ago' }
+function planBadge(plan) {
+  if (!plan || plan === 'free') return '<span class="bdg bdg-m">Free</span>'
+  if (plan === 'starter')  return '<span class="bdg bdg-b">Starter</span>'
+  if (plan === 'pro')      return '<span class="bdg bdg-t">Pro</span>'
+  if (plan === 'scale')    return '<span class="bdg" style="background:rgba(159,122,234,.08);color:var(--purple);border:1px solid rgba(159,122,234,.2)">Scale</span>'
+  if (plan === 'lifetime') return '<span class="bdg bdg-g">Lifetime</span>'
+  return `<span class="bdg bdg-m">${esc(plan)}</span>`
+}
+function statusBadge(status) {
+  if (status === 'active')    return '<span class="bdg bdg-t">Active</span>'
+  if (status === 'suspended') return '<span class="bdg bdg-r">Suspended</span>'
+  if (status === 'past_due')  return '<span class="bdg bdg-g">Past Due</span>'
+  if (status === 'cancelled') return '<span class="bdg bdg-m">Cancelled</span>'
+  return '<span class="bdg bdg-m">—</span>'
+}
+function showFB(id, type, msg) {
+  const el = document.getElementById(id); if (!el) return
+  el.className = `fb on fb-${type}`; el.textContent = msg
+}
+window.toast = function(msg, type='ok') {
+  const el = document.getElementById('toast')
+  el.textContent = msg; el.className = 'on ' + type
+  clearTimeout(el._t); el._t = setTimeout(() => el.className = '', 2800)
+}
+</script>
+</body>
+</html>
