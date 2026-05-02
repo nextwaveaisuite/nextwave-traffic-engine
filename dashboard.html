@@ -208,10 +208,92 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
 #toast.err{border-color:rgba(242,92,122,.3);color:var(--rose)}
 #toast.info{border-color:rgba(79,142,247,.3);color:var(--blue)}
 @keyframes tu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@media(max-width:860px){#toast{bottom:74px;right:12px;left:12px;max-width:none;text-align:center;justify-content:center}}
 
 @media(max-width:1080px){.krow{grid-template-columns:1fr 1fr}}
-@media(max-width:860px){.sidebar{display:none}.g2,.g3,.gm{grid-template-columns:1fr}}
-@media(max-width:580px){.krow{grid-template-columns:1fr 1fr}.page{padding:14px}}
+@media(max-width:860px){
+  .sidebar{display:none}
+  .g2,.g3,.gm{grid-template-columns:1fr}
+  .main{padding-bottom:70px}
+}
+@media(max-width:580px){.krow{grid-template-columns:1fr 1fr}.page{padding:14px 12px}}
+
+/* ── MOBILE HAMBURGER ─────────────────────────────── */
+.ham-btn{
+  display:none;
+  width:32px;height:32px;border-radius:var(--r);
+  background:none;border:1px solid var(--line);
+  color:var(--dim);cursor:pointer;
+  align-items:center;justify-content:center;
+  font-size:16px;flex-direction:column;gap:4px;
+  transition:all .12s;
+}
+.ham-btn span{display:block;width:14px;height:1.5px;background:currentColor;border-radius:2px;transition:all .2s}
+.ham-btn:hover{color:var(--body);border-color:var(--line2)}
+@media(max-width:860px){.ham-btn{display:flex}}
+
+/* ── MOBILE DRAWER ────────────────────────────────── */
+.drawer-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);
+  z-index:150;display:none;
+  animation:fadeIn .15s ease;
+}
+.drawer-backdrop.open{display:block}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.drawer{
+  position:fixed;top:0;left:0;bottom:0;
+  width:240px;
+  background:var(--ink2);
+  border-right:1px solid var(--line);
+  z-index:160;
+  display:flex;flex-direction:column;
+  overflow-y:auto;
+  transform:translateX(-100%);
+  transition:transform .22s cubic-bezier(.4,0,.2,1);
+}
+.drawer.open{transform:translateX(0)}
+.drawer-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;border-bottom:1px solid var(--line);
+  flex-shrink:0;
+}
+.drawer-close{
+  width:28px;height:28px;border-radius:var(--r);
+  background:none;border:1px solid var(--line);
+  color:var(--dim);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;transition:all .12s;
+}
+.drawer-close:hover{color:var(--body);background:var(--ink3)}
+
+/* ── MOBILE BOTTOM TAB BAR ────────────────────────── */
+.mob-tabs{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--ink2);
+  border-top:1px solid var(--line);
+  height:60px;
+  z-index:100;
+  align-items:stretch;
+  padding:0 4px;
+}
+@media(max-width:860px){.mob-tabs{display:flex}}
+.mob-tab{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;
+  cursor:pointer;border:none;background:none;
+  color:var(--muted);padding:4px 2px;
+  transition:color .12s;border-radius:var(--r);
+  font-family:var(--f);
+  -webkit-tap-highlight-color:transparent;
+}
+.mob-tab:hover,.mob-tab.on{color:var(--teal)}
+.mob-tab.on .mob-tab-dot{background:var(--teal)}
+.mob-tab-icon{font-size:18px;line-height:1}
+.mob-tab-label{font-size:9px;font-weight:500;letter-spacing:.2px;line-height:1}
+.mob-tab-dot{width:4px;height:4px;border-radius:50%;background:transparent;transition:background .12s}
+.mob-tab-more{position:relative}
+.mob-tab-more .mob-tab-icon{font-size:20px}
 </style>
 </head>
 <body>
@@ -226,6 +308,9 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
   <div class="topbar-right">
     <span class="t-time" id="clock">--:--:--</span>
     <button class="t-btn" title="Refresh all data" onclick="refreshAll()">↻</button>
+    <button class="ham-btn" onclick="openDrawer()" title="Menu" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </div>
 
@@ -823,6 +908,84 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
 </main>
 </div>
 
+<!-- ── MOBILE DRAWER ──────────────────────────────────── -->
+<div class="drawer-backdrop" id="drawer-bd" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <div class="brand">
+      <div class="brand-ico"><svg viewBox="0 0 14 14"><path d="M1 11 L4.5 3.5 L8 8 L10.5 4.5 L13 11 Z"/></svg></div>
+      <div class="brand-name"><b>NEXT</b>WAVE</div>
+    </div>
+    <button class="drawer-close" onclick="closeDrawer()">×</button>
+  </div>
+
+  <div class="sg">
+    <div class="sg-lbl">Overview</div>
+    <div class="ni" onclick="navMob('overview',this)"><span class="ni-ic">▤</span>Dashboard</div>
+  </div>
+  <div class="sg">
+    <div class="sg-lbl">Tools</div>
+    <div class="ni" onclick="navMob('funnels',this)"><span class="ni-ic">◈</span>AI Funnels</div>
+    <div class="ni" onclick="navMob('links',this)"><span class="ni-ic">⌖</span>Link Cloaker</div>
+    <div class="ni" onclick="navMob('leads',this)"><span class="ni-ic">◎</span>Leads</div>
+  </div>
+  <div class="sg">
+    <div class="sg-lbl">Revenue</div>
+    <div class="ni" onclick="navMob('conversions',this)"><span class="ni-ic">◉</span>Conversions</div>
+    <div class="ni" onclick="navMob('traffic',this)"><span class="ni-ic">◌</span>Traffic</div>
+  </div>
+  <div class="sg">
+    <div class="sg-lbl">Earn</div>
+    <div class="ni" onclick="navMob('affiliate',this)"><span class="ni-ic">💸</span>My Affiliate</div>
+  </div>
+  <div class="sg">
+    <div class="sg-lbl">Connect</div>
+    <div class="ni" onclick="navMob('integrations',this)"><span class="ni-ic">⊕</span>Integrations</div>
+    <div class="ni" onclick="navMob('settings',this)"><span class="ni-ic">◧</span>Settings</div>
+  </div>
+
+  <div style="flex:1"></div>
+
+  <div class="si-row">
+    <div class="si-pill off" id="mob-pi-tz"><div class="si-pip"></div>TrafficZest</div>
+    <div class="si-pill off" id="mob-pi-fm"><div class="si-pip"></div>Forge Mail</div>
+  </div>
+  <div class="s-plan" style="margin:0 10px 16px">
+    <div class="s-plan-lbl">PLAN</div>
+    <div class="s-plan-name">Free Access</div>
+    <button class="s-plan-btn" onclick="navMob('settings',null)">Upgrade — from $19/mo</button>
+  </div>
+</div>
+
+<!-- ── MOBILE BOTTOM TABS ─────────────────────────────── -->
+<div class="mob-tabs">
+  <button class="mob-tab on" id="mob-overview" onclick="navMob('overview',this)">
+    <span class="mob-tab-icon">▤</span>
+    <span class="mob-tab-label">Home</span>
+    <span class="mob-tab-dot"></span>
+  </button>
+  <button class="mob-tab" id="mob-funnels" onclick="navMob('funnels',this)">
+    <span class="mob-tab-icon">◈</span>
+    <span class="mob-tab-label">Funnels</span>
+    <span class="mob-tab-dot"></span>
+  </button>
+  <button class="mob-tab" id="mob-links" onclick="navMob('links',this)">
+    <span class="mob-tab-icon">⌖</span>
+    <span class="mob-tab-label">Links</span>
+    <span class="mob-tab-dot"></span>
+  </button>
+  <button class="mob-tab" id="mob-leads" onclick="navMob('leads',this)">
+    <span class="mob-tab-icon">◎</span>
+    <span class="mob-tab-label">Leads</span>
+    <span class="mob-tab-dot"></span>
+  </button>
+  <button class="mob-tab mob-tab-more" onclick="openDrawer()">
+    <span class="mob-tab-icon">⋯</span>
+    <span class="mob-tab-label">More</span>
+    <span class="mob-tab-dot"></span>
+  </button>
+</div>
+
 <!-- MODAL: Log Sale -->
 <div class="modal-wrap" id="m-conv" onclick="closeBD(event,'m-conv')">
   <div class="modal">
@@ -847,6 +1010,25 @@ window._sb = supabase
 setInterval(() => {
   document.getElementById('clock').textContent = new Date().toTimeString().slice(0,8)
 }, 1000)
+
+// ── MOBILE DRAWER ─────────────────────────────────────
+window.openDrawer = function() {
+  document.getElementById('drawer').classList.add('open')
+  document.getElementById('drawer-bd').classList.add('open')
+  document.body.style.overflow = 'hidden'
+}
+window.closeDrawer = function() {
+  document.getElementById('drawer').classList.remove('open')
+  document.getElementById('drawer-bd').classList.remove('open')
+  document.body.style.overflow = ''
+}
+window.navMob = function(id, el) {
+  closeDrawer()
+  document.querySelectorAll('.mob-tab').forEach(t => t.classList.remove('on'))
+  const tab = document.getElementById('mob-' + id)
+  if (tab) tab.classList.add('on')
+  nav(id, null)
+}
 
 // NAV
 window.nav = function(id, el) {
@@ -1214,8 +1396,14 @@ window.saveFM = function() {
 function syncStatus() {
   const tz = !!localStorage.getItem('tz_ok')
   const fm = !!localStorage.getItem('fm_ok')
+  // Sidebar pills
   document.getElementById('pi-tz').className = 'si-pill ' + (tz ? 'on' : 'off')
   document.getElementById('pi-fm').className = 'si-pill ' + (fm ? 'on' : 'off')
+  // Drawer pills (mobile)
+  const mobTz = document.getElementById('mob-pi-tz')
+  const mobFm = document.getElementById('mob-pi-fm')
+  if (mobTz) mobTz.className = 'si-pill ' + (tz ? 'on' : 'off')
+  if (mobFm) mobFm.className = 'si-pill ' + (fm ? 'on' : 'off')
   if (tz) { document.getElementById('tz-bdg').textContent = 'Configured'; document.getElementById('tz-bdg').className = 'bdg bdg-t' }
   if (fm) { document.getElementById('fm-bdg').textContent = 'Connected'; document.getElementById('fm-bdg').className = 'bdg bdg-t'; set('fm-sync', document.getElementById('sb-ct')?.textContent||'0'); set('fm-last','Recently') }
 }
