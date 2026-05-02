@@ -315,29 +315,100 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
   <div class="gm" style="flex:1;min-height:0">
     <div class="gc">
       <div class="panel">
-        <div class="p-head"><div class="p-title"><span class="p-icon">◈</span>Build Funnel Copy</div></div>
+        <div class="p-head">
+          <div class="p-title"><span class="p-icon">◈</span>Build Funnel Copy</div>
+          <span class="bdg bdg-b" style="font-size:9px">CONGRUENT MODE</span>
+        </div>
         <div class="p-body">
-          <div class="fld"><label class="lbl">What are you promoting?</label><input class="inp" id="ai-niche" placeholder="e.g. weight loss supplement, email course, SaaS tool…" /></div>
-          <div class="fld"><label class="lbl">Destination / Affiliate URL</label><input class="inp" id="ai-url" placeholder="https://your-offer.com/link" /></div>
-          <div class="r2">
-            <div class="fld"><label class="lbl">Traffic source</label>
-              <select class="sel" id="ai-src">
-                <option value="trafficzest">TrafficZest</option>
-                <option value="solo-ads">Solo Ads</option>
-                <option value="cold-traffic">Cold Traffic</option>
-                <option value="email-list">Email List</option>
-              </select>
-            </div>
-            <div class="fld"><label class="lbl">Funnel slug</label><input class="inp" id="ai-slug" placeholder="my-offer" /></div>
+
+          <!-- STEP 1: URL + Auto-extract -->
+          <div style="background:var(--teal-bg);border:1px solid var(--teal-bdr);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;font-size:11px;color:var(--teal);line-height:1.6">
+            <strong style="display:block;margin-bottom:2px">For congruent copy, fill in your offer details below.</strong>
+            The more specific you are, the more the VSL and funnel match your exact offer.
           </div>
-          <button class="btn btn-p btn-w" id="ai-btn" onclick="buildFunnel()">Generate with AI</button>
+
+          <div class="fld">
+            <label class="lbl">Affiliate / Offer URL <span style="color:var(--muted);font-size:9px;font-weight:400">(paste link → auto-extract details)</span></label>
+            <div style="display:flex;gap:6px">
+              <input class="inp" id="ai-url" placeholder="https://your-offer.com/link" style="flex:1" onblur="autoScrape()" />
+              <button class="btn btn-g btn-sm" id="scrape-btn" onclick="scrapeOffer()" title="Extract offer details from URL" style="flex-shrink:0;white-space:nowrap">
+                <span id="scrape-btn-txt">⬇ Extract</span>
+              </button>
+            </div>
+            <div class="fb" id="scrape-fb"></div>
+          </div>
+
+          <!-- STEP 2: Offer Details -->
+          <div style="border-top:1px solid var(--line);padding-top:12px;margin-top:4px">
+            <div style="font-family:var(--m);font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Offer Details — the more you fill in, the better the copy</div>
+
+            <div class="fld">
+              <label class="lbl">Offer Name <span style="color:var(--rose);font-size:9px">required</span></label>
+              <input class="inp" id="ai-offer-name" placeholder="e.g. Ikaria Lean Belly Juice, Perpetual Income 365…" />
+            </div>
+
+            <div class="fld">
+              <label class="lbl">Core Promise (what does it deliver?)</label>
+              <input class="inp" id="ai-promise" placeholder="e.g. Lose 30lbs in 90 days using a Japanese morning ritual" />
+            </div>
+
+            <div class="fld">
+              <label class="lbl">Unique Mechanism (how does it work?)</label>
+              <input class="inp" id="ai-mechanism" placeholder="e.g. Targets ceramide compounds that trap fat — no diet changes needed" />
+            </div>
+
+            <div class="fld">
+              <label class="lbl">Target Buyer (who is this for?)</label>
+              <input class="inp" id="ai-avatar" placeholder="e.g. Women over 40 who have tried every diet and feel like their metabolism is broken" />
+            </div>
+
+            <div class="r2">
+              <div class="fld">
+                <label class="lbl">Price</label>
+                <input class="inp" id="ai-price" placeholder="e.g. $67 one-time" />
+              </div>
+              <div class="fld">
+                <label class="lbl">Guarantee</label>
+                <input class="inp" id="ai-guarantee" placeholder="e.g. 180-day money back" />
+              </div>
+            </div>
+
+            <div class="fld">
+              <label class="lbl">Bonuses (optional)</label>
+              <input class="inp" id="ai-bonuses" placeholder="e.g. Bonus 1: Metabolic Reset Guide, Bonus 2: VIP coaching call" />
+            </div>
+
+            <div class="fld">
+              <label class="lbl">Niche / Category</label>
+              <input class="inp" id="ai-niche" placeholder="e.g. weight loss, make money online, forex, relationship…" />
+            </div>
+
+            <div class="r2">
+              <div class="fld">
+                <label class="lbl">Traffic source</label>
+                <select class="sel" id="ai-src">
+                  <option value="trafficzest">TrafficZest</option>
+                  <option value="solo-ads">Solo Ads</option>
+                  <option value="cold-traffic">Cold Traffic</option>
+                  <option value="email-list">Email List</option>
+                </select>
+              </div>
+              <div class="fld">
+                <label class="lbl">Funnel slug</label>
+                <input class="inp" id="ai-slug" placeholder="my-offer" />
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-p btn-w" id="ai-btn" onclick="buildFunnel()" style="margin-top:4px">Generate Congruent Funnel →</button>
           <div class="fb" id="ai-fb"></div>
         </div>
       </div>
+
       <div class="panel">
         <div class="p-head"><div class="p-title"><span class="p-icon">▶</span>Deploy to Live URL</div></div>
         <div class="p-body">
-          <p style="font-size:11px;color:var(--muted);margin-bottom:11px;line-height:1.6">Generate copy first, then deploy creates a live funnel URL.</p>
+          <p style="font-size:11px;color:var(--muted);margin-bottom:11px;line-height:1.6">Generate copy first, then deploy publishes your opt-in page and VSL bridge page live.</p>
           <button class="btn btn-s btn-w" id="dep-btn" onclick="deployFunnel()" disabled>Deploy Funnel</button>
           <div class="fb" id="dep-fb"></div>
         </div>
@@ -355,6 +426,11 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
           <div class="ai-sec"><div class="ai-sec-lbl">Call to Action</div><div class="ai-sec-val" style="color:var(--teal);font-weight:600" id="o-cta"></div></div>
           <div class="ai-sec"><div class="ai-sec-lbl">Email Subject</div><div class="ai-sec-val" id="o-subj"></div></div>
           <div class="ai-sec"><div class="ai-sec-lbl">Email Body</div><div class="ai-sec-val" style="white-space:pre-wrap;font-size:11px" id="o-body"></div></div>
+          <div style="height:1px;background:var(--line);margin:14px 0"></div>
+          <div style="font-family:var(--m);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--blue);margin-bottom:10px">VSL BRIDGE PAGE</div>
+          <div class="ai-sec"><div class="ai-sec-lbl">VSL Video Title</div><div class="ai-sec-val" style="color:var(--blue);font-weight:600" id="o-vsltitle"></div></div>
+          <div class="ai-sec"><div class="ai-sec-lbl">VSL Script (spoken word, ~2 mins)</div><div class="ai-sec-val" style="white-space:pre-wrap;font-size:11px;line-height:1.7" id="o-vslscript"></div></div>
+          <div class="ai-sec"><div class="ai-sec-lbl">Bridge Page CTA</div><div class="ai-sec-val" style="color:var(--teal);font-weight:600" id="o-vslcta"></div></div>
         </div>
       </div>
     </div>
@@ -834,43 +910,99 @@ async function loadOverview() {
 
 // AI FUNNELS
 let savedCopy = null
+window._scrapedCopy = ''
+
+// ── OFFER SCRAPER ─────────────────────────────────────
+window.scrapeOffer = async function() {
+  const url = document.getElementById('ai-url').value.trim()
+  if (!url) { toast('Enter an affiliate URL first', 'err'); return }
+  try { new URL(url) } catch { toast('URL must start with https://', 'err'); return }
+  const btn = document.getElementById('scrape-btn')
+  btn.disabled = true
+  document.getElementById('scrape-btn-txt').textContent = '…'
+  setFB('scrape-fb','info','Fetching offer page…')
+  try {
+    const res  = await fetch('/.netlify/functions/scrape-offer', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ url })
+    })
+    const data = await res.json()
+    if (data.success && data.extracted) {
+      const e = data.extracted
+      if (e.title    && !document.getElementById('ai-offer-name').value) document.getElementById('ai-offer-name').value = e.title.slice(0,80)
+      if (e.headline && !document.getElementById('ai-promise').value)    document.getElementById('ai-promise').value    = e.headline.slice(0,120)
+      if (e.metaDesc && !document.getElementById('ai-mechanism').value)  document.getElementById('ai-mechanism').value  = e.metaDesc.slice(0,120)
+      if (e.prices?.length && !document.getElementById('ai-price').value) document.getElementById('ai-price').value = e.prices[0]
+      if (e.guarantee && !document.getElementById('ai-guarantee').value)  document.getElementById('ai-guarantee').value = e.guarantee
+      window._scrapedCopy = data.summary || ''
+      setFB('scrape-fb','ok','✓ ' + (data.message || 'Details extracted — review fields then generate.'))
+    } else {
+      setFB('scrape-fb','info','ℹ ' + (data.message || 'Fill in offer details manually for best results.'))
+    }
+  } catch(e) { setFB('scrape-fb','info','ℹ Could not reach offer page — fill in details manually.') }
+  btn.disabled = false
+  document.getElementById('scrape-btn-txt').textContent = '⬇ Extract'
+}
+
+window.autoScrape = function() {
+  const url = document.getElementById('ai-url').value.trim()
+  if (url && url.startsWith('https://') && !document.getElementById('ai-offer-name').value) scrapeOffer()
+}
 
 window.buildFunnel = async function() {
-  const niche = document.getElementById('ai-niche').value.trim()
-  if (!niche) { toast('Enter what you are promoting', 'err'); return }
+  const offerName = document.getElementById('ai-offer-name').value.trim()
+  const niche     = document.getElementById('ai-niche').value.trim()
+  if (!offerName && !niche) { toast('Enter an offer name or niche first', 'err'); return }
+
   const btn = document.getElementById('ai-btn')
-  btnLoad(btn, true, 'Generating…')
+  btnLoad(btn, true, 'Generating congruent copy…')
   setFB('ai-fb', '', '')
   set('ai-bdg', 'generating…')
   document.getElementById('ai-bdg').className = 'bdg bdg-m'
+
   try {
     const res = await fetch('/.netlify/functions/ai', {
       method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ prompt: niche, type: 'funnel', source: document.getElementById('ai-src').value })
+      body: JSON.stringify({
+        prompt:       niche || offerName,
+        niche:        niche,
+        offerName:    offerName,
+        offerPromise: document.getElementById('ai-promise').value.trim(),
+        mechanism:    document.getElementById('ai-mechanism').value.trim(),
+        avatar:       document.getElementById('ai-avatar').value.trim(),
+        price:        document.getElementById('ai-price').value.trim(),
+        guarantee:    document.getElementById('ai-guarantee').value.trim(),
+        bonuses:      document.getElementById('ai-bonuses').value.trim(),
+        source:       document.getElementById('ai-src').value,
+        scrapedCopy:  window._scrapedCopy || ''
+      })
     })
     const data = await res.json()
     if (data.error) throw new Error(data.error)
     const c = data.result; savedCopy = c
-    document.getElementById('o-hl').textContent   = c.headline      || ''
-    document.getElementById('o-sh').textContent   = c.subheadline   || ''
-    document.getElementById('o-hk').textContent   = c.hook          || ''
-    document.getElementById('o-cta').textContent  = c.cta           || ''
-    document.getElementById('o-subj').textContent = c.emailSubject  || ''
-    document.getElementById('o-body').textContent = c.emailBody     || ''
-    document.getElementById('o-ul').innerHTML = (c.bullets||[]).map(b => `<li>${esc(b)}</li>`).join('')
-    document.getElementById('ai-empty').style.display = 'none'
+    document.getElementById('o-hl').textContent        = c.headline      || ''
+    document.getElementById('o-sh').textContent        = c.subheadline   || ''
+    document.getElementById('o-hk').textContent        = c.hook          || ''
+    document.getElementById('o-cta').textContent       = c.cta           || ''
+    document.getElementById('o-subj').textContent      = c.emailSubject  || ''
+    document.getElementById('o-body').textContent      = c.emailBody     || ''
+    document.getElementById('o-ul').innerHTML          = (c.bullets||[]).map(b => `<li>${esc(b)}</li>`).join('')
+    document.getElementById('o-vsltitle').textContent  = c.vslTitle      || ''
+    document.getElementById('o-vslscript').textContent = c.vslScript     || ''
+    document.getElementById('o-vslcta').textContent    = c.vslCta        || ''
+    document.getElementById('ai-empty').style.display  = 'none'
     document.getElementById('ai-out').classList.add('on')
-    document.getElementById('dep-btn').disabled = false
+    document.getElementById('dep-btn').disabled        = false
     set('ai-bdg', '✓ ready')
     document.getElementById('ai-bdg').className = 'bdg bdg-t'
-    addFeed('Copy generated: ' + niche, 'ok')
+    addFeed('Congruent copy generated: ' + (offerName || niche), 'ok')
     toast('Copy ready', 'ok')
   } catch(e) {
     setFB('ai-fb', 'err', '⚠ ' + e.message)
     set('ai-bdg', 'error')
     document.getElementById('ai-bdg').className = 'bdg bdg-r'
   }
-  btnLoad(btn, false, 'Generate with AI')
+  btnLoad(btn, false, 'Generate Congruent Funnel →')
 }
 
 window.deployFunnel = async function() {
@@ -886,9 +1018,33 @@ window.deployFunnel = async function() {
     })
     const data = await res.json()
     if (data.error) throw new Error(data.error)
-    setFB('dep-fb', 'ok', '✓ Live', data.url)
+
+    // Show both funnel URL and bridge page URL
+    const el = document.getElementById('dep-fb')
+    el.className = 'fb on fb-ok'
+    el.innerHTML = `
+      <div style="margin-bottom:8px;font-size:12px">✓ Deployed successfully</div>
+      <div style="font-size:11px;color:var(--dim);margin-bottom:5px">Opt-in funnel page:</div>
+      <div class="lk-row" style="margin-bottom:10px">
+        <code>${esc(data.url)}</code>
+        <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(data.url)}').then(()=>toast('Copied','ok'))">Copy</span>
+      </div>
+      <div style="font-size:11px;color:var(--dim);margin-bottom:5px">VSL Bridge page:</div>
+      <div class="lk-row">
+        <code>${esc(data.bridgeUrl)}</code>
+        <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(data.bridgeUrl)}').then(()=>toast('Copied','ok'))">Copy</span>
+      </div>
+      ${data.videoReady
+        ? `<div style="margin-top:8px;font-size:11px;color:var(--teal)">🎬 VSL video generated successfully</div>`
+        : `<div style="margin-top:8px;font-size:11px;color:var(--muted)">ℹ No D-ID key set — bridge page shows script as text. Add DID_API_KEY to Netlify to enable video.</div>`
+      }
+      <div style="margin-top:10px;font-size:11px;color:var(--dim);line-height:1.6">
+        <strong style="color:var(--body)">Your funnel flow:</strong><br>
+        Traffic → <a href="${esc(data.url)}" target="_blank" style="color:var(--teal);text-decoration:none">Opt-in page</a> → <a href="${esc(data.bridgeUrl)}" target="_blank" style="color:var(--blue);text-decoration:none">VSL Bridge</a> → Affiliate offer
+      </div>`
+
     addFeed('Funnel deployed: ' + name, 'ok')
-    toast('Funnel is live', 'ok')
+    toast('Funnel live', 'ok')
     loadOverview()
   } catch(e) { setFB('dep-fb', 'err', '⚠ ' + e.message) }
   btnLoad(btn, false, 'Deploy Funnel')
