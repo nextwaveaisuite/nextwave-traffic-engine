@@ -17,172 +17,104 @@ html{scroll-behavior:smooth}
   --blue:#4f8ef7;--body:#dce8f5;--dim:#8fa3c4;--muted:#3d5275;
   --f:'DM Sans',sans-serif;--m:'DM Mono',monospace;
 }
-body{background:var(--bg);color:var(--body);font-family:var(--f);font-size:16px;line-height:1.65;overflow-x:hidden;min-height:100vh}
+body{background:var(--bg);color:var(--body);font-family:var(--f);font-size:16px;line-height:1.65;min-height:100vh}
 
 /* NAV */
-nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:54px;background:rgba(8,12,20,.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:52px;background:rgba(8,12,20,.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none}
-.nav-logo{width:24px;height:24px;border-radius:5px;background:var(--teal);display:flex;align-items:center;justify-content:center}
-.nav-logo svg{width:13px;height:13px;fill:#080c14}
-.nav-name{font-family:var(--m);font-size:12px;font-weight:500;letter-spacing:.5px;color:var(--body)}
+.nav-logo{width:22px;height:22px;border-radius:4px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+.nav-logo svg{width:12px;height:12px;fill:#080c14}
+.nav-name{font-family:var(--m);font-size:11px;font-weight:500;letter-spacing:.5px;color:var(--body)}
 .nav-name b{color:var(--teal)}
+.nav-step{font-family:var(--m);font-size:10px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.step-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;font-family:var(--m)}
+.step-active{background:var(--teal);color:#080c14}
+.step-next{background:var(--s2);border:1px solid var(--line);color:var(--muted)}
+.step-line{width:20px;height:1px;background:var(--line)}
 
-/* LOADING STATE */
-.loading-screen{
-  min-height:100vh;display:flex;align-items:center;justify-content:center;
-  flex-direction:column;gap:16px;
-}
-.loader{width:32px;height:32px;border:2px solid var(--line);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite}
+/* LOADING */
+.loading-screen{min-height:80vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.loader{width:28px;height:28px;border:2px solid var(--line);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-txt{font-family:var(--m);font-size:11px;color:var(--muted);letter-spacing:.8px}
+.load-txt{font-family:var(--m);font-size:11px;color:var(--muted);letter-spacing:.8px}
 
-/* ERROR STATE */
-.error-screen{min-height:80vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center;padding:40px}
-.error-screen h2{font-size:22px;font-weight:700}
-.error-screen p{font-size:14px;color:var(--dim);max-width:400px;line-height:1.7}
-.error-screen a{color:var(--teal);text-decoration:none;font-size:13px}
+/* ERROR */
+.error-screen{min-height:70vh;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center;padding:40px}
+.error-screen h2{font-size:20px;font-weight:700}
+.error-screen p{font-size:13px;color:var(--dim);max-width:380px;line-height:1.7}
+.error-screen a{color:var(--teal);text-decoration:none}
 
-/* FUNNEL PAGE */
+/* FUNNEL */
 .funnel-wrap{display:none;max-width:720px;margin:0 auto;padding:60px 24px 80px}
 
 /* HERO */
-.f-eyebrow{
-  display:inline-flex;align-items:center;gap:7px;
-  font-family:var(--m);font-size:10px;letter-spacing:.8px;
-  color:var(--teal);border:1px solid var(--teal-bdr);
-  background:var(--teal-bg);padding:5px 13px;border-radius:20px;
-  margin-bottom:24px;
-}
+.f-eyebrow{display:inline-flex;align-items:center;gap:7px;font-family:var(--m);font-size:10px;letter-spacing:.8px;color:var(--teal);border:1px solid var(--teal-bdr);background:var(--teal-bg);padding:5px 13px;border-radius:20px;margin-bottom:20px}
 .f-eyebrow::before{content:'';width:5px;height:5px;background:var(--teal);border-radius:50%;animation:pip 1.5s ease infinite}
 @keyframes pip{0%,100%{opacity:1}50%{opacity:.2}}
 .f-header{text-align:center;margin-bottom:32px}
-.f-headline{
-  font-size:clamp(32px,6vw,60px);font-weight:700;
-  line-height:1.05;letter-spacing:-1.5px;
-  margin-bottom:12px;
-}
+.f-headline{font-size:clamp(30px,6vw,58px);font-weight:700;line-height:1.05;letter-spacing:-1.5px;margin-bottom:12px}
 .f-headline em{font-style:normal;color:var(--teal)}
-.f-rule{width:44px;height:2px;background:linear-gradient(90deg,var(--teal),var(--blue));margin:18px auto;border-radius:2px}
-.f-subheadline{font-size:clamp(16px,2.5vw,20px);color:var(--dim);font-weight:300;line-height:1.7;margin-bottom:0}
+.f-rule{width:44px;height:2px;background:linear-gradient(90deg,var(--teal),var(--blue));margin:16px auto;border-radius:2px}
+.f-subheadline{font-size:clamp(15px,2.5vw,20px);color:var(--dim);font-weight:300;line-height:1.7}
 .f-subheadline strong{color:var(--body);font-weight:500}
 
 /* HOOK */
-.f-hook{
-  background:var(--s1);border:1px solid var(--line);border-radius:12px;
-  padding:24px;margin:32px 0;
-  font-size:16px;color:var(--dim);line-height:1.8;
-  border-left:3px solid var(--teal);
-}
+.f-hook{background:var(--s1);border:1px solid var(--line);border-radius:12px;padding:22px;margin:28px 0;font-size:16px;color:var(--dim);line-height:1.8;border-left:3px solid var(--teal)}
 
 /* BENEFITS */
-.f-benefits-label{
-  font-family:var(--m);font-size:10px;letter-spacing:1.2px;
-  text-transform:uppercase;color:var(--muted);margin-bottom:14px;
-}
-.f-benefits{list-style:none;margin-bottom:36px;display:flex;flex-direction:column;gap:0}
-.f-benefits li{
-  display:flex;align-items:flex-start;gap:12px;
-  padding:13px 0;border-bottom:1px solid var(--line);
-  font-size:15px;color:var(--dim);line-height:1.5;
-}
+.f-benefits-label{font-family:var(--m);font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.f-benefits{list-style:none;margin-bottom:32px}
+.f-benefits li{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);font-size:15px;color:var(--dim);line-height:1.5}
 .f-benefits li:last-child{border-bottom:none}
-.f-check{
-  width:20px;height:20px;border-radius:50%;
-  background:var(--teal-bg);border:1px solid var(--teal-bdr);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--teal);font-size:10px;flex-shrink:0;margin-top:1px;
-  font-family:var(--m);
-}
+.f-check{width:20px;height:20px;border-radius:50%;background:var(--teal-bg);border:1px solid var(--teal-bdr);display:flex;align-items:center;justify-content:center;color:var(--teal);font-size:10px;flex-shrink:0;margin-top:2px;font-family:var(--m)}
 
-/* OPT-IN FORM */
-.f-optin{
-  background:var(--s1);border:1px solid var(--teal-bdr);
-  border-radius:14px;padding:28px;margin:36px 0;
-}
-.f-optin-title{
-  font-size:13px;font-weight:600;margin-bottom:5px;
-  display:flex;align-items:center;gap:8px;
-}
+/* SOCIAL PROOF */
+.f-proof{display:flex;justify-content:center;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:24px 0}
+.f-proof-item{flex:1;text-align:center;padding:14px 10px;border-right:1px solid var(--line)}
+.f-proof-item:last-child{border-right:none}
+.f-proof-num{font-family:var(--m);font-size:20px;font-weight:500;color:var(--teal);line-height:1}
+.f-proof-lbl{font-size:10px;color:var(--muted);margin-top:3px}
+
+/* OPT-IN */
+.f-optin{background:var(--s1);border:1px solid var(--teal-bdr);border-radius:14px;padding:28px;margin:32px 0}
+.f-optin-title{font-size:14px;font-weight:600;margin-bottom:4px;display:flex;align-items:center;gap:8px}
 .f-optin-title span{color:var(--teal)}
 .f-optin-sub{font-size:12px;color:var(--muted);margin-bottom:18px}
 .f-fields{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
-.f-input{
-  width:100%;background:var(--s2);border:1px solid var(--line);
-  border-radius:8px;color:var(--body);padding:12px 14px;
-  font-size:13px;font-family:var(--f);outline:none;transition:border-color .15s;
-}
+.f-input{width:100%;background:var(--s2);border:1px solid var(--line);border-radius:8px;color:var(--body);padding:12px 14px;font-size:13px;font-family:var(--f);outline:none;transition:border-color .15s}
 .f-input:focus{border-color:var(--teal-bdr);background:var(--s3)}
 .f-input::placeholder{color:var(--muted)}
-.f-btn{
-  width:100%;padding:14px;background:var(--teal);color:#080c14;
-  border:none;border-radius:8px;font-size:15px;font-weight:700;
-  font-family:var(--f);cursor:pointer;transition:all .15s;
-  position:relative;overflow:hidden;
-}
+.f-btn{width:100%;padding:15px;background:var(--teal);color:#080c14;border:none;border-radius:8px;font-size:16px;font-weight:700;font-family:var(--f);cursor:pointer;transition:all .15s;position:relative;overflow:hidden}
 .f-btn:hover{background:var(--teal2);transform:translateY(-1px)}
 .f-btn:active{transform:translateY(0)}
 .f-btn.loading{opacity:.7;pointer-events:none}
-.f-btn.loading::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
-  animation:sweep 1s infinite;
-}
+.f-btn.loading::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:sweep 1s infinite}
 @keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
 .f-micro{font-size:11px;color:var(--muted);text-align:center;margin-top:10px}
 .f-micro span{color:rgba(25,230,176,.6)}
 .f-status{font-size:12px;min-height:16px;text-align:center;margin-top:8px;font-family:var(--m)}
 .f-status.ok{color:var(--teal)}.f-status.err{color:#f25c7a}
 
-/* CTA BUTTON (no form, just a link) */
-.f-cta-btn{
-  display:block;width:100%;padding:16px;
-  background:var(--teal);color:#080c14;
-  border:none;border-radius:10px;
-  font-size:16px;font-weight:700;font-family:var(--f);
-  cursor:pointer;text-align:center;text-decoration:none;
-  transition:all .15s;margin:32px 0;
-}
-.f-cta-btn:hover{background:var(--teal2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(25,230,176,.2)}
-
-/* SOCIAL PROOF */
-.f-proof{
-  display:flex;justify-content:center;gap:0;
-  border:1px solid var(--line);border-radius:10px;
-  overflow:hidden;margin:28px 0;
-}
-.f-proof-item{flex:1;text-align:center;padding:14px 10px;border-right:1px solid var(--line)}
-.f-proof-item:last-child{border-right:none}
-.f-proof-num{font-family:var(--m);font-size:20px;font-weight:500;color:var(--teal);line-height:1}
-.f-proof-lbl{font-size:10px;color:var(--muted);margin-top:3px}
-
-/* FOOTER */
-.f-footer{text-align:center;padding:20px 0;border-top:1px solid var(--line);margin-top:40px}
-.f-footer p{font-size:11px;color:var(--muted);line-height:1.7}
-.f-footer a{color:var(--dim);text-decoration:none}
-.f-footer a:hover{color:var(--teal)}
-
-/* SUCCESS SCREEN */
-.success-screen{
+/* REDIRECT SCREEN — shown while processing before bridge page redirect */
+.redirect-screen{
   display:none;min-height:80vh;
   align-items:center;justify-content:center;
   flex-direction:column;gap:16px;text-align:center;padding:40px;
 }
-.success-screen.show{display:flex}
-.success-check{
-  width:64px;height:64px;border-radius:50%;
-  background:var(--teal-bg);border:2px solid var(--teal-bdr);
-  display:flex;align-items:center;justify-content:center;
-  font-size:28px;margin-bottom:8px;
-  animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both;
-}
+.redirect-check{width:64px;height:64px;border-radius:50%;background:var(--teal-bg);border:2px solid var(--teal-bdr);display:flex;align-items:center;justify-content:center;font-size:28px;animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes popIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.success-screen h2{font-size:28px;font-weight:700;letter-spacing:-.5px}
-.success-screen p{font-size:15px;color:var(--dim);max-width:400px;line-height:1.7}
+.redirect-screen h2{font-size:22px;font-weight:700}
+.redirect-screen p{font-size:14px;color:var(--dim);line-height:1.7}
+.redirect-progress{width:240px;height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin-top:8px}
+.redirect-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:2px;animation:progress 1.2s ease forwards}
+@keyframes progress{from{width:0}to{width:100%}}
 
-@media(max-width:600px){
-  .funnel-wrap{padding:40px 18px 60px}
-  nav{padding:0 16px}
-}
+/* FOOTER */
+.f-footer{text-align:center;padding:20px 0;border-top:1px solid var(--line);margin-top:32px}
+.f-footer p{font-size:10px;color:var(--muted);line-height:1.7}
+.f-footer a{color:var(--dim);text-decoration:none}
+
+@media(max-width:600px){.funnel-wrap{padding:40px 18px 60px}nav{padding:0 16px}}
 </style>
 </head>
 <body>
@@ -192,34 +124,42 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
     <div class="nav-logo"><svg viewBox="0 0 14 14"><path d="M1 11 L4.5 3.5 L8 8 L10.5 4.5 L13 11 Z"/></svg></div>
     <div class="nav-name"><b>NEXT</b>WAVE</div>
   </a>
+  <div class="nav-step">
+    <div class="step-dot step-active">1</div>
+    <div class="step-line"></div>
+    <div class="step-dot step-next">2</div>
+    <div class="step-line"></div>
+    <div class="step-dot step-next">3</div>
+  </div>
 </nav>
 
 <!-- LOADING -->
 <div class="loading-screen" id="loading">
   <div class="loader"></div>
-  <div class="loading-txt">LOADING FUNNEL…</div>
+  <div class="load-txt">LOADING…</div>
 </div>
 
 <!-- ERROR -->
-<div class="error-screen" id="error-screen" style="display:none">
-  <h2>Funnel not found</h2>
+<div class="error-screen" id="error-screen">
+  <h2>Page not found</h2>
   <p>This funnel link doesn't exist or may have been removed.</p>
-  <a href="/">← Back to NextWave</a>
+  <a href="/">← Back</a>
 </div>
 
-<!-- SUCCESS -->
-<div class="success-screen" id="success-screen">
-  <div class="success-check">✓</div>
+<!-- REDIRECT SCREEN — shows between opt-in submit and bridge redirect -->
+<div class="redirect-screen" id="redirect-screen">
+  <div class="redirect-check">✓</div>
   <h2>You're in!</h2>
-  <p>Check your email — your access details are on their way.</p>
+  <p>Taking you to the next step…</p>
+  <div class="redirect-progress"><div class="redirect-bar"></div></div>
 </div>
 
-<!-- FUNNEL CONTENT -->
+<!-- FUNNEL -->
 <div class="funnel-wrap" id="funnel-wrap">
 
   <div class="f-header">
     <div class="f-eyebrow" id="f-eyebrow">SPECIAL OFFER</div>
-    <h1 class="f-headline" id="f-headline">Loading…</h1>
+    <h1 class="f-headline" id="f-headline"></h1>
     <div class="f-rule"></div>
     <p class="f-subheadline" id="f-subheadline"></p>
   </div>
@@ -227,18 +167,17 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
   <div class="f-hook" id="f-hook"></div>
 
   <div class="f-proof">
-    <div class="f-proof-item"><div class="f-proof-num">100%</div><div class="f-proof-lbl">Proven system</div></div>
+    <div class="f-proof-item"><div class="f-proof-num">✓</div><div class="f-proof-lbl">Proven system</div></div>
     <div class="f-proof-item"><div class="f-proof-num">24/7</div><div class="f-proof-lbl">Automated</div></div>
-    <div class="f-proof-item"><div class="f-proof-num">Free</div><div class="f-proof-lbl">To get started</div></div>
+    <div class="f-proof-item"><div class="f-proof-num">Free</div><div class="f-proof-lbl">To start</div></div>
   </div>
 
   <div class="f-benefits-label">WHAT YOU GET</div>
   <ul class="f-benefits" id="f-benefits"></ul>
 
-  <!-- OPT-IN FORM -->
   <div class="f-optin">
-    <div class="f-optin-title"><span>→</span> <span id="f-cta-text">Get Instant Access</span></div>
-    <div class="f-optin-sub">Enter your details below to get started</div>
+    <div class="f-optin-title"><span>→</span> <span id="f-cta-label">Get Instant Access</span></div>
+    <div class="f-optin-sub">Enter your details below — no credit card needed</div>
     <div class="f-fields">
       <input class="f-input" id="f-name" type="text" placeholder="Your first name" autocomplete="given-name" />
       <input class="f-input" id="f-email" type="email" placeholder="Your email address" autocomplete="email" />
@@ -252,21 +191,26 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 
   <div class="f-footer">
     <p>
-      Results vary based on individual effort and implementation.<br>
-      No specific income is guaranteed.<br>
+      Results vary. No income is guaranteed.<br>
       <a href="/">Powered by NextWave</a>
     </p>
   </div>
+
 </div>
 
 <script type="module">
 import { supabase } from '/supabase.js'
 
-// ── GET SLUG FROM URL ─────────────────────────────────
-// URL is /funnel/my-offer-slug
+// ── GET SLUG ──────────────────────────────────────────
+// URL pattern: /funnel/my-offer-slug
 const slug = window.location.pathname.split('/').filter(Boolean).pop()
 
-// ── LOAD FUNNEL DATA ──────────────────────────────────
+// Store for use in submitLead
+window._funnelSlug     = slug
+window._bridgeUrl      = null
+window._affiliateLink  = null
+
+// ── LOAD FUNNEL ───────────────────────────────────────
 async function loadFunnel() {
   if (!slug) { showError(); return }
 
@@ -279,31 +223,26 @@ async function loadFunnel() {
 
     if (error || !data) { showError(); return }
 
-    // Parse copy — stored as jsonb in Supabase
+    // Parse copy
     let copy = data.copy
     if (typeof copy === 'string') {
       try { copy = JSON.parse(copy) } catch { copy = null }
     }
 
+    // Store key URLs
+    const siteUrl = window.location.origin
+    window._bridgeUrl     = `${siteUrl}/bridge/${slug}`
+    window._affiliateLink = data.affiliate_link || null
+
     // Update page title
-    document.title = copy?.headline || data.funnel_name || 'NextWave Funnel'
+    document.title = copy?.headline || data.funnel_name || 'Get Access'
 
     // Populate content
-    if (copy?.headline) {
-      document.getElementById('f-headline').textContent = copy.headline
-    } else {
-      document.getElementById('f-headline').textContent = data.funnel_name || 'Get Access Now'
-    }
+    document.getElementById('f-headline').textContent    = copy?.headline    || data.funnel_name || 'Get Access Now'
+    document.getElementById('f-subheadline').textContent = copy?.subheadline || ''
+    document.getElementById('f-hook').textContent        = copy?.hook        || ''
 
-    if (copy?.subheadline) {
-      document.getElementById('f-subheadline').textContent = copy.subheadline
-    }
-
-    if (copy?.hook) {
-      document.getElementById('f-hook').textContent = copy.hook
-    } else {
-      document.getElementById('f-hook').style.display = 'none'
-    }
+    if (!copy?.hook) document.getElementById('f-hook').style.display = 'none'
 
     if (copy?.bullets?.length) {
       document.getElementById('f-benefits').innerHTML = copy.bullets
@@ -312,24 +251,17 @@ async function loadFunnel() {
     }
 
     if (copy?.cta) {
-      document.getElementById('f-cta-text').textContent = copy.cta
-      document.getElementById('f-btn-text').textContent = copy.cta + ' →'
+      document.getElementById('f-cta-label').textContent = copy.cta
+      document.getElementById('f-btn-text').textContent  = copy.cta + ' →'
     }
 
-    // Store affiliate link for after opt-in
-    window._affiliateLink = data.affiliate_link || null
-    window._funnelSlug    = slug
-    window._funnelName    = data.funnel_name || slug
-
     // Show funnel
-    document.getElementById('loading').style.display    = 'none'
-    document.getElementById('funnel-wrap').style.display = 'block'
+    document.getElementById('loading').style.display      = 'none'
+    document.getElementById('funnel-wrap').style.display  = 'block'
 
-    // Log page view event
+    // Log view
     supabase.from('events').insert([{
-      type:       'click',
-      value:      1,
-      funnel_id:  slug,
+      type: 'funnel_view', value: 1, funnel_id: slug,
       created_at: new Date().toISOString()
     }]).then()
 
@@ -337,11 +269,6 @@ async function loadFunnel() {
     console.error('Funnel load error:', e)
     showError()
   }
-}
-
-function showError() {
-  document.getElementById('loading').style.display      = 'none'
-  document.getElementById('error-screen').style.display = 'flex'
 }
 
 // ── SUBMIT LEAD ───────────────────────────────────────
@@ -352,55 +279,77 @@ window.submitLead = async function() {
   const stat  = document.getElementById('f-status')
 
   if (!name) {
-    stat.className = 'f-status err'; stat.textContent = '⚠ Enter your first name'
-    document.getElementById('f-name').focus(); return
+    stat.className = 'f-status err'
+    stat.textContent = '⚠ Enter your first name'
+    document.getElementById('f-name').focus()
+    return
   }
   if (!email || !email.includes('@')) {
-    stat.className = 'f-status err'; stat.textContent = '⚠ Enter a valid email address'
-    document.getElementById('f-email').focus(); return
+    stat.className = 'f-status err'
+    stat.textContent = '⚠ Enter a valid email address'
+    document.getElementById('f-email').focus()
+    return
   }
 
   btn.classList.add('loading')
-  document.getElementById('f-btn-text').textContent = 'Processing…'
-  stat.className = 'f-status ok'; stat.textContent = '✓ Securing your access…'
+  document.getElementById('f-btn-text').textContent = 'Securing your access…'
+  stat.className  = 'f-status ok'
+  stat.textContent = '✓ Got it — taking you to step 2…'
 
-  // Capture lead via Netlify function
+  // Save lead via Netlify function (captures to Supabase + Forge Mail)
   try {
     await fetch('/.netlify/functions/email', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email,
-        name,
-        funnel: window._funnelSlug || 'funnel'
-      })
+      body:    JSON.stringify({ email, name, funnel: window._funnelSlug || 'funnel' })
     })
-  } catch(e) { console.warn('Lead capture error:', e) }
+  } catch(e) {
+    console.warn('Lead capture non-fatal error:', e.message)
+  }
 
-  // Show success screen
+  // Save to sessionStorage for the bridge page to read
+  sessionStorage.setItem('nw_email', email)
+  sessionStorage.setItem('nw_name',  name)
+  sessionStorage.setItem('nw_funnel', window._funnelSlug)
+
+  // Show redirect screen
+  document.getElementById('funnel-wrap').style.display    = 'none'
+  document.getElementById('redirect-screen').style.display = 'flex'
+
+  // ── SEQUENCE ROUTING ─────────────────────────────────
+  // Priority order:
+  // 1. If bridge page exists (always true if funnel was deployed through NextWave) → go to bridge
+  // 2. If no bridge but affiliate link exists → go directly to offer
+  // 3. Fallback → homepage
+
   setTimeout(() => {
-    document.getElementById('funnel-wrap').style.display   = 'none'
-    document.getElementById('success-screen').classList.add('show')
-
-    // Redirect to affiliate link after 2 seconds if one exists
-    if (window._affiliateLink) {
-      setTimeout(() => {
-        window.location.href = window._affiliateLink
-      }, 2000)
+    if (window._bridgeUrl) {
+      window.location.href = window._bridgeUrl
+    } else if (window._affiliateLink) {
+      window.location.href = window._affiliateLink
+    } else {
+      window.location.href = '/'
     }
-  }, 800)
+  }, 1400)  // 1.4 seconds — long enough to see the confirmation, short enough not to feel slow
 }
 
-// Enter key on email field
+// Enter key on email
 document.getElementById('f-email').addEventListener('keydown', e => {
   if (e.key === 'Enter') window.submitLead()
 })
+document.getElementById('f-name').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('f-email').focus()
+})
+
+function showError() {
+  document.getElementById('loading').style.display       = 'none'
+  document.getElementById('error-screen').style.display  = 'flex'
+}
 
 function esc(s) {
   return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
 }
 
-// Start
 loadFunnel()
 </script>
 </body>
