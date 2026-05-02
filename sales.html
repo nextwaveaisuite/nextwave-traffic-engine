@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NextWave — Pricing & Plans</title>
+<title>NextWave Traffic Engine — The System Between Your Traffic and Your Commissions</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -19,8 +19,9 @@ html{scroll-behavior:smooth}
   --body:#dce8f5;--dim:#8fa3c4;--muted:#3d5275;
   --f:'DM Sans',sans-serif;--m:'DM Mono',monospace;
 }
-body{background:var(--bg);color:var(--body);font-family:var(--f);font-size:15px;line-height:1.6;overflow-x:hidden}
+body{background:var(--bg);color:var(--body);font-family:var(--f);font-size:16px;line-height:1.65;overflow-x:hidden}
 
+/* NAV */
 nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:56px;background:rgba(8,12,20,.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none}
 .nav-logo{width:26px;height:26px;border-radius:5px;background:var(--teal);display:flex;align-items:center;justify-content:center}
@@ -31,118 +32,165 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .nav-cta:hover{opacity:.85}
 
 /* HERO */
-.hero{padding:100px 24px 60px;text-align:center;position:relative;overflow:hidden}
+.hero{padding:100px 24px 70px;text-align:center;position:relative;overflow:hidden}
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(25,230,176,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(25,230,176,.02) 1px,transparent 1px);background-size:52px 52px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black,transparent)}
 .hero-glow{position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:700px;height:500px;background:radial-gradient(ellipse,rgba(79,142,247,.06) 0%,rgba(25,230,176,.04) 40%,transparent 70%);pointer-events:none}
 .chip{display:inline-flex;align-items:center;gap:7px;font-family:var(--m);font-size:10px;letter-spacing:.8px;color:var(--teal);border:1px solid var(--teal-bdr);background:var(--teal-bg);padding:5px 13px;border-radius:20px;margin-bottom:24px}
 .chip-dot{width:5px;height:5px;background:var(--teal);border-radius:50%;animation:pip 1.5s ease infinite}
 @keyframes pip{0%,100%{opacity:1}50%{opacity:.2}}
-h1{font-size:clamp(36px,6vw,68px);font-weight:700;line-height:1.05;letter-spacing:-1.5px;margin-bottom:14px}
+h1{font-size:clamp(36px,6.5vw,76px);font-weight:700;line-height:1.02;letter-spacing:-2px;margin-bottom:14px}
 h1 em{font-style:normal;color:var(--teal)}
-.hero-sub{font-size:clamp(15px,2vw,18px);color:var(--dim);max-width:520px;margin:0 auto 10px;font-weight:300;line-height:1.7}
+h1 .ou{-webkit-text-stroke:1.5px rgba(255,255,255,.15);color:transparent}
+.rule{width:44px;height:2px;background:linear-gradient(90deg,var(--teal),var(--blue));margin:18px auto;border-radius:2px}
+.hero-sub{font-size:clamp(16px,2vw,20px);color:var(--dim);max-width:600px;margin:0 auto 32px;font-weight:300;line-height:1.75}
 .hero-sub strong{color:var(--body);font-weight:500}
-.toggle-wrap{display:flex;align-items:center;justify-content:center;gap:10px;margin:28px 0 0;font-size:13px;color:var(--dim)}
-.toggle{position:relative;width:44px;height:24px;cursor:pointer}
-.toggle input{opacity:0;width:0;height:0;position:absolute}
-.toggle-slider{position:absolute;inset:0;background:var(--s3);border-radius:12px;border:1px solid var(--line);transition:background .15s}
-.toggle input:checked + .toggle-slider{background:var(--teal)}
-.toggle-slider::after{content:'';position:absolute;width:18px;height:18px;left:2px;top:2px;background:var(--body);border-radius:50%;transition:transform .15s}
-.toggle input:checked + .toggle-slider::after{transform:translateX(20px)}
-.save-badge{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bdr);font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;font-family:var(--m)}
 
-/* PRICING GRID */
-.pricing-wrap{max-width:1060px;margin:56px auto 0;padding:0 24px}
-.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;align-items:start}
+/* OPT-IN */
+.hero-form{display:flex;gap:8px;max-width:440px;margin:0 auto 12px}
+.hero-form input{flex:1;background:var(--s1);border:1px solid var(--line);border-radius:7px;color:var(--body);padding:13px 14px;font-size:14px;font-family:var(--f);outline:none;transition:border-color .15s}
+.hero-form input::placeholder{color:var(--muted)}
+.hero-form input:focus{border-color:var(--teal-bdr)}
+.hero-btn{background:var(--teal);color:#080c14;font-weight:700;font-size:14px;padding:13px 22px;border:none;border-radius:7px;cursor:pointer;white-space:nowrap;font-family:var(--f);position:relative;overflow:hidden;transition:all .15s}
+.hero-btn:hover{background:var(--teal2);transform:translateY(-1px)}
+.hero-btn.loading{opacity:.7;pointer-events:none}
+.hero-btn.loading::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:sweep 1s infinite}
+@keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.micro{font-size:11px;color:var(--muted)}
+.micro span{color:rgba(25,230,176,.6)}
+.fst{font-size:12px;min-height:16px;margin-top:8px;font-family:var(--m)}
+.fst.ok{color:var(--teal)}.fst.err{color:var(--rose)}
 
-.pc{background:var(--s1);border:1px solid var(--line);border-radius:14px;padding:24px;position:relative;transition:border-color .15s}
+/* PIPELINE VISUAL */
+.pipeline-section{background:var(--s1);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:40px 24px}
+.pipeline-wrap{max-width:960px;margin:0 auto}
+.pipeline-label{font-family:var(--m);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:28px}
+.pipeline{display:flex;align-items:stretch;justify-content:center;gap:0;flex-wrap:wrap}
+.pipe-step{
+  background:var(--s2);border:1px solid var(--line);
+  border-radius:0;padding:20px 16px;
+  text-align:center;flex:1;min-width:120px;max-width:160px;
+  position:relative;transition:border-color .2s;
+}
+.pipe-step:first-child{border-radius:10px 0 0 10px}
+.pipe-step:last-child{border-radius:0 10px 10px 0}
+.pipe-step:hover{border-color:rgba(25,230,176,.25);z-index:1}
+.pipe-step.new{border-color:rgba(79,142,247,.3);background:rgba(79,142,247,.04)}
+.pipe-new-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-family:var(--m);font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--blue);color:#fff;white-space:nowrap}
+.pipe-icon{font-size:24px;margin-bottom:8px}
+.pipe-name{font-size:12px;font-weight:600;margin-bottom:3px}
+.pipe-desc{font-size:10px;color:var(--muted);line-height:1.4}
+.pipe-arrow{font-size:18px;color:var(--teal);padding:0 6px;opacity:.4;align-self:center;flex-shrink:0}
+
+/* SECTIONS */
+section{padding:80px 24px}
+.wrap{max-width:1040px;margin:0 auto}
+.stag{font-family:var(--m);font-size:10px;color:var(--teal);letter-spacing:1.5px;margin-bottom:12px;text-transform:uppercase}
+h2{font-size:clamp(28px,4.5vw,52px);font-weight:700;line-height:1.08;letter-spacing:-1px;margin-bottom:14px}
+h2 em{font-style:normal;color:var(--teal)}
+.btext{font-size:17px;color:var(--dim);max-width:580px;font-weight:300;line-height:1.75}
+.btext strong{color:var(--body);font-weight:500}
+.ds{background:var(--s1)}
+
+/* WHAT IT ACTUALLY DOES */
+.feature-rows{display:flex;flex-direction:column;gap:0;margin-top:48px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.feat-row{display:grid;grid-template-columns:280px 1fr;gap:0;border-bottom:1px solid var(--line)}
+.feat-row:last-child{border-bottom:none}
+.feat-left{padding:28px 24px;background:var(--s2);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.feat-num{font-family:var(--m);font-size:10px;color:var(--muted);letter-spacing:1px}
+.feat-name{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.feat-status{font-family:var(--m);font-size:9px;font-weight:700;padding:2px 7px;border-radius:9px}
+.status-real{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-bdr)}
+.status-new{background:rgba(79,142,247,.08);color:var(--blue);border:1px solid rgba(79,142,247,.2)}
+.status-partial{background:rgba(240,165,0,.08);color:var(--gold);border:1px solid rgba(240,165,0,.2)}
+.feat-right{padding:28px 28px}
+.feat-right p{font-size:14px;color:var(--dim);line-height:1.75;margin-bottom:10px}
+.feat-right p:last-child{margin-bottom:0}
+.feat-right strong{color:var(--body);font-weight:500}
+.feat-benefit{display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding:12px;background:var(--s2);border-radius:8px;font-size:13px;color:var(--dim);line-height:1.55}
+.feat-benefit .bc{color:var(--teal);flex-shrink:0;margin-top:1px}
+
+/* BRIDGE PAGE EXPLAINER */
+.bridge-explainer{background:rgba(79,142,247,.04);border:1px solid rgba(79,142,247,.2);border-radius:14px;padding:32px;margin-top:48px}
+.bridge-explainer h3{font-size:20px;font-weight:700;letter-spacing:-.5px;margin-bottom:12px;color:var(--blue)}
+.bridge-flow{display:flex;align-items:center;gap:0;margin:20px 0;flex-wrap:wrap}
+.bridge-node{background:var(--s2);border:1px solid var(--line);padding:12px 16px;border-radius:8px;text-align:center;flex:1;min-width:100px}
+.bridge-node .bn-icon{font-size:20px;margin-bottom:5px}
+.bridge-node .bn-name{font-size:12px;font-weight:600}
+.bridge-node .bn-desc{font-size:10px;color:var(--muted);margin-top:2px}
+.bridge-node.highlight{border-color:var(--blue);background:rgba(79,142,247,.06)}
+.bridge-node.highlight .bn-name{color:var(--blue)}
+.bridge-arr{font-size:16px;color:var(--teal);padding:0 8px;opacity:.5;flex-shrink:0}
+
+/* PROOF BAR */
+.proof{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--s1);padding:20px 40px;display:flex;justify-content:center;flex-wrap:wrap}
+.ps{text-align:center;padding:0 36px;border-right:1px solid var(--line)}
+.ps:last-child{border-right:none}
+.pn{font-family:var(--m);font-size:26px;font-weight:500;color:var(--teal);line-height:1}
+.pl{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* PRICING */
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:48px}
+.pc{background:var(--s2);border:1px solid var(--line);border-radius:12px;padding:22px;position:relative;transition:border-color .15s}
 .pc:hover{border-color:rgba(255,255,255,.1)}
-.pc.pop{border-color:var(--teal-bdr);background:linear-gradient(160deg,rgba(25,230,176,.06),var(--s1))}
-.pc.life{border-color:var(--gold);background:linear-gradient(160deg,rgba(240,165,0,.06),var(--s1))}
-.pc-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-family:var(--m);font-size:9px;font-weight:700;padding:3px 12px;border-radius:20px;white-space:nowrap}
+.pc.pop{border-color:var(--teal-bdr);background:var(--teal-bg)}
+.pc.life{border-color:rgba(240,165,0,.3);background:rgba(240,165,0,.04)}
+.pc-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-family:var(--m);font-size:9px;font-weight:700;padding:2px 10px;border-radius:20px;white-space:nowrap}
 .pc.pop .pc-badge{background:var(--teal);color:#080c14}
 .pc.life .pc-badge{background:var(--gold);color:#080c14}
-.pc-name{font-size:12px;font-weight:600;color:var(--dim);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;font-family:var(--m)}
-.pc-price{margin-bottom:4px;line-height:1;display:flex;align-items:flex-end;gap:3px}
-.pc-price .amt{font-family:var(--m);font-size:40px;font-weight:700;color:var(--body)}
-.pc.pop .pc-price .amt{color:var(--teal)}
-.pc.life .pc-price .amt{color:var(--gold)}
-.pc-price .curr{font-size:18px;color:var(--dim);margin-bottom:6px;font-family:var(--m)}
-.pc-price .per{font-size:12px;color:var(--muted);margin-bottom:8px;font-family:var(--m)}
-.pc-desc{font-size:12px;color:var(--muted);margin-bottom:18px;line-height:1.5;min-height:36px}
-.pc-feats{list-style:none;margin-bottom:20px;display:flex;flex-direction:column;gap:0}
-.pc-feats li{display:flex;gap:8px;font-size:12px;color:var(--dim);padding:7px 0;border-bottom:1px solid var(--b2);line-height:1.45}
-.pc-feats li:last-child{border-bottom:none}
-.pc-feats .ck{flex-shrink:0;font-size:12px}
-.pc-feats .ck.t{color:var(--teal)}.pc-feats .ck.g{color:var(--gold)}
-.pc-btn{display:block;width:100%;padding:11px;border-radius:8px;border:none;font-family:var(--f);font-size:13px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;transition:all .12s}
-.pc-btn.primary{background:var(--teal);color:#080c14}.pc-btn.primary:hover{background:var(--teal2)}
-.pc-btn.outline{background:transparent;color:var(--body);border:1px solid var(--line)}.pc-btn.outline:hover{border-color:rgba(255,255,255,.18)}
-.pc-btn.gold{background:var(--gold);color:#080c14}.pc-btn.gold:hover{opacity:.88}
+.pc-tier{font-family:var(--m);font-size:10px;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
+.pc-price{font-family:var(--m);font-size:36px;font-weight:500;line-height:1;margin-bottom:4px}
+.pc.pop .pc-price{color:var(--teal)}.pc.life .pc-price{color:var(--gold)}
+.pc-period{font-size:11px;color:var(--muted);margin-bottom:10px;font-family:var(--m)}
+.pc-desc{font-size:12px;color:var(--dim);margin-bottom:14px;min-height:32px}
+.pc-list{list-style:none;margin-bottom:16px}
+.pc-list li{display:flex;gap:7px;font-size:11px;color:var(--dim);padding:5px 0;border-bottom:1px solid var(--b2)}
+.pc-list li:last-child{border-bottom:none}
+.pc-ck{flex-shrink:0}.pc.pop .pc-ck{color:var(--teal)}.pc.life .pc-ck{color:var(--gold)}
+.pc-ck-d{color:var(--teal)}
+.pc-btn{width:100%;padding:11px;border-radius:7px;border:none;font-family:var(--f);font-size:13px;font-weight:700;cursor:pointer;transition:all .12s;text-decoration:none;display:block;text-align:center}
+.pc-btn-p{background:var(--teal);color:#080c14}.pc-btn-p:hover{background:var(--teal2)}
+.pc-btn-o{background:var(--s3);color:var(--body);border:1px solid var(--line)}.pc-btn-o:hover{border-color:rgba(255,255,255,.15)}
+.pc-btn-g{background:var(--gold);color:#080c14}.pc-btn-g:hover{opacity:.9}
 
-/* LIFETIME SECTION */
-.lifetime-section{max-width:820px;margin:60px auto 0;padding:0 24px}
-.lifetime-box{background:linear-gradient(135deg,rgba(240,165,0,.07),rgba(25,230,176,.04));border:1px solid rgba(240,165,0,.25);border-radius:16px;padding:36px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
-.lt-left h2{font-size:clamp(24px,3vw,36px);font-weight:700;letter-spacing:-1px;margin-bottom:10px;line-height:1.1}
-.lt-left h2 em{font-style:normal;color:var(--gold)}
-.lt-left p{font-size:14px;color:var(--dim);line-height:1.7;margin-bottom:16px}
-.lt-math{background:rgba(0,0,0,.25);border-radius:10px;padding:16px;margin-bottom:18px}
-.lt-math-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,.05)}
-.lt-math-row:last-child{border-bottom:none;padding-top:10px;margin-top:4px}
-.lt-math-row .label{color:var(--dim)}
-.lt-math-row .val{font-family:var(--m);font-weight:700}
-.lt-math-row .val.cross{text-decoration:line-through;color:var(--muted)}
-.lt-math-row .val.teal{color:var(--teal)}
-.lt-math-row .val.gold{color:var(--gold);font-size:15px}
-.lt-right{text-align:center}
-.lt-price{font-family:var(--m);font-size:72px;font-weight:700;color:var(--gold);line-height:1;margin-bottom:6px}
-.lt-price-curr{font-size:28px;vertical-align:top;margin-top:14px;display:inline-block;color:var(--gold)}
-.lt-once{font-size:12px;color:var(--muted);margin-bottom:6px;font-family:var(--m)}
-.lt-saving{display:inline-block;background:rgba(25,230,176,.1);color:var(--teal);border:1px solid var(--teal-bdr);font-size:11px;font-family:var(--m);padding:3px 10px;border-radius:20px;margin-bottom:20px}
-.lt-btn{display:block;padding:14px;background:var(--gold);color:#080c14;border-radius:9px;font-size:14px;font-weight:700;font-family:var(--f);cursor:pointer;border:none;transition:opacity .12s;text-decoration:none;text-align:center}
-.lt-btn:hover{opacity:.88}
-.lt-note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6}
-
-/* COMPARISON TABLE */
-.compare-section{max-width:820px;margin:60px auto 80px;padding:0 24px}
-.compare-section h3{font-size:20px;font-weight:700;letter-spacing:-.5px;margin-bottom:20px;text-align:center}
-.ctbl{width:100%;border-collapse:collapse;font-size:12px}
-.ctbl th{padding:10px 14px;font-family:var(--m);font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);border-bottom:2px solid var(--line);text-align:center}
-.ctbl th:first-child{text-align:left;color:var(--dim)}
-.ctbl th.hl{color:var(--teal)}
-.ctbl th.hlg{color:var(--gold)}
-.ctbl td{padding:10px 14px;border-bottom:1px solid var(--b2);color:var(--dim);text-align:center;vertical-align:middle}
-.ctbl td:first-child{text-align:left;color:var(--body);font-weight:500}
-.ctbl tr:last-child td{border-bottom:none}
-.ctbl tr:hover td{background:rgba(255,255,255,.012)}
-.ck-y{color:var(--teal);font-size:14px}.ck-n{color:var(--muted);font-size:13px;opacity:.5}.ck-g{color:var(--gold);font-size:14px}
-.ctbl .mono{font-family:var(--m);font-size:10px}
+/* LIFETIME MATH BOX */
+.math-box{background:rgba(240,165,0,.04);border:1px solid rgba(240,165,0,.2);border-radius:12px;padding:24px;margin-top:16px}
+.math-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}
+.math-row:last-child{border-bottom:none;padding-top:10px;margin-top:4px}
+.math-row .ml{color:var(--dim)}
+.math-row .mv{font-family:var(--m);font-weight:600}
+.math-row .mv.cross{text-decoration:line-through;color:var(--muted)}
+.math-row .mv.gold{color:var(--gold);font-size:16px}
 
 /* FAQ */
-.faq-section{max-width:680px;margin:0 auto 80px;padding:0 24px}
-.faq-section h3{font-size:20px;font-weight:700;letter-spacing:-.5px;margin-bottom:24px;text-align:center}
-.faq-item{border-bottom:1px solid var(--line);overflow:hidden}
-.faq-q{width:100%;background:none;border:none;text-align:left;padding:16px 0;font-family:var(--f);font-size:13px;font-weight:600;color:var(--body);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.faq-wrap{max-width:680px;margin:48px auto 0}
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-q{width:100%;background:none;border:none;text-align:left;padding:16px 0;font-family:var(--f);font-size:14px;font-weight:600;color:var(--body);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .faq-q:hover{color:var(--teal)}
-.faq-icon{color:var(--teal);font-size:18px;transition:transform .2s;flex-shrink:0}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;font-size:13px;color:var(--dim);line-height:1.7}
-.faq-item.open .faq-a{max-height:200px;padding-bottom:16px}
-.faq-item.open .faq-icon{transform:rotate(45deg)}
+.faq-ic{color:var(--teal);font-size:18px;transition:transform .2s;flex-shrink:0}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease,padding .3s ease;font-size:13px;color:var(--dim);line-height:1.75}
+.faq-item.open .faq-a{max-height:300px;padding-bottom:16px}
+.faq-item.open .faq-ic{transform:rotate(45deg)}
 
-footer{background:var(--s1);border-top:1px solid var(--line);padding:28px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-.footer-brand{font-family:var(--m);font-size:11px;font-weight:500;color:var(--teal)}
-.footer-links{display:flex;gap:18px;flex-wrap:wrap}
-.footer-links a{font-size:11px;color:var(--muted);text-decoration:none}
-.footer-links a:hover{color:var(--body)}
-.footer-legal{font-size:10px;color:var(--muted);width:100%;padding-top:8px;border-top:1px solid var(--line)}
+/* FINAL CTA */
+.final{text-align:center;padding:100px 24px;position:relative;overflow:hidden}
+.final-glow{position:absolute;bottom:-200px;left:50%;transform:translateX(-50%);width:900px;height:500px;background:radial-gradient(ellipse,rgba(25,230,176,.07) 0%,transparent 65%);pointer-events:none}
+.final-form{display:flex;gap:8px;max-width:440px;margin:36px auto 12px}
+.final-form input{flex:1;background:var(--s1);border:1px solid var(--line);border-radius:7px;color:var(--body);padding:13px 14px;font-size:14px;font-family:var(--f);outline:none;transition:border-color .15s}
+.final-form input::placeholder{color:var(--muted)}
+.final-form input:focus{border-color:var(--teal-bdr)}
 
-/* ANIMATIONS */
+footer{background:var(--s1);border-top:1px solid var(--line);padding:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.fbrand{font-family:var(--m);font-size:11px;font-weight:500;color:var(--teal)}
+.flinks{display:flex;gap:18px;flex-wrap:wrap}
+.flinks a{font-size:11px;color:var(--muted);text-decoration:none}
+.flinks a:hover{color:var(--body)}
+.flegal{font-size:10px;color:var(--muted);width:100%;padding-top:8px;border-top:1px solid var(--line)}
+
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .reveal{opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease}
 .reveal.in{opacity:1;transform:none}
-
-/* RESPONSIVE */
-@media(max-width:900px){.pricing-grid{grid-template-columns:1fr 1fr}.lifetime-box{grid-template-columns:1fr}}
-@media(max-width:580px){.pricing-grid{grid-template-columns:1fr}nav{padding:0 16px}}
+@media(max-width:900px){.pgrid{grid-template-columns:1fr 1fr}.feat-row{grid-template-columns:1fr}.feat-left{border-right:none;border-bottom:1px solid var(--line)}}
+@media(max-width:600px){nav{padding:0 16px}.hero-form,.final-form{flex-direction:column}.pgrid{grid-template-columns:1fr}section{padding:56px 20px}.pipeline{flex-direction:column;align-items:center}.pipe-arrow{transform:rotate(90deg)}.bridge-flow{flex-direction:column;align-items:center}.bridge-arr{transform:rotate(90deg)}.ps{min-width:50%;padding:10px 16px}}
 </style>
 </head>
 <body>
@@ -152,217 +200,353 @@ footer{background:var(--s1);border-top:1px solid var(--line);padding:28px 32px;d
     <div class="nav-logo"><svg viewBox="0 0 14 14"><path d="M1 11 L4.5 3.5 L8 8 L10.5 4.5 L13 11 Z"/></svg></div>
     <div class="nav-name"><b>NEXT</b>WAVE</div>
   </a>
-  <a href="/" class="nav-cta">Get Started Free →</a>
+  <a href="checkout.html" class="nav-cta">Get Access →</a>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-grid"></div>
   <div class="hero-glow"></div>
-  <div class="chip"><div class="chip-dot"></div>SIMPLE, TRANSPARENT PRICING</div>
-  <h1>THE RIGHT PLAN FOR<br><em>WHERE YOU ARE NOW</em></h1>
-  <p class="hero-sub">Start at whatever level makes sense. Upgrade as your traffic and commissions grow. <strong>No lock-in.</strong></p>
+  <div class="chip"><div class="chip-dot"></div>FOR TRAFFICZEST + SOLO AD AFFILIATES</div>
+  <h1>
+    MOST AFFILIATES LOSE<br>
+    <em>EVERY VISITOR</em> THEY<br>
+    PAID FOR. <span class="ou">THIS FIXES THAT.</span>
+  </h1>
+  <div class="rule"></div>
+  <p class="hero-sub">
+    You buy traffic. The visitor lands. They don't buy. They're gone — forever.
+    <strong>NextWave puts a complete capture system between your traffic and your offer.</strong>
+    Every visitor becomes a lead. Every lead gets followed up automatically.
+  </p>
+  <div class="hero-form">
+    <input type="email" id="he" placeholder="Enter your email to start free" autocomplete="email" />
+    <button class="hero-btn" id="hb" onclick="go('he','hb','hs')">Get Free Access →</button>
+  </div>
+  <div class="micro"><span>✓ Free to start</span> &nbsp;·&nbsp; No credit card &nbsp;·&nbsp; Live in 60 seconds</div>
+  <div class="fst" id="hs"></div>
 </section>
 
-<!-- PRICING GRID -->
-<div class="pricing-wrap">
-  <div class="pricing-grid reveal">
-
-    <!-- STARTER $19 -->
-    <div class="pc">
-      <div class="pc-name">Starter</div>
-      <div class="pc-price"><span class="curr">$</span><span class="amt">19</span><span class="per">/mo</span></div>
-      <div class="pc-desc">Get the system running. Test your first funnel with real traffic.</div>
-      <ul class="pc-feats">
-        <li><span class="ck t">✓</span>10 AI funnel builds/month</li>
-        <li><span class="ck t">✓</span>25 cloaked links</li>
-        <li><span class="ck t">✓</span>Lead capture + Supabase storage</li>
-        <li><span class="ck t">✓</span>TrafficZest pipeline</li>
-        <li><span class="ck t">✓</span>Basic dashboard analytics</li>
-        <li><span class="ck t">✓</span>Email support</li>
-      </ul>
-      <button class="pc-btn outline" onclick="goSignup('starter')">Get Started — $19/mo</button>
-    </div>
-
-    <!-- PRO $49 — POPULAR -->
-    <div class="pc pop">
-      <div class="pc-badge">MOST POPULAR</div>
-      <div class="pc-name">Pro</div>
-      <div class="pc-price"><span class="curr">$</span><span class="amt">49</span><span class="per">/mo</span></div>
-      <div class="pc-desc">For affiliates actively running campaigns and building their list.</div>
-      <ul class="pc-feats">
-        <li><span class="ck t">✓</span>Unlimited AI funnel builds</li>
-        <li><span class="ck t">✓</span>Unlimited cloaked links</li>
-        <li><span class="ck t">✓</span>Full Forge Mail automation</li>
-        <li><span class="ck t">✓</span>Conversion tracking + revenue attribution</li>
-        <li><span class="ck t">✓</span>Full analytics dashboard</li>
-        <li><span class="ck t">✓</span>Priority support</li>
-      </ul>
-      <button class="pc-btn primary" onclick="goSignup('pro')">Get Pro — $49/mo</button>
-    </div>
-
-    <!-- SCALE $99 -->
-    <div class="pc">
-      <div class="pc-name">Scale</div>
-      <div class="pc-price"><span class="curr">$</span><span class="amt">99</span><span class="per">/mo</span></div>
-      <div class="pc-desc">Running high-volume campaigns across multiple niches and offers.</div>
-      <ul class="pc-feats">
-        <li><span class="ck t">✓</span>Everything in Pro</li>
-        <li><span class="ck t">✓</span>Multiple workspaces</li>
-        <li><span class="ck t">✓</span>API access</li>
-        <li><span class="ck t">✓</span>Custom domain support</li>
-        <li><span class="ck t">✓</span>Advanced traffic segmentation</li>
-        <li><span class="ck t">✓</span>Dedicated support</li>
-      </ul>
-      <button class="pc-btn outline" onclick="goSignup('scale')">Get Scale — $99/mo</button>
-    </div>
-
-    <!-- LIFETIME $997 -->
-    <div class="pc life">
-      <div class="pc-badge">BEST VALUE</div>
-      <div class="pc-name">Lifetime</div>
-      <div class="pc-price"><span class="curr">$</span><span class="amt">997</span><span class="per">&nbsp;once</span></div>
-      <div class="pc-desc">Pay once. Own forever. No monthly bills, ever.</div>
-      <ul class="pc-feats">
-        <li><span class="ck g">✓</span>Everything in Scale</li>
-        <li><span class="ck g">✓</span>Lifetime access — pay once</li>
-        <li><span class="ck g">✓</span>All future updates included</li>
-        <li><span class="ck g">✓</span>Early access to new features</li>
-        <li><span class="ck g">✓</span>Founding member status</li>
-        <li><span class="ck g">✓</span>Pays for itself in &lt;21 months</li>
-      </ul>
-      <button class="pc-btn gold" onclick="goSignup('lifetime')">Get Lifetime — $997</button>
-    </div>
-
-  </div>
-</div>
-
-<!-- LIFETIME JUSTIFICATION BOX -->
-<div class="lifetime-section reveal">
-  <div class="lifetime-box">
-    <div class="lt-left">
-      <h2>Why $997 is the<br><em>smartest purchase</em></h2>
-      <p>Most people pay monthly without thinking about the total cost. Here's what the numbers actually say:</p>
-      <div class="lt-math">
-        <div class="lt-math-row"><span class="label">Pro plan × 24 months</span><span class="val cross">$1,176</span></div>
-        <div class="lt-math-row"><span class="label">Scale plan × 12 months</span><span class="val cross">$1,188</span></div>
-        <div class="lt-math-row"><span class="label">Pro plan break-even point</span><span class="val teal">Month 21</span></div>
-        <div class="lt-math-row"><span class="label">Scale break-even point</span><span class="val teal">Month 11</span></div>
-        <div class="lt-math-row"><span class="label">Lifetime — total cost, forever</span><span class="val gold">$997</span></div>
+<!-- PIPELINE VISUAL -->
+<div class="pipeline-section">
+  <div class="pipeline-wrap">
+    <div class="pipeline-label">// THE COMPLETE NEXTWAVE PIPELINE</div>
+    <div class="pipeline reveal">
+      <div class="pipe-step">
+        <div class="pipe-icon">⚡</div>
+        <div class="pipe-name">Traffic</div>
+        <div class="pipe-desc">TrafficZest or any solo ad source</div>
       </div>
-      <p style="font-size:12px;color:var(--muted)">If you're running campaigns for more than 18 months, Lifetime costs less than Pro. Every month after that is free.</p>
-    </div>
-    <div class="lt-right">
-      <div class="lt-price"><span class="lt-price-curr">$</span>997</div>
-      <div class="lt-once">ONE PAYMENT. YOURS FOREVER.</div>
-      <div class="lt-saving">Saves up to $1,188 vs monthly</div>
-      <button class="lt-btn" onclick="goSignup('lifetime')">Get Lifetime Access — $997</button>
-      <div class="lt-note">Includes all future updates. No subscription. No renewal. Price will increase as features are added.</div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🔗</div>
+        <div class="pipe-name">Cloaked Link</div>
+        <div class="pipe-desc">Shortened, tracked, protected</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-icon">📄</div>
+        <div class="pipe-name">Lead Capture</div>
+        <div class="pipe-desc">AI-built opt-in page</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step new">
+        <div class="pipe-new-badge">NEW</div>
+        <div class="pipe-icon">🎬</div>
+        <div class="pipe-name">VSL Bridge</div>
+        <div class="pipe-desc">Warms lead before the offer</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-icon">💰</div>
+        <div class="pipe-name">Affiliate Offer</div>
+        <div class="pipe-desc">Warmed-up, ready to buy</div>
+      </div>
+      <div class="pipe-arrow">→</div>
+      <div class="pipe-step">
+        <div class="pipe-icon">📧</div>
+        <div class="pipe-name">Forge Mail</div>
+        <div class="pipe-desc">Auto follow-up sequence fires</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- COMPARISON TABLE -->
-<div class="compare-section reveal">
-  <h3>Full feature comparison</h3>
-  <table class="ctbl">
-    <thead>
-      <tr>
-        <th style="width:35%">Feature</th>
-        <th>Starter<br><span class="mono">$19/mo</span></th>
-        <th class="hl">Pro<br><span class="mono">$49/mo</span></th>
-        <th>Scale<br><span class="mono">$99/mo</span></th>
-        <th class="hlg">Lifetime<br><span class="mono">$997</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>AI Funnel Builder</td><td>10/month</td><td class="mono" style="color:var(--teal)">Unlimited</td><td class="mono" style="color:var(--teal)">Unlimited</td><td class="mono" style="color:var(--gold)">Unlimited</td></tr>
-      <tr><td>Cloaked Links</td><td>25 links</td><td class="mono" style="color:var(--teal)">Unlimited</td><td class="mono" style="color:var(--teal)">Unlimited</td><td class="mono" style="color:var(--gold)">Unlimited</td></tr>
-      <tr><td>Lead Capture</td><td><span class="ck-y">✓</span></td><td><span class="ck-y">✓</span></td><td><span class="ck-y">✓</span></td><td><span class="ck-g">✓</span></td></tr>
-      <tr><td>TrafficZest Pipeline</td><td><span class="ck-y">✓</span></td><td><span class="ck-y">✓</span></td><td><span class="ck-y">✓</span></td><td><span class="ck-g">✓</span></td></tr>
-      <tr><td>Forge Mail Automation</td><td><span class="ck-n">—</span></td><td><span class="ck-y">✓</span></td><td><span class="ck-y">✓</span></td><td><span class="ck-g">✓</span></td></tr>
-      <tr><td>Revenue Attribution</td><td><span class="ck-n">—</span></td><td><span class="ck-y">✓</span></td><td><span class="ck-y">✓</span></td><td><span class="ck-g">✓</span></td></tr>
-      <tr><td>Multiple Workspaces</td><td><span class="ck-n">—</span></td><td><span class="ck-n">—</span></td><td><span class="ck-y">✓</span></td><td><span class="ck-g">✓</span></td></tr>
-      <tr><td>API Access</td><td><span class="ck-n">—</span></td><td><span class="ck-n">—</span></td><td><span class="ck-y">✓</span></td><td><span class="ck-g">✓</span></td></tr>
-      <tr><td>Custom Domains</td><td><span class="ck-n">—</span></td><td><span class="ck-n">—</span></td><td><span class="ck-y">✓</span></td><td><span class="ck-g">✓</span></td></tr>
-      <tr><td>Future Updates</td><td><span class="ck-y">✓</span></td><td><span class="ck-y">✓</span></td><td><span class="ck-y">✓</span></td><td style="color:var(--gold);font-weight:600">Lifetime</td></tr>
-      <tr><td>Support</td><td>Email</td><td style="color:var(--teal)">Priority</td><td style="color:var(--teal)">Dedicated</td><td style="color:var(--gold)">Dedicated</td></tr>
-    </tbody>
-  </table>
+<!-- PROOF BAR -->
+<div class="proof">
+  <div class="ps"><div class="pn">100%</div><div class="pl">Automated once set up</div></div>
+  <div class="ps"><div class="pn">&lt;60s</div><div class="pl">Funnel live time</div></div>
+  <div class="ps"><div class="pn">6</div><div class="pl">Tools in one system</div></div>
+  <div class="ps"><div class="pn">$0</div><div class="pl">To get started</div></div>
 </div>
+
+<!-- WHAT IT ACTUALLY DOES -->
+<section>
+  <div class="wrap">
+    <div class="reveal">
+      <div class="stag">// WHAT IT ACTUALLY DOES</div>
+      <h2>SIX REAL TOOLS.<br><em>ONE CONNECTED SYSTEM.</em></h2>
+      <p class="btext">No exaggeration. No hype. Here is exactly what each part of NextWave does — and what that means for your campaigns.</p>
+    </div>
+
+    <div class="feature-rows reveal">
+
+      <div class="feat-row">
+        <div class="feat-left">
+          <div class="feat-num">01</div>
+          <div class="feat-name">AI Funnel Builder <span class="feat-status status-real">✓ Live</span></div>
+        </div>
+        <div class="feat-right">
+          <p>Type your niche. NextWave calls the Claude AI API and generates a complete opt-in page — headline, hook, benefit bullets, CTA, and a follow-up email sequence — using direct response copywriting frameworks. The copy is saved and published to a live URL in under 60 seconds.</p>
+          <div class="feat-benefit"><span class="bc">→</span>Instead of spending hours writing a landing page, you have one in 30 seconds. Tailored to your exact offer. Ready to capture traffic.</div>
+        </div>
+      </div>
+
+      <div class="feat-row">
+        <div class="feat-left">
+          <div class="feat-num">02</div>
+          <div class="feat-name">Link Cloaker <span class="feat-status status-real">✓ Live</span></div>
+        </div>
+        <div class="feat-right">
+          <p>Paste any affiliate URL. NextWave creates a short, clean link like <code style="font-family:var(--m);font-size:12px;color:var(--teal)">nextwave.app/l/your-offer</code>. The original URL is hidden. Every click is tracked — how many, from which campaign, at what time.</p>
+          <div class="feat-benefit"><span class="bc">→</span>Your raw affiliate link is protected. You know exactly which traffic source is clicking and converting. No more guessing which campaign is working.</div>
+        </div>
+      </div>
+
+      <div class="feat-row">
+        <div class="feat-left">
+          <div class="feat-num">03</div>
+          <div class="feat-name">Lead Capture Pipeline <span class="feat-status status-real">✓ Live</span></div>
+        </div>
+        <div class="feat-right">
+          <p>When a visitor lands on your funnel page and enters their email, it is saved to your database instantly. That lead is then pushed to Forge Mail automatically where your pre-built email sequence begins firing. The visitor is captured whether they buy or not.</p>
+          <div class="feat-benefit"><span class="bc">→</span>Every paid click has a second chance to convert. A visitor who doesn't buy today gets followed up for the next 30 days automatically. Your list grows with every campaign.</div>
+        </div>
+      </div>
+
+      <div class="feat-row">
+        <div class="feat-left">
+          <div class="feat-num">04</div>
+          <div class="feat-name">VSL Bridge Page <span class="feat-status status-new">✦ New</span></div>
+        </div>
+        <div class="feat-right">
+          <p>After a visitor opts in, instead of sending them directly to the affiliate offer, NextWave routes them through a Bridge Page first. This page contains a short video sales letter — AI-generated script, rendered as a talking-head video — that explains the offer, builds trust, and warms the lead before they reach the purchase page.</p>
+          <p><strong>This is the step most affiliates skip.</strong> Cold traffic sent straight to an offer converts at 1-3%. Warmed traffic that watched a 2-minute video converts at 3-8%. The bridge page is that difference.</p>
+          <div class="feat-benefit"><span class="bc">→</span>You enter your offer details. NextWave writes the VSL script and generates the video using AI. The bridge page is live and inserted automatically between opt-in and offer.</div>
+        </div>
+      </div>
+
+      <div class="feat-row">
+        <div class="feat-left">
+          <div class="feat-num">05</div>
+          <div class="feat-name">Forge Mail Sync <span class="feat-status status-real">✓ Live</span></div>
+        </div>
+        <div class="feat-right">
+          <p>Every lead captured syncs to Forge Mail in real time, tagged with the funnel name and traffic source. Your existing Forge Mail sequences fire the moment someone opts in. Conversion events are also sent back to Forge Mail so automation triggers work correctly.</p>
+          <div class="feat-benefit"><span class="bc">→</span>You set up your sequence once. It runs for every lead, from every campaign, forever. Your email list compounds with every traffic purchase.</div>
+        </div>
+      </div>
+
+      <div class="feat-row">
+        <div class="feat-left">
+          <div class="feat-num">06</div>
+          <div class="feat-name">Revenue Dashboard <span class="feat-status status-real">✓ Live</span></div>
+        </div>
+        <div class="feat-right">
+          <p>Every metric in one place — leads captured, link clicks, conversions, and revenue tracked in real time from your Supabase database. Filter by 24 hours, 7 days, or 30 days. See which funnels and links are generating the most activity.</p>
+          <div class="feat-benefit"><span class="bc">→</span>You stop guessing. You see which campaign sent the most leads, which funnel produced the most conversions, and what your actual revenue number is — live.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- BRIDGE PAGE EXPLAINER -->
+    <div class="bridge-explainer reveal">
+      <h3>What is a Bridge Page — and why does it matter?</h3>
+      <p style="font-size:14px;color:var(--dim);line-height:1.75;margin-bottom:20px">A bridge page is a page that sits between your opt-in page and the affiliate offer. Its job is to warm the lead — to take someone who just gave their email and prepare them to buy. Without a bridge page, cold traffic hits the offer page with no context. With one, they arrive already believing.</p>
+      <div class="bridge-flow">
+        <div class="bridge-node"><div class="bn-icon">⚡</div><div class="bn-name">Traffic arrives</div><div class="bn-desc">Cold. Sceptical.</div></div>
+        <div class="bridge-arr">→</div>
+        <div class="bridge-node"><div class="bn-icon">📄</div><div class="bn-name">Opt-in Page</div><div class="bn-desc">Captures email</div></div>
+        <div class="bridge-arr">→</div>
+        <div class="bridge-node highlight"><div class="bn-icon">🎬</div><div class="bn-name">VSL Bridge Page</div><div class="bn-desc">2-min video. Builds trust. Answers objections.</div></div>
+        <div class="bridge-arr">→</div>
+        <div class="bridge-node"><div class="bn-icon">💰</div><div class="bn-name">Affiliate Offer</div><div class="bn-desc">Warm. Ready. Converting.</div></div>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin-top:16px;line-height:1.65">NextWave generates the bridge page automatically. You enter your offer. The AI writes the video script using direct response principles. The video is generated via AI avatar technology. The page is published and inserted into your funnel flow automatically.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="ds" id="pricing">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center">
+      <div class="stag" style="text-align:center">// PRICING</div>
+      <h2 style="text-align:center">START FREE.<br><em>UPGRADE AS YOU GROW.</em></h2>
+    </div>
+    <div class="pgrid reveal">
+
+      <div class="pc">
+        <div class="pc-tier">STARTER</div>
+        <div class="pc-price">$19<span style="font-size:14px;color:var(--muted);font-family:var(--m)">/mo</span></div>
+        <div class="pc-desc">Test the system with real traffic before scaling</div>
+        <ul class="pc-list">
+          <li><span class="pc-ck pc-ck-d">✓</span>10 AI funnel builds/month</li>
+          <li><span class="pc-ck pc-ck-d">✓</span>25 cloaked + tracked links</li>
+          <li><span class="pc-ck pc-ck-d">✓</span>Lead capture pipeline</li>
+          <li><span class="pc-ck pc-ck-d">✓</span>TrafficZest compatible</li>
+          <li><span class="pc-ck pc-ck-d">✓</span>Basic dashboard</li>
+        </ul>
+        <a href="checkout.html?plan=starter" class="pc-btn pc-btn-o">Get Starter</a>
+      </div>
+
+      <div class="pc pop">
+        <div class="pc-badge">MOST POPULAR</div>
+        <div class="pc-tier">PRO</div>
+        <div class="pc-price">$49<span style="font-size:14px;color:rgba(25,230,176,.5);font-family:var(--m)">/mo</span></div>
+        <div class="pc-desc">For affiliates actively running campaigns</div>
+        <ul class="pc-list">
+          <li><span class="pc-ck">✓</span>Unlimited AI builds + links</li>
+          <li><span class="pc-ck">✓</span>VSL Bridge Page builder</li>
+          <li><span class="pc-ck">✓</span>Full Forge Mail automation</li>
+          <li><span class="pc-ck">✓</span>Revenue attribution</li>
+          <li><span class="pc-ck">✓</span>Priority support</li>
+        </ul>
+        <a href="checkout.html?plan=pro" class="pc-btn pc-btn-p">Get Pro</a>
+      </div>
+
+      <div class="pc">
+        <div class="pc-tier">SCALE</div>
+        <div class="pc-price">$99<span style="font-size:14px;color:var(--muted);font-family:var(--m)">/mo</span></div>
+        <div class="pc-desc">High-volume campaigns, multiple offers</div>
+        <ul class="pc-list">
+          <li><span class="pc-ck pc-ck-d">✓</span>Everything in Pro</li>
+          <li><span class="pc-ck pc-ck-d">✓</span>Multiple workspaces</li>
+          <li><span class="pc-ck pc-ck-d">✓</span>API access</li>
+          <li><span class="pc-ck pc-ck-d">✓</span>Custom domains</li>
+          <li><span class="pc-ck pc-ck-d">✓</span>Dedicated support</li>
+        </ul>
+        <a href="checkout.html?plan=scale" class="pc-btn pc-btn-o">Get Scale</a>
+      </div>
+
+      <div class="pc life">
+        <div class="pc-badge">BEST VALUE</div>
+        <div class="pc-tier">LIFETIME</div>
+        <div class="pc-price">$997<span style="font-size:14px;color:rgba(240,165,0,.5);font-family:var(--m)"> once</span></div>
+        <div class="pc-desc">Pay once. Own forever. All future updates.</div>
+        <ul class="pc-list">
+          <li><span class="pc-ck" style="color:var(--gold)">✓</span>Everything in Scale</li>
+          <li><span class="pc-ck" style="color:var(--gold)">✓</span>All future features</li>
+          <li><span class="pc-ck" style="color:var(--gold)">✓</span>Founding member status</li>
+          <li><span class="pc-ck" style="color:var(--gold)">✓</span>No monthly bills ever</li>
+          <li><span class="pc-ck" style="color:var(--gold)">✓</span>Cheaper than 21 months Pro</li>
+        </ul>
+        <a href="checkout.html?plan=lifetime" class="pc-btn pc-btn-g">Get Lifetime</a>
+      </div>
+
+    </div>
+
+    <div class="math-box reveal">
+      <div style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--gold)">Why $997 Lifetime makes financial sense</div>
+      <div class="math-row"><span class="ml">Pro plan × 24 months</span><span class="mv cross">$1,176</span></div>
+      <div class="math-row"><span class="ml">Scale plan × 12 months</span><span class="mv cross">$1,188</span></div>
+      <div class="math-row"><span class="ml">Lifetime — total cost, forever</span><span class="mv gold">$997</span></div>
+      <p style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6">After 21 months of Pro, Lifetime has already paid for itself. Every month after that costs you nothing. All future features included.</p>
+    </div>
+  </div>
+</section>
 
 <!-- FAQ -->
-<div class="faq-section reveal">
-  <h3>Common questions</h3>
-
-  <div class="faq-item">
-    <button class="faq-q" onclick="faq(this)">Is there a free trial? <span class="faq-icon">+</span></button>
-    <div class="faq-a">There's no free trial, but the Starter plan at $19/month is designed to let you test the full system with real traffic at minimal cost. If it doesn't work for your campaigns within 30 days, you haven't risked much. Most users see their first leads within hours of setting up.</div>
+<section>
+  <div class="wrap">
+    <div class="reveal" style="text-align:center">
+      <div class="stag" style="text-align:center">// COMMON QUESTIONS</div>
+      <h2 style="text-align:center">STRAIGHT<br><em>ANSWERS.</em></h2>
+    </div>
+    <div class="faq-wrap">
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="faq(this)">Does this actually work with TrafficZest? <span class="faq-ic">+</span></button>
+        <div class="faq-a">Yes. You set your TrafficZest destination URL to your NextWave cloaked link. Traffic flows from TrafficZest into your funnel automatically. There is no direct API connection to TrafficZest — you set it manually once, and it runs from there. The cloaking, tracking, lead capture and Forge Mail sync all happen automatically after that.</div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="faq(this)">What is a VSL Bridge Page and do I need it? <span class="faq-ic">+</span></button>
+        <div class="faq-a">A VSL (Video Sales Letter) Bridge Page sits between your opt-in page and the affiliate offer. Its job is to warm the lead — build trust and explain the offer — before they reach the purchase page. Cold traffic sent directly to an offer converts at 1-3%. Traffic that watched a short explainer video first converts significantly higher. It is not mandatory, but it is one of the highest-leverage things you can add to a funnel.</div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="faq(this)">Do I need a Forge Mail account? <span class="faq-ic">+</span></button>
+        <div class="faq-a">Forge Mail integration is available on Pro and above. On Starter, leads are captured and stored in your database. You can export them or connect a different email tool. Full automation — sequences firing the moment someone opts in — requires Forge Mail and a Pro or above plan.</div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="faq(this)">What happens after someone opts in? <span class="faq-ic">+</span></button>
+        <div class="faq-a">Their email is saved to your database. If you have a VSL Bridge Page set up, they are redirected there next. If not, they go directly to your affiliate offer URL. Either way, Forge Mail receives the lead immediately and fires your follow-up sequence. If they do not buy today, your email sequence continues for however long you have set it up.</div>
+      </div>
+      <div class="faq-item reveal">
+        <button class="faq-q" onclick="faq(this)">Can I use this with offers other than TrafficZest? <span class="faq-ic">+</span></button>
+        <div class="faq-a">Yes. The system works with any affiliate offer on any network — JVZoo, Warrior Plus, ClickBank, Explodely, or direct affiliate programmes. You paste your affiliate URL into the funnel builder and NextWave handles the rest. TrafficZest is the recommended traffic source but not the only one.</div>
+      </div>
+    </div>
   </div>
+</section>
 
-  <div class="faq-item">
-    <button class="faq-q" onclick="faq(this)">Why is Lifetime $997? That seems like a lot. <span class="faq-icon">+</span></button>
-    <div class="faq-a">At $49/month (Pro), you break even on Lifetime in 21 months. At $99/month (Scale), it's 11 months. After that point, every month is free — forever. If you plan to use NextWave for more than two years, Lifetime is the cheaper option. It's not a big number when you do the maths.</div>
+<!-- FINAL CTA -->
+<section class="final">
+  <div class="final-glow"></div>
+  <div class="wrap" style="position:relative;text-align:center">
+    <div class="stag" style="text-align:center">// GET STARTED</div>
+    <h2 style="text-align:center;font-size:clamp(32px,5.5vw,68px)">STOP LOSING THE<br>TRAFFIC YOU <em>PAID FOR.</em></h2>
+    <p class="btext" style="margin:0 auto;text-align:center">Every click you send without NextWave is a lead lost forever. Set up takes 60 seconds. It is free to start.</p>
+    <div class="final-form">
+      <input type="email" id="fe" placeholder="Enter your email to start free" autocomplete="email" />
+      <button class="hero-btn" id="fb" onclick="go('fe','fb','fs')">Get Free Access →</button>
+    </div>
+    <div class="micro"><span>✓ Free to start</span> &nbsp;·&nbsp; No credit card &nbsp;·&nbsp; See the dashboard in 60 seconds</div>
+    <div class="fst" id="fs"></div>
   </div>
-
-  <div class="faq-item">
-    <button class="faq-q" onclick="faq(this)">Can I upgrade or downgrade at any time? <span class="faq-icon">+</span></button>
-    <div class="faq-a">Yes. You can switch between Starter, Pro, and Scale at any time. Changes take effect at the next billing date. Lifetime is a one-time purchase with no ongoing payments.</div>
-  </div>
-
-  <div class="faq-item">
-    <button class="faq-q" onclick="faq(this)">Do I need a TrafficZest account to use NextWave? <span class="faq-icon">+</span></button>
-    <div class="faq-a">No. NextWave works with any traffic source — solo ads, cold traffic, social media, email. TrafficZest is the recommended traffic source because it pairs well with the system, but it's not required to get started.</div>
-  </div>
-
-  <div class="faq-item">
-    <button class="faq-q" onclick="faq(this)">Do I need a Forge Mail account? <span class="faq-icon">+</span></button>
-    <div class="faq-a">Forge Mail integration is available on Pro and above. On Starter, leads are captured and stored in your NextWave database. You can export them manually. Full automation — sequences firing the moment someone opts in — requires Forge Mail and a Pro or higher plan.</div>
-  </div>
-
-  <div class="faq-item">
-    <button class="faq-q" onclick="faq(this)">What does the $997 Lifetime plan include exactly? <span class="faq-icon">+</span></button>
-    <div class="faq-a">Everything in Scale — plus all future features and updates for life, early access to new tools, founding member status, and no billing ever again. The price will increase as more features are added, so the current $997 is the lowest it will be.</div>
-  </div>
-</div>
+</section>
 
 <footer>
-  <div class="footer-brand">NEXTWAVE</div>
-  <div class="footer-links">
+  <div class="fbrand">NEXTWAVE</div>
+  <div class="flinks">
     <a href="/">Home</a>
     <a href="dashboard.html">Dashboard</a>
+    <a href="checkout.html">Pricing</a>
     <a href="#">Privacy Policy</a>
     <a href="#">Terms</a>
     <a href="#">Support</a>
   </div>
-  <div class="footer-legal">
-    NextWave Traffic Engine. Results vary based on traffic quality, offer selection, and implementation. No income is guaranteed. © 2025 NextWave Traffic Engine. All rights reserved.
+  <div class="flegal">
+    NextWave Traffic Engine integrates with TrafficZest and Forge Mail to automate affiliate marketing pipelines.
+    Results vary based on traffic quality, offer selection, and consistency of implementation. No income is guaranteed.
+    © 2025 NextWave Traffic Engine. All rights reserved.
   </div>
 </footer>
 
 <script>
-function goSignup(plan) {
-  sessionStorage.setItem('nw_plan', plan)
-  window.location.href = '/?plan=' + plan
+function go(eid, bid, sid) {
+  const email = document.getElementById(eid).value.trim()
+  const btn   = document.getElementById(bid)
+  const stat  = document.getElementById(sid)
+  if (!email || !email.includes('@')) { stat.className='fst err'; stat.textContent='⚠ Enter a valid email'; document.getElementById(eid).focus(); return }
+  btn.classList.add('loading'); btn.textContent='Setting up…'
+  stat.className='fst ok'; stat.textContent='✓ Creating your account…'
+  fetch('/.netlify/functions/email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,funnel:'sales-page'})}).catch(()=>{})
+  sessionStorage.setItem('nw_email', email)
+  setTimeout(()=>{ window.location.href='/dashboard.html' }, 1100)
 }
-
+document.getElementById('he').addEventListener('keydown',e=>{ if(e.key==='Enter') go('he','hb','hs') })
+document.getElementById('fe').addEventListener('keydown',e=>{ if(e.key==='Enter') go('fe','fb','fs') })
 function faq(btn) {
-  const item = btn.parentElement
-  const open = item.classList.contains('open')
-  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'))
-  if (!open) item.classList.add('open')
+  const item=btn.parentElement, open=item.classList.contains('open')
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'))
+  if(!open) item.classList.add('open')
 }
-
-const obs = new IntersectionObserver(entries => {
-  entries.forEach((e, i) => {
-    if (e.isIntersecting) {
-      e.target.style.transitionDelay = (i * 60) + 'ms'
-      e.target.classList.add('in')
-      obs.unobserve(e.target)
-    }
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){e.target.style.transitionDelay=(i*60)+'ms';e.target.classList.add('in');obs.unobserve(e.target)}
   })
-}, { threshold: 0.1 })
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el))
+},{threshold:.1})
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el))
 </script>
 </body>
 </html>
