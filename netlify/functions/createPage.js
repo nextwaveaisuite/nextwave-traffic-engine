@@ -24,16 +24,11 @@ export async function handler(event) {
       .replace(/^-|-$/g, '')
       .slice(0, 60) || 'funnel'
 
-    const siteUrl   = process.env.SITE_URL || 'https://nextwave-traffic-engine.netlify.app'
-    const pageUrl   = `${siteUrl}/funnel/${slug}`
-    const bridgeUrl = `${siteUrl}/bridge/${slug}`
     const hasVideo  = !!process.env.DID_API_KEY && !!copy?.vslScript
 
     console.log('createPage: saving slug =', slug, '| hasVideo =', hasVideo)
 
     // ── UPSERT — handles duplicate slugs gracefully ───────
-    // If slug already exists, update it with new copy
-    // onConflict: 'slug' requires a unique constraint on slug column
     const record = {
       funnel_name:      name,
       affiliate_link:   link,
@@ -44,7 +39,6 @@ export async function handler(event) {
       created_at:       new Date().toISOString()
     }
 
-    // Try upsert first
     let data, error
     const upsertRes = await supabase
       .from('funnels')
@@ -55,37 +49,28 @@ export async function handler(event) {
     data  = upsertRes.data
     error = upsertRes.error
 
-    // If upsert failed (e.g. no unique constraint) try plain insert
     if (error) {
-      console.warn('createPage upsert error:', error.message, '— trying insert')
-
-      // Try deleting existing record first then inserting
+      console.warn('createPage upsert error:', error.message, '— trying delete+insert')
       await supabase.from('funnels').delete().eq('slug', slug)
-
       const insertRes = await supabase
         .from('funnels')
         .insert([record])
         .select()
         .single()
-
       data  = insertRes.data
       error = insertRes.error
     }
 
     if (error) {
       console.error('createPage fatal error:', JSON.stringify(error))
-      throw new Error(error.message || 'Supabase insert failed — ' + JSON.stringify(error))
+      throw new Error(error.message || 'Supabase insert failed')
     }
 
-    if (!data) {
-      console.error('createPage: no data returned from Supabase')
-      throw new Error('Supabase returned no data — record may not have saved')
-    }
-
-    console.log('createPage: saved successfully, id =', data.id || 'unknown')
+    console.log('createPage: saved successfully, slug =', slug)
 
     // ── TRIGGER BACKGROUND VIDEO ──────────────────────────
     if (hasVideo) {
+      const siteUrl = process.env.SITE_URL || 'https://nextwave-traffic-engine.netlify.app'
       fetch(`${siteUrl}/.netlify/functions/video-background`, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -93,15 +78,15 @@ export async function handler(event) {
       }).catch(e => console.warn('Background video non-fatal:', e.message))
     }
 
+    // Return slug only — dashboard builds full URLs from window.location.origin
+    // This avoids SITE_URL misconfiguration causing empty URLs
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        url:         pageUrl,
-        bridgeUrl,
         slug,
         videoStatus: hasVideo ? 'processing' : 'no_key',
-        data
+        saved:       true
       })
     }
 
