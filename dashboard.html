@@ -1862,58 +1862,50 @@ window.loadLinks = async function() {
 
 // ── RESET CLICK COUNT ─────────────────────────────────
 window.resetLinkClicks = async function(id, slug) {
+  if (!slug) { toast('Cannot identify link', 'err'); return }
   if (!confirm('Reset click count to zero? The link stays active.')) return
+  const cell = document.getElementById('clk-' + slug)
+  if (cell) cell.textContent = '…'
   try {
-    // Always use slug — it always exists regardless of id type
-    const { error } = await _sb.from('links').update({ clicks: 0 }).eq('slug', slug)
-    if (error) throw error
-    // Update cell immediately
-    const rowId = id || slug
-    const cell  = document.getElementById('clk-' + rowId)
-    if (cell) { cell.textContent = '0'; cell.style.color = 'var(--teal)'; setTimeout(()=>{ cell.style.color='' },800) }
+    const res  = await fetch('/.netlify/functions/deleteLink', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ slug, action: 'reset' })
+    })
+    const data = await res.json()
+    if (!res.ok || data.error) throw new Error(data.error || 'Reset failed')
+    if (cell) { cell.textContent = '0'; cell.style.color='var(--teal)'; setTimeout(()=>{ cell.style.color='' },800) }
     toast('Clicks reset to zero', 'ok')
     loadLinks()
   } catch(e) {
     console.error('resetLinkClicks:', e)
-    toast('Reset failed: ' + (e.message || 'Unknown error'), 'err')
+    if (cell) cell.textContent = '?'
+    toast('Reset failed: ' + (e.message||'Unknown error'), 'err')
   }
 }
 
 window.deleteLink = async function(id, slug) {
   if (!slug) { toast('Cannot identify link — refresh and try again', 'err'); return }
-  if (!confirm('Delete Wave Link /l/' + slug + '?\n\nClicks on this link will stop working. This cannot be undone.')) return
-
-  // Show immediate feedback
-  const rowId = id || slug
-  const row   = document.getElementById('lr-' + rowId)
-  if (row) { row.style.opacity = '0.3'; row.style.pointerEvents = 'none' }
-
+  if (!confirm('Delete Wave Link /l/' + slug + '? This cannot be undone.')) return
+  const row = document.getElementById('lr-' + slug)
+  if (row) { row.style.opacity='0.3'; row.style.pointerEvents='none' }
   try {
-    // Delete by slug — always works regardless of id format
-    const { error, count } = await _sb
-      .from('links')
-      .delete()
-      .eq('slug', slug)
-
-    if (error) throw error
-
-    // Animate out and reload
+    const res  = await fetch('/.netlify/functions/deleteLink', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ slug, action: 'delete' })
+    })
+    const data = await res.json()
+    if (!res.ok || data.error) throw new Error(data.error || 'Delete failed')
     if (row) {
       row.style.transition = 'opacity .2s'
       row.style.opacity    = '0'
       setTimeout(() => { row.remove(); loadLinks(); loadOverview() }, 220)
-    } else {
-      loadLinks(); loadOverview()
-    }
-
+    } else { loadLinks(); loadOverview() }
     toast('Wave Link deleted', 'ok')
     addFeed('Deleted: /l/' + slug, 'w')
-
   } catch(e) {
-    console.error('deleteLink error:', e)
-    // Restore row if delete failed
-    if (row) { row.style.opacity = '1'; row.style.pointerEvents = '' }
-    toast('Delete failed — ' + (e.message || 'check console'), 'err')
+    console.error('deleteLink:', e)
+    if (row) { row.style.opacity='1'; row.style.pointerEvents='' }
+    toast('Delete failed — ' + (e.message||'check console'), 'err')
   }
 }
 
