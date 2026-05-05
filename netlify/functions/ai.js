@@ -23,7 +23,19 @@ export async function handler(event) {
     const mechanism   = body.mechanism   || ''                   // e.g. "Targets ceramide compounds that trap fat in cells"
     const avatar      = body.avatar      || ''                   // e.g. "women over 40 who have tried every diet"
     const source      = body.source      || 'trafficzest'
-    const scrapedCopy = body.scrapedCopy || ''                   // auto-extracted from offer page if URL was scraped
+    const followup    = body.followup    || 'forgemail'
+    const scrapedCopy = body.scrapedCopy || ''
+
+    const followupNames = {
+      forgemail:      'Forge Mail (a lead generation and email marketing platform with its own built-in lead database — not just an autoresponder)',
+      aweber:         'AWeber',
+      getresponse:    'GetResponse',
+      mailchimp:      'Mailchimp',
+      activecampaign: 'ActiveCampaign',
+      convertkit:     'ConvertKit',
+      none:           'email follow-up'
+    }
+    const followupName = followupNames[followup] || 'Forge Mail'
 
     if (!niche && !offerName) {
       return { statusCode: 400, body: JSON.stringify({ error: 'At minimum, enter your niche or offer name' }) }
@@ -38,48 +50,16 @@ export async function handler(event) {
     // Assemble everything we know about the offer into a clear brief
     const offerContext = buildOfferContext({
       niche, offerName, offerPromise, price, guarantee,
-      bonuses, mechanism, avatar, scrapedCopy
+      bonuses, mechanism, avatar, scrapedCopy, followupName, source
     })
 
-    // ── SYSTEM PROMPT ──────────────────────────────────────────────
     const systemPrompt = `You are a world-class direct response copywriter specialising in affiliate marketing funnels.
 
 Your single most important rule: CONGRUENCE.
 Every word of copy you write must match the specific offer exactly.
-The opt-in page, the VSL script, and the affiliate offer page must feel like one continuous conversation.
-When a visitor reads your funnel and then lands on the offer page, their reaction must be:
-"Yes — this is exactly what I expected. I'm in the right place."
-
-If there is ANY disconnect between the funnel copy and the offer, conversions collapse. This is the #1 killer of affiliate campaigns.
-
-CONGRUENCE CHECKLIST — every piece of copy must pass this:
-✓ The headline promise matches what the offer actually delivers
-✓ The mechanism you mention is the SAME mechanism the offer uses
-✓ The avatar you write for matches the offer's target buyer exactly
-✓ The price/guarantee/bonuses match what is on the offer page
-✓ The VSL script sets up the offer page — the visitor arrives already nodding
-✓ Nothing in the funnel promises something the offer cannot deliver
-
-COPYWRITING PRINCIPLES:
-- Pain Agitation Solution (PAS): exact pain → twist the knife → this offer solves it
-- Future Pacing: show their life AFTER using this specific product
-- Specificity: use the actual offer name, actual mechanism, actual price — never vague
-- Pattern Interrupt: open with something that stops them cold
-- Identity Shift: speak to who they want to become
-- Fear of Loss: what they lose by NOT taking this specific offer today
-- Write at 6th grade level — short sentences, punchy, direct
-- Never use buzzwords: "game-changer", "revolutionary", "unlock potential"
-
-VSL SCRIPT RULES:
-- The VSL introduces and pre-sells THIS specific offer by name
-- Mention the mechanism — the unique thing this offer does that others don't
-- Address the #1 objection they will have before it surfaces
-- The CTA tells them exactly what to do next — "click the button below to get [offer name]"
-- Spoken word tone — conversational, trusted friend, not salesperson
-- 250-300 words = approximately 2 minutes at natural speaking pace
-- The last sentence of the VSL should set up the offer page perfectly
 
 Traffic source: ${source} — cold, sceptical traffic that clicked an ad. 3 seconds to earn attention.
+Email follow-up platform: ${followupName} — mention this by name in the email body copy as the tool delivering the follow-up sequence.
 
 Respond ONLY with raw JSON. No markdown. No backticks. No explanation. Start with { end with }.`
 
@@ -176,9 +156,8 @@ Return EXACTLY this JSON — no other text:
 
 // ── BUILD OFFER CONTEXT ────────────────────────────────────────
 // Assembles everything known about the offer into a clear brief for Claude
-function buildOfferContext({ niche, offerName, offerPromise, price, guarantee, bonuses, mechanism, avatar, scrapedCopy }) {
+function buildOfferContext({ niche, offerName, offerPromise, price, guarantee, bonuses, mechanism, avatar, scrapedCopy, followupName, source }) {
   const lines = []
-
   if (niche)        lines.push(`Niche / category: ${niche}`)
   if (offerName)    lines.push(`Offer name: ${offerName}`)
   if (offerPromise) lines.push(`Core promise: ${offerPromise}`)
@@ -187,14 +166,9 @@ function buildOfferContext({ niche, offerName, offerPromise, price, guarantee, b
   if (price)        lines.push(`Price: ${price}`)
   if (guarantee)    lines.push(`Guarantee: ${guarantee}`)
   if (bonuses)      lines.push(`Bonuses: ${bonuses}`)
-
-  if (scrapedCopy) {
-    lines.push(`\nKey copy extracted from offer page:\n${scrapedCopy.slice(0, 1200)}`)
-  }
-
-  if (lines.length === 0) {
-    lines.push('No offer details provided — write the best copy possible for the niche.')
-  }
-
+  if (source)       lines.push(`Traffic source: ${source}`)
+  if (followupName) lines.push(`Email follow-up platform: ${followupName} — reference this by name in email copy`)
+  if (scrapedCopy)  lines.push(`\nKey copy extracted from offer page:\n${scrapedCopy.slice(0, 1200)}`)
+  if (lines.length === 0) lines.push('No offer details provided — write best copy possible for the niche.')
   return lines.join('\n')
 }
