@@ -266,46 +266,112 @@ async function loadBridge() {
 }
 
 function renderVideoArea(data, copy) {
-  const area = document.getElementById('video-area')
-
-  // Check if a D-ID video URL was stored
-  const videoUrl = data.vsl_video_url || null
+  const area      = document.getElementById('video-area')
+  const videoUrl  = data.vsl_video_url    || null
+  const status    = data.vsl_video_status || null
 
   if (videoUrl) {
-    // Real video available
-    area.innerHTML = `
-      <div class="video-container">
-        <div class="video-ratio"></div>
-        <video controls autoplay muted playsinline preload="auto">
-          <source src="${esc(videoUrl)}" type="video/mp4">
-          Your browser does not support video.
-        </video>
-      </div>
-      <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:8px;font-family:var(--m)">
-        🔊 Turn up your volume for the best experience
-      </p>`
-  } else if (copy?.vslScript) {
-    // No video yet — show script as readable text with note
+    // ── VIDEO READY — show player ─────────────────────────
+    showVideoPlayer(area, videoUrl)
+
+  } else if (status === 'processing') {
+    // ── VIDEO GENERATING — show script + live progress bar ─
     area.innerHTML = `
       <div class="script-mode">
-        <div class="script-label">WHAT THIS IS ABOUT</div>
-        <div class="script-body" id="script-content">${esc(copy.vslScript)}</div>
-        <div class="script-note">
-          ℹ Video version: To enable AI-generated video, add DID_API_KEY to your Netlify environment variables (get your key at d-id.com).
-          The bridge page script above is displayed as text until then.
-        </div>
+        <div class="script-label">WHILE THE VIDEO GENERATES — READ THIS FIRST</div>
+        <div class="script-body">${esc(copy?.vslScript || '')}</div>
+      </div>
+      <div class="generating-bar" id="gen-bar">
+        <div class="gen-spin"></div>
+        <span id="gen-txt">Your personalised video is being generated — this page will update automatically</span>
+      </div>`
+
+    // Poll for video status every 8 seconds
+    pollForVideo(slug, copy)
+
+  } else if (copy?.vslScript) {
+    // ── NO VIDEO / SCRIPT FALLBACK ────────────────────────
+    area.innerHTML = `
+      <div class="script-mode">
+        <div class="script-label">WATCH — IMPORTANT BEFORE CONTINUING</div>
+        <div class="script-body">${esc(copy.vslScript)}</div>
       </div>`
   } else {
-    // No script, no video — show placeholder
     area.innerHTML = `
       <div class="video-container">
         <div class="video-ratio"></div>
         <div class="video-placeholder">
           <div class="vp-icon">🎬</div>
-          <div class="vp-txt">VSL video will appear here</div>
+          <div class="vp-txt">Video loading…</div>
         </div>
       </div>`
   }
+}
+
+function showVideoPlayer(area, videoUrl) {
+  area.innerHTML = `
+    <div class="video-container">
+      <div class="video-ratio"></div>
+      <video controls autoplay muted playsinline preload="auto">
+        <source src="${esc(videoUrl)}" type="video/mp4">
+        Your browser does not support video.
+      </video>
+    </div>
+    <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:8px;font-family:var(--m)">
+      🔊 Turn up your volume for the best experience
+    </p>`
+}
+
+// Poll video-status endpoint until video is ready
+let _pollTimer   = null
+let _pollCount   = 0
+const _maxPolls  = 75  // 75 × 8s = 10 minutes max
+
+async function pollForVideo(funnelSlug, copy) {
+  if (_pollTimer) clearTimeout(_pollTimer)
+
+  _pollTimer = setTimeout(async () => {
+    _pollCount++
+    if (_pollCount > _maxPolls) {
+      // Give up polling — show script permanently
+      const bar = document.getElementById('gen-bar')
+      if (bar) bar.innerHTML = '<span style="color:var(--muted);font-size:11px">Video generation is taking longer than usual. Refresh the page in a few minutes to check again.</span>'
+      return
+    }
+
+    try {
+      const res  = await fetch(`/.netlify/functions/video-status?slug=${funnelSlug}`)
+      const data = await res.json()
+
+      if (data.status === 'ready' && data.videoUrl) {
+        // Video is ready — replace script with video player
+        const area = document.getElementById('video-area')
+        if (area) showVideoPlayer(area, data.videoUrl)
+        const genTxt = document.getElementById('gen-txt')
+        if (genTxt) genTxt.textContent = '✓ Video ready!'
+        return // Stop polling
+      }
+
+      if (data.status === 'error' || data.status === 'timeout' || data.status === 'no_key') {
+        // Stop polling — script stays as fallback
+        const bar = document.getElementById('gen-bar')
+        if (bar) bar.style.display = 'none'
+        return
+      }
+
+      // Still processing — update counter and poll again
+      const genTxt = document.getElementById('gen-txt')
+      if (genTxt) {
+        const secs = _pollCount * 8
+        genTxt.textContent = `Generating your video… (${secs}s) — this page updates automatically`
+      }
+      pollForVideo(funnelSlug, copy)
+
+    } catch(e) {
+      // Network error — try again
+      pollForVideo(funnelSlug, copy)
+    }
+  }, 8000)
 }
 
 // ── GO TO OFFER ────────────────────────────────────────
