@@ -307,7 +307,9 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
   <div class="topbar-mid"><div class="live-pip"></div><span class="live-txt">LIVE</span></div>
   <div class="topbar-right">
     <span class="t-time" id="clock">--:--:--</span>
+    <span id="user-email-chip" style="font-family:var(--m);font-size:10px;color:var(--muted);padding:3px 8px;border:1px solid var(--line);border-radius:var(--r);background:var(--ink3);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
     <button class="t-btn" title="Refresh all data" onclick="refreshAll()">↻</button>
+    <button class="t-btn" title="Sign out" onclick="signOut()" style="font-size:11px;color:var(--rose)">⏻</button>
     <button class="ham-btn" onclick="openDrawer()" title="Menu" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
@@ -1005,6 +1007,35 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
 <script type="module">
 import { supabase } from './supabase.js'
 window._sb = supabase
+
+// ── AUTH GUARD ────────────────────────────────────────
+// Check if user is signed in — redirect to login if not
+const { data: { session: _session } } = await supabase.auth.getSession()
+if (!_session) {
+  window.location.href = '/login.html'
+  throw new Error('Not authenticated')
+}
+
+// Store user info
+const _user = _session.user
+sessionStorage.setItem('nw_email',   _user.email)
+sessionStorage.setItem('nw_user_id', _user.id)
+
+// Show user email in topbar
+const _emailChip = document.getElementById('user-email-chip')
+if (_emailChip) _emailChip.textContent = _user.email
+
+// Listen for auth changes — sign out if session expires
+supabase.auth.onAuthStateChange((event) => {
+  if (event === 'SIGNED_OUT') window.location.href = '/login.html'
+})
+
+// ── SIGN OUT ──────────────────────────────────────────
+window.signOut = async function() {
+  await supabase.auth.signOut()
+  sessionStorage.clear()
+  window.location.href = '/login.html'
+}
 
 // CLOCK
 setInterval(() => {
