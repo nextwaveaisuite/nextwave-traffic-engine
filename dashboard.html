@@ -1240,7 +1240,7 @@ window.createLink = async function() {
   if (!url) { toast('Enter a destination URL', 'err'); return }
   try { new URL(url) } catch { toast('URL must start with https://', 'err'); return }
   const fb = document.getElementById('lnk-fb')
-  fb.className = 'fb on fb-info'; fb.textContent = 'Creating…'
+  fb.className = 'fb on fb-info'; fb.textContent = 'Creating short link…'
   try {
     const res = await fetch('/.netlify/functions/createLink', {
       method: 'POST', headers: {'Content-Type':'application/json'},
@@ -1248,13 +1248,44 @@ window.createLink = async function() {
     })
     const data = await res.json()
     if (data.error) throw new Error(data.error)
-    setFB('lnk-fb', 'ok', '✓ Created', data.short_link)
+
+    // Show TinyURL as primary share link, tracking link as secondary
+    const el = document.getElementById('lnk-fb')
+    el.className = 'fb on fb-ok'
+
+    if (data.tiny_url) {
+      el.innerHTML = `
+        <div style="margin-bottom:8px;font-size:12px;font-weight:600">✓ Short link created</div>
+        <div style="font-size:11px;color:var(--dim);margin-bottom:4px">Share this TinyURL:</div>
+        <div class="lk-row" style="margin-bottom:10px;border-color:var(--teal-bdr)">
+          <code style="color:var(--teal);font-size:12px">${esc(data.tiny_url)}</code>
+          <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(data.tiny_url)}').then(()=>toast('TinyURL copied!','ok'))">Copy</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Tracking link (behind the TinyURL):</div>
+        <div class="lk-row">
+          <code style="font-size:10px">${esc(data.short_link)}</code>
+          <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(data.short_link)}').then(()=>toast('Copied','ok'))">Copy</span>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6">
+          ✓ Every click on the TinyURL is tracked through NextWave before reaching your offer.
+        </div>`
+    } else {
+      // TinyURL unavailable — show tracking link only
+      el.innerHTML = `
+        <div style="margin-bottom:8px;font-size:12px;font-weight:600">✓ Tracking link created</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">TinyURL service was unavailable — share this link:</div>
+        <div class="lk-row">
+          <code>${esc(data.short_link)}</code>
+          <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(data.short_link)}').then(()=>toast('Copied','ok'))">Copy</span>
+        </div>`
+    }
+
     document.getElementById('lnk-url').value  = ''
     document.getElementById('lnk-slug').value = ''
     document.getElementById('lnk-lbl').value  = ''
-    addFeed('Link created: /l/' + data.slug, 'ok')
+    addFeed('Short link created: ' + (data.tiny_url || data.short_link), 'ok')
     loadLinks()
-    toast('Link created', 'ok')
+    toast('Short link ready', 'ok')
   } catch(e) { setFB('lnk-fb', 'err', '⚠ ' + e.message) }
 }
 
@@ -1265,12 +1296,19 @@ window.loadLinks = async function() {
     const total = list.reduce((s,l) => s + (l.clicks||0), 0)
     set('l-tot', list.length)
     set('l-clk', total)
-    set('l-top', list[0] ? '/l/' + list[0].slug : '—')
+    set('l-top', list[0] ? (list[0].tiny_url || '/l/' + list[0].slug) : '—')
     document.getElementById('links-body').innerHTML = list.length
       ? list.map(l => `<tr>
-          <td class="mono ct">/l/${esc(l.slug)}</td>
+          <td>
+            ${l.tiny_url
+              ? `<a href="${esc(l.tiny_url)}" target="_blank" class="mono ct" style="text-decoration:none;font-size:11px">${esc(l.tiny_url)}</a>`
+              : `<span class="mono ct" style="font-size:11px">/l/${esc(l.slug)}</span>`
+            }
+          </td>
           <td class="cs">${esc(l.label||'—')}</td>
-          <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><a href="${esc(l.original_url||'#')}" target="_blank" style="color:var(--blue);text-decoration:none;font-size:11px">${esc(l.original_url||'—')}</a></td>
+          <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+            <a href="${esc(l.original_url||'#')}" target="_blank" style="color:var(--blue);text-decoration:none;font-size:11px">${esc(l.original_url||'—')}</a>
+          </td>
           <td class="mono cg">${l.clicks||0}</td>
         </tr>`).join('')
       : emptyRow(4, '⌖', 'No links yet.')
