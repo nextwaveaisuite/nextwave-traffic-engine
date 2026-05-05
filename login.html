@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign In — NextWave</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080c14;--s1:#0d1220;--s2:#111827;--s3:#1a2235;
+  --line:#1e2d42;--teal:#19e6b0;--teal2:#13c99a;
+  --teal-bg:rgba(25,230,176,.07);--teal-bdr:rgba(25,230,176,.18);
+  --blue:#4f8ef7;--rose:#f25c7a;
+  --body:#dce8f5;--dim:#8fa3c4;--muted:#3d5275;
+  --f:'DM Sans',sans-serif;--m:'DM Mono',monospace;
+}
+html,body{height:100%;margin:0}
+body{
+  background:var(--bg);color:var(--body);font-family:var(--f);
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:20px;min-height:100vh;
+}
+
+/* GRID BACKGROUND */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(25,230,176,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(25,230,176,.02) 1px,transparent 1px);
+  background-size:52px 52px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black,transparent);
+  pointer-events:none;
+}
+
+/* BRAND */
+.brand{
+  display:flex;align-items:center;gap:9px;
+  text-decoration:none;margin-bottom:32px;
+  position:relative;
+}
+.brand-logo{
+  width:32px;height:32px;border-radius:7px;
+  background:var(--teal);display:flex;align-items:center;justify-content:center;
+}
+.brand-logo svg{width:16px;height:16px;fill:#080c14}
+.brand-name{font-family:var(--m);font-size:14px;font-weight:700;letter-spacing:.5px}
+.brand-name b{color:var(--teal)}
+
+/* CARD */
+.card{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:14px;padding:32px;
+  width:100%;max-width:400px;
+  position:relative;
+}
+.card-title{font-size:18px;font-weight:700;letter-spacing:-.3px;margin-bottom:4px}
+.card-sub{font-size:13px;color:var(--muted);margin-bottom:24px}
+
+/* TABS */
+.tabs{display:flex;gap:0;margin-bottom:24px;background:var(--s2);border-radius:8px;padding:3px}
+.tab{
+  flex:1;padding:7px;border:none;border-radius:6px;
+  background:none;color:var(--muted);
+  font-family:var(--f);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .15s;
+}
+.tab.on{background:var(--teal);color:#080c14}
+.tab:not(.on):hover{color:var(--body)}
+
+/* FORM */
+.fld{margin-bottom:14px}
+.lbl{
+  display:block;font-family:var(--m);font-size:9px;
+  letter-spacing:.4px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:4px;
+}
+.inp{
+  width:100%;background:var(--s2);border:1px solid var(--line);
+  border-radius:8px;color:var(--body);padding:11px 13px;
+  font-size:13px;font-family:var(--f);outline:none;
+  transition:border-color .15s;
+}
+.inp:focus{border-color:var(--teal-bdr);background:var(--s3)}
+.inp::placeholder{color:var(--muted)}
+
+/* BUTTON */
+.btn{
+  width:100%;padding:12px;
+  background:var(--teal);color:#080c14;
+  border:none;border-radius:8px;
+  font-family:var(--f);font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .15s;
+  position:relative;overflow:hidden;
+  margin-top:4px;
+}
+.btn:hover{background:var(--teal2);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn.loading{opacity:.7;pointer-events:none}
+.btn.loading::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+  animation:sweep 1s infinite;
+}
+@keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+
+/* DIVIDER */
+.divider{
+  display:flex;align-items:center;gap:10px;
+  margin:18px 0;color:var(--muted);font-size:11px;
+}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--line)}
+
+/* FEEDBACK */
+.fb{
+  padding:10px 12px;border-radius:7px;
+  font-size:12px;line-height:1.5;
+  margin-top:12px;display:none;
+}
+.fb.on{display:block}
+.fb-ok{background:var(--teal-bg);border:1px solid var(--teal-bdr);color:var(--teal)}
+.fb-err{background:rgba(242,92,122,.08);border:1px solid rgba(242,92,122,.2);color:var(--rose)}
+.fb-info{background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.2);color:var(--blue)}
+
+/* FORGOT */
+.forgot{
+  display:block;text-align:right;
+  font-size:11px;color:var(--muted);
+  text-decoration:none;margin-top:-8px;margin-bottom:14px;
+  transition:color .12s;
+}
+.forgot:hover{color:var(--teal)}
+
+/* FOOTER LINKS */
+.card-footer{
+  text-align:center;margin-top:20px;
+  font-size:12px;color:var(--muted);
+}
+.card-footer a{color:var(--teal);text-decoration:none}
+.card-footer a:hover{text-decoration:underline}
+
+/* VERIFY SCREEN */
+.verify-screen{display:none;text-align:center}
+.verify-icon{font-size:48px;margin-bottom:16px}
+.verify-title{font-size:18px;font-weight:700;margin-bottom:8px}
+.verify-sub{font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:20px}
+.resend-btn{
+  background:none;border:1px solid var(--line);
+  color:var(--dim);font-family:var(--f);font-size:12px;
+  padding:8px 16px;border-radius:7px;cursor:pointer;
+  transition:all .12s;
+}
+.resend-btn:hover{border-color:var(--teal);color:var(--teal)}
+</style>
+</head>
+<body>
+
+<a href="/" class="brand">
+  <div class="brand-logo"><svg viewBox="0 0 14 14"><path d="M1 11 L4.5 3.5 L8 8 L10.5 4.5 L13 11 Z"/></svg></div>
+  <div class="brand-name"><b>NEXT</b>WAVE</div>
+</a>
+
+<div class="card">
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab on" id="tab-in"  onclick="switchTab('in')">Sign In</button>
+    <button class="tab"    id="tab-up"  onclick="switchTab('up')">Create Account</button>
+  </div>
+
+  <!-- SIGN IN FORM -->
+  <div id="form-in">
+    <div class="fld">
+      <label class="lbl">Email address</label>
+      <input class="inp" id="in-email" type="email" placeholder="you@email.com" autocomplete="email" />
+    </div>
+    <div class="fld">
+      <label class="lbl">Password</label>
+      <input class="inp" id="in-pass" type="password" placeholder="Your password" autocomplete="current-password" />
+    </div>
+    <a href="#" class="forgot" onclick="showForgot();return false">Forgot password?</a>
+    <button class="btn" id="in-btn" onclick="signIn()">Sign In →</button>
+    <div class="fb" id="in-fb"></div>
+  </div>
+
+  <!-- CREATE ACCOUNT FORM -->
+  <div id="form-up" style="display:none">
+    <div class="fld">
+      <label class="lbl">Full name</label>
+      <input class="inp" id="up-name" type="text" placeholder="Your full name" autocomplete="name" />
+    </div>
+    <div class="fld">
+      <label class="lbl">Email address</label>
+      <input class="inp" id="up-email" type="email" placeholder="you@email.com" autocomplete="email" />
+    </div>
+    <div class="fld">
+      <label class="lbl">Password <span style="color:var(--muted);font-size:9px">(min 8 characters)</span></label>
+      <input class="inp" id="up-pass" type="password" placeholder="Create a password" autocomplete="new-password" />
+    </div>
+    <button class="btn" id="up-btn" onclick="signUp()">Create Account →</button>
+    <div class="fb" id="up-fb"></div>
+  </div>
+
+  <!-- FORGOT PASSWORD FORM -->
+  <div id="form-forgot" style="display:none">
+    <div style="margin-bottom:16px">
+      <div style="font-size:14px;font-weight:600;margin-bottom:4px">Reset your password</div>
+      <div style="font-size:12px;color:var(--muted)">Enter your email and we'll send a reset link.</div>
+    </div>
+    <div class="fld">
+      <label class="lbl">Email address</label>
+      <input class="inp" id="fg-email" type="email" placeholder="you@email.com" autocomplete="email" />
+    </div>
+    <button class="btn" id="fg-btn" onclick="sendReset()">Send Reset Link →</button>
+    <div class="fb" id="fg-fb"></div>
+    <div style="text-align:center;margin-top:14px">
+      <a href="#" style="font-size:12px;color:var(--muted);text-decoration:none" onclick="showSignIn();return false">← Back to sign in</a>
+    </div>
+  </div>
+
+  <!-- EMAIL VERIFY SCREEN -->
+  <div class="verify-screen" id="verify-screen">
+    <div class="verify-icon">📬</div>
+    <div class="verify-title">Check your email</div>
+    <div class="verify-sub">
+      We sent a confirmation link to<br>
+      <strong id="verify-email" style="color:var(--body)"></strong><br><br>
+      Click the link in that email to activate your account, then come back here to sign in.
+    </div>
+    <button class="resend-btn" onclick="resendConfirmation()">Resend email</button>
+    <div style="margin-top:16px">
+      <a href="#" style="font-size:12px;color:var(--muted);text-decoration:none" onclick="switchTab('in');return false">← Back to sign in</a>
+    </div>
+  </div>
+
+</div>
+
+<div class="card-footer" id="card-footer">
+  Don't have an account? <a href="#" onclick="switchTab('up');return false">Create one free</a>
+  &nbsp;·&nbsp; <a href="/">Back to home</a>
+</div>
+
+<script type="module">
+import { supabase } from './supabase.js'
+
+// ── AUTO REDIRECT IF ALREADY LOGGED IN ───────────────
+const { data: { session } } = await supabase.auth.getSession()
+if (session) {
+  window.location.href = '/dashboard.html'
+}
+
+// ── TAB SWITCHING ─────────────────────────────────────
+window.switchTab = function(tab) {
+  document.getElementById('form-in').style.display     = tab === 'in' ? 'block' : 'none'
+  document.getElementById('form-up').style.display     = tab === 'up' ? 'block' : 'none'
+  document.getElementById('form-forgot').style.display = 'none'
+  document.getElementById('tab-in').className  = 'tab' + (tab === 'in' ? ' on' : '')
+  document.getElementById('tab-up').className  = 'tab' + (tab === 'up' ? ' on' : '')
+  document.getElementById('card-footer').style.display = 'block'
+  document.getElementById('verify-screen').style.display = 'none'
+  clearFeedback()
+}
+
+window.showForgot = function() {
+  document.getElementById('form-in').style.display     = 'none'
+  document.getElementById('form-up').style.display     = 'none'
+  document.getElementById('form-forgot').style.display = 'block'
+  document.getElementById('card-footer').style.display = 'none'
+}
+
+window.showSignIn = function() {
+  switchTab('in')
+}
+
+// ── SIGN IN ───────────────────────────────────────────
+window.signIn = async function() {
+  const email    = document.getElementById('in-email').value.trim()
+  const password = document.getElementById('in-pass').value
+
+  if (!email)    { showFB('in-fb','err','⚠ Enter your email'); return }
+  if (!password) { showFB('in-fb','err','⚠ Enter your password'); return }
+
+  const btn = document.getElementById('in-btn')
+  btn.classList.add('loading'); btn.textContent = 'Signing in…'
+
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+
+  if (error) {
+    btn.classList.remove('loading'); btn.textContent = 'Sign In →'
+    if (error.message.includes('Invalid login')) {
+      showFB('in-fb','err','⚠ Email or password is incorrect')
+    } else if (error.message.includes('Email not confirmed')) {
+      showFB('in-fb','err','⚠ Please confirm your email first — check your inbox')
+    } else {
+      showFB('in-fb','err','⚠ ' + error.message)
+    }
+    return
+  }
+
+  // Save user info to session
+  sessionStorage.setItem('nw_email', data.user.email)
+  sessionStorage.setItem('nw_user_id', data.user.id)
+
+  btn.textContent = '✓ Signed in — redirecting…'
+  setTimeout(() => { window.location.href = '/dashboard.html' }, 600)
+}
+
+// ── SIGN UP ───────────────────────────────────────────
+window.signUp = async function() {
+  const name     = document.getElementById('up-name').value.trim()
+  const email    = document.getElementById('up-email').value.trim()
+  const password = document.getElementById('up-pass').value
+
+  if (!name)              { showFB('up-fb','err','⚠ Enter your full name'); return }
+  if (!email)             { showFB('up-fb','err','⚠ Enter your email'); return }
+  if (password.length < 8){ showFB('up-fb','err','⚠ Password must be at least 8 characters'); return }
+
+  const btn = document.getElementById('up-btn')
+  btn.classList.add('loading'); btn.textContent = 'Creating account…'
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { full_name: name },
+      emailRedirectTo: window.location.origin + '/dashboard.html'
+    }
+  })
+
+  if (error) {
+    btn.classList.remove('loading'); btn.textContent = 'Create Account →'
+    if (error.message.includes('already registered')) {
+      showFB('up-fb','err','⚠ That email already has an account — sign in instead')
+    } else {
+      showFB('up-fb','err','⚠ ' + error.message)
+    }
+    return
+  }
+
+  // Check if email confirmation is required
+  if (data.user && !data.session) {
+    // Email confirmation required
+    document.getElementById('form-up').style.display    = 'none'
+    document.getElementById('verify-screen').style.display = 'block'
+    document.getElementById('verify-email').textContent = email
+    document.getElementById('card-footer').style.display = 'none'
+    sessionStorage.setItem('nw_pending_email', email)
+  } else if (data.session) {
+    // Auto-confirmed — go straight to dashboard
+    sessionStorage.setItem('nw_email', email)
+    sessionStorage.setItem('nw_user_id', data.user.id)
+
+    // Create user record in users table
+    await supabase.from('users').upsert([{
+      email,
+      name,
+      plan:       'free',
+      plan_status:'active',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }], { onConflict: 'email' })
+
+    btn.textContent = '✓ Account created — redirecting…'
+    setTimeout(() => { window.location.href = '/dashboard.html' }, 700)
+  }
+}
+
+// ── FORGOT PASSWORD ───────────────────────────────────
+window.sendReset = async function() {
+  const email = document.getElementById('fg-email').value.trim()
+  if (!email) { showFB('fg-fb','err','⚠ Enter your email'); return }
+
+  const btn = document.getElementById('fg-btn')
+  btn.classList.add('loading'); btn.textContent = 'Sending…'
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + '/login.html?reset=true'
+  })
+
+  btn.classList.remove('loading'); btn.textContent = 'Send Reset Link →'
+
+  if (error) {
+    showFB('fg-fb','err','⚠ ' + error.message)
+  } else {
+    showFB('fg-fb','ok','✓ Reset link sent — check your email')
+  }
+}
+
+// ── RESEND CONFIRMATION ───────────────────────────────
+window.resendConfirmation = async function() {
+  const email = sessionStorage.getItem('nw_pending_email')
+  if (!email) return
+  await supabase.auth.resend({ type: 'signup', email })
+  alert('Confirmation email resent to ' + email)
+}
+
+// ── HANDLE PASSWORD RESET REDIRECT ────────────────────
+const urlParams = new URLSearchParams(window.location.search)
+if (urlParams.get('reset') === 'true') {
+  // User came back from reset email — show new password form
+  document.getElementById('form-in').innerHTML = `
+    <div style="font-size:14px;font-weight:600;margin-bottom:4px">Set new password</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:16px">Enter your new password below.</div>
+    <div class="fld">
+      <label class="lbl">New Password</label>
+      <input class="inp" id="np-pass" type="password" placeholder="New password (min 8 chars)" />
+    </div>
+    <button class="btn" onclick="updatePassword()">Set New Password →</button>
+    <div class="fb" id="np-fb"></div>`
+}
+
+window.updatePassword = async function() {
+  const password = document.getElementById('np-pass').value
+  if (password.length < 8) { showFB('np-fb','err','⚠ Password must be at least 8 characters'); return }
+  const { error } = await supabase.auth.updateUser({ password })
+  if (error) {
+    showFB('np-fb','err','⚠ ' + error.message)
+  } else {
+    showFB('np-fb','ok','✓ Password updated — signing you in…')
+    setTimeout(() => { window.location.href = '/dashboard.html' }, 1200)
+  }
+}
+
+// ── UTILS ─────────────────────────────────────────────
+function showFB(id, type, msg) {
+  const el = document.getElementById(id)
+  if (!el) return
+  el.className = `fb on fb-${type}`
+  el.textContent = msg
+}
+function clearFeedback() {
+  document.querySelectorAll('.fb').forEach(el => el.className = 'fb')
+}
+
+// Enter key support
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return
+  const tab = document.getElementById('tab-in').classList.contains('on') ? 'in' : 'up'
+  if (tab === 'in') signIn()
+  else signUp()
+})
+</script>
+</body>
+</html>
