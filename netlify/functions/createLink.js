@@ -1,12 +1,12 @@
 // netlify/functions/createLink.js
-// Creates a cloaked tracking link AND generates a real TinyURL short link
+// Creates a cloaked tracking link AND generates a Wave Link (short URL via tinyurl.com API)
 //
 // HOW IT WORKS:
 // 1. User pastes affiliate URL
 // 2. NextWave creates a tracking link: nextwave-traffic-engine.netlify.app/l/slug
-// 3. That tracking link is then sent to TinyURL free API
-// 4. TinyURL returns: https://tinyurl.com/xxxxxxxx
-// 5. User shares the TinyURL — it redirects through NextWave (click tracked)
+// 3. That tracking link is shortened via a free URL shortening API
+// 4. Returns a clean short URL: https://tinyurl.com/xxxxxxxx
+// 5. User shares the Wave Link — redirects through NextWave (click tracked)
 //    then on to the affiliate offer
 //
 // CHAIN: tinyurl.com/xxx → nextwave.app/l/slug → affiliate offer
@@ -63,7 +63,7 @@ export const handler = async (event) => {
     const trackingUrl = `${siteUrl}/l/${slug}`
 
     // ── GENERATE TINYURL ─────────────────────────────────────────
-    // TinyURL free API — no key required
+    // Free URL shortening API — no key required
     // We shorten the NextWave tracking URL so tracking still fires
     let tinyUrl = null
     try {
@@ -77,14 +77,14 @@ export const handler = async (event) => {
 
       if (tinyRes.ok) {
         const tinyText = (await tinyRes.text()).trim()
-        // Validate it looks like a TinyURL
+        // Validate it looks like a valid short URL
         if (tinyText.startsWith('https://tinyurl.com/') || tinyText.startsWith('http://tinyurl.com/')) {
           tinyUrl = tinyText
         }
       }
     } catch (e) {
-      // TinyURL API failed — non-fatal, continue without it
-      console.warn('TinyURL API non-fatal error:', e.message)
+      // Wave Link API failed — non-fatal, continue without short URL
+      console.warn('Wave Link API non-fatal error:', e.message)
     }
 
     // ── SAVE TO SUPABASE ─────────────────────────────────────────
@@ -109,7 +109,7 @@ export const handler = async (event) => {
       body: JSON.stringify({
         slug,
         short_link:   trackingUrl,   // NextWave tracking link
-        tiny_url:     tinyUrl,       // TinyURL (shareable)
+        tiny_url:     tinyUrl,       // Wave Link — short URL for sharing
         share_link:   tinyUrl || trackingUrl,  // best link to share
         data
       })
