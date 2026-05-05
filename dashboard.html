@@ -613,6 +613,31 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
       </div>
     </div>
   </div>
+
+  <!-- MY FUNNELS LIBRARY -->
+  <div class="panel" style="margin-top:14px">
+    <div class="p-head">
+      <div class="p-title"><span class="p-icon">📁</span>My Funnels <span class="ps">all deployed funnels — reuse any URL</span></div>
+      <button class="btn btn-g btn-sm" onclick="loadMyFunnels()">↻ Refresh</button>
+    </div>
+    <div class="p-body np">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>Funnel Name</th>
+            <th>Opt-in Page</th>
+            <th>VSL Bridge Page</th>
+            <th>Video</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="my-funnels-body">
+          <tr><td colspan="6"><div class="empty"><div class="empty-ic">◈</div><p>No funnels deployed yet. Generate and deploy your first funnel above.</p></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <!-- ══ LINK CLOAKER ══ -->
@@ -1361,9 +1386,128 @@ async function loadOverview() {
 // ── FUNNELS TAB INIT ──────────────────────────────────
 function loadFunnelsTab() {
   loadWaveLinksDropdown()
+  loadMyFunnels()
 }
 
-// AI FUNNELS
+// ── MY FUNNELS LIBRARY ─────────────────────────────────
+window.loadMyFunnels = async function() {
+  try {
+    const { data: funnels, error } = await _sb
+      .from('funnels')
+      .select('funnel_name, slug, affiliate_link, vsl_video_status, vsl_video_url, created_at')
+      .order('created_at', { ascending: false })
+
+    if (error) throw error
+
+    const list    = funnels || []
+    const siteUrl = window.location.origin
+
+    document.getElementById('my-funnels-body').innerHTML = list.length
+      ? list.map(f => {
+          const funnelUrl = `${siteUrl}/funnel/${esc(f.slug)}`
+          const bridgeUrl = `${siteUrl}/bridge/${esc(f.slug)}`
+          const videoStatus = f.vsl_video_status || 'no_key'
+          const videoBadge  = videoStatus === 'ready'
+            ? '<span class="bdg bdg-t" style="font-size:9px">✓ Ready</span>'
+            : videoStatus === 'processing'
+            ? '<span class="bdg bdg-m" style="font-size:9px">Generating…</span>'
+            : '<span class="bdg" style="font-size:9px;background:var(--s2);color:var(--muted);border:1px solid var(--line)">Script only</span>'
+
+          return `<tr>
+            <td style="font-weight:600;font-size:12px">${esc(f.funnel_name||f.slug)}</td>
+            <td>
+              <div style="display:flex;align-items:center;gap:5px">
+                <a href="${funnelUrl}" target="_blank" class="mono ct" style="text-decoration:none;font-size:10px">/funnel/${esc(f.slug)}</a>
+                <span class="cp-btn" onclick="copyText('${funnelUrl}')" style="flex-shrink:0">Copy</span>
+              </div>
+            </td>
+            <td>
+              <div style="display:flex;align-items:center;gap:5px">
+                <a href="${bridgeUrl}" target="_blank" style="color:var(--blue);text-decoration:none;font-size:10px;font-family:var(--m)">/bridge/${esc(f.slug)}</a>
+                <span class="cp-btn" onclick="copyText('${bridgeUrl}')" style="flex-shrink:0">Copy</span>
+              </div>
+            </td>
+            <td>${videoBadge}</td>
+            <td class="mono cs" style="font-size:10px">${ago(f.created_at)}</td>
+            <td>
+              <div style="display:flex;gap:4px;flex-wrap:wrap">
+                <button class="btn btn-sm btn-g" style="font-size:10px;padding:3px 8px" onclick="reloadFunnel('${esc(f.slug)}')" title="Load this funnel into the builder">✎ Edit</button>
+                <button class="btn btn-sm" style="font-size:10px;padding:3px 8px;background:rgba(242,92,122,.08);color:var(--rose);border:1px solid rgba(242,92,122,.2)" onclick="deleteFunnel('${esc(f.slug)}','${esc(f.funnel_name||f.slug)}')" title="Delete this funnel">✕</button>
+              </div>
+            </td>
+          </tr>`
+        }).join('')
+      : '<tr><td colspan="6"><div class="empty"><div class="empty-ic">◈</div><p>No funnels yet. Deploy your first one above.</p></div></td></tr>'
+
+  } catch(e) {
+    console.error('loadMyFunnels:', e)
+    document.getElementById('my-funnels-body').innerHTML =
+      '<tr><td colspan="6" style="color:var(--rose);font-size:12px;padding:12px">Error loading funnels: ' + esc(e.message) + '</td></tr>'
+  }
+}
+
+window.copyText = function(text) {
+  navigator.clipboard.writeText(text).then(() => toast('Copied!', 'ok'))
+}
+
+window.reloadFunnel = async function(slug) {
+  // Load funnel data back into the builder form for editing/reuse
+  const { data: f } = await _sb.from('funnels').select('*').eq('slug', slug).maybeSingle()
+  if (!f) { toast('Funnel not found', 'err'); return }
+
+  let copy = f.copy
+  if (typeof copy === 'string') { try { copy = JSON.parse(copy) } catch { copy = null } }
+
+  // Populate form fields
+  if (f.funnel_name)    document.getElementById('ai-offer-name').value = f.funnel_name
+  if (f.affiliate_link) document.getElementById('ai-url').value        = f.affiliate_link
+  if (f.slug)           document.getElementById('ai-slug').value       = f.slug
+  if (copy?.headline)   document.getElementById('ai-promise').value    = copy.headline
+
+  // Restore copy to output panel
+  if (copy) {
+    savedCopy = copy
+    document.getElementById('o-hl').textContent        = copy.headline      || ''
+    document.getElementById('o-sh').textContent        = copy.subheadline   || ''
+    document.getElementById('o-hk').textContent        = copy.hook          || ''
+    document.getElementById('o-cta').textContent       = copy.cta           || ''
+    document.getElementById('o-subj').textContent      = copy.emailSubject  || ''
+    document.getElementById('o-body').textContent      = copy.emailBody     || ''
+    document.getElementById('o-ul').innerHTML          = (copy.bullets||[]).map(b=>`<li>${esc(b)}</li>`).join('')
+    document.getElementById('o-vsltitle').textContent  = copy.vslTitle      || ''
+    document.getElementById('o-vslscript').textContent = copy.vslScript     || ''
+    document.getElementById('o-vslcta').textContent    = copy.vslCta        || ''
+    document.getElementById('ai-empty').style.display  = 'none'
+    document.getElementById('ai-out').classList.add('on')
+    document.getElementById('dep-btn').disabled        = false
+    set('ai-bdg', '✓ loaded')
+    document.getElementById('ai-bdg').className = 'bdg bdg-t'
+  }
+
+  // Scroll to top of funnels page
+  document.getElementById('page-funnels').scrollTop = 0
+  toast('Funnel loaded — edit and redeploy', 'ok')
+}
+
+window.deleteFunnel = async function(slug, name) {
+  if (!confirm('Delete funnel "' + name + '"?\n\nThe opt-in and bridge page URLs will stop working. This cannot be undone.')) return
+  try {
+    const res  = await fetch('/.netlify/functions/deleteLink', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ slug, action: 'deleteFunnel' })
+    })
+    // Also delete directly via client as backup
+    await _sb.from('funnels').delete().eq('slug', slug)
+    toast('Funnel deleted', 'ok')
+    loadMyFunnels()
+  } catch(e) {
+    toast('Delete failed: ' + e.message, 'err')
+  }
+}
+
+// Also reload funnels library after every deploy
+const _origDeploy = window.deployFunnel
+// FUNNELS TAB
 let savedCopy = null
 window._scrapedCopy = ''
 
@@ -1781,6 +1925,7 @@ window.deployFunnel = async function() {
     addFeed('Funnel deployed: ' + name, 'ok')
     toast('Funnel live', 'ok')
     loadOverview()
+    loadMyFunnels()  // refresh library
   } catch(e) { setFB('dep-fb', 'err', '⚠ ' + e.message) }
   btnLoad(btn, false, 'Deploy Funnel')
 }
