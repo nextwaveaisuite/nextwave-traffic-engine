@@ -2269,57 +2269,87 @@ function updatePeriod(period) {
   set('period-avg',    '$' + avg.toFixed(0))
 }
 
-window.enrollAffiliate = async function() {
-  const btn = document.querySelector('[onclick="enrollAffiliate()"]')
-  if (btn) { btn.disabled = true; btn.textContent = 'Setting up…' }
+window.enrollAffiliate = function() {
+  // ── INSTANT — show UI before any network calls ────────
+  const email   = sessionStorage.getItem('nw_email') || ''
+  const siteUrl = window.location.origin
 
-  try {
-    // Get email from Supabase Auth session — most reliable source
-    const { data: { session } } = await _sb.auth.getSession()
-    const email = session?.user?.email || sessionStorage.getItem('nw_email') || ''
+  // Generate ref code immediately from email or random
+  const base    = email ? email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,8) : 'user'
+  const refCode = base + Math.random().toString(36).slice(2,6)
+  const affUrl  = siteUrl + '/?ref=' + refCode
 
-    if (!email) {
-      showFB('aff-enroll-fb','err','⚠ Could not detect your email. Please sign out and sign back in, then try again.')
-      if (btn) { btn.disabled = false; btn.textContent = 'Join Affiliate Program →' }
-      return
+  // Show enrolled state right now — no waiting
+  showAffState('enrolled')
+  affTab('banners')
+
+  // Populate all content synchronously
+  const refEl = document.getElementById('aff-ref-link')
+  if (refEl) refEl.textContent = affUrl
+  set('aff-ref-code', refCode)
+  const exEl = document.getElementById('aff-example-link')
+  if (exEl) exEl.textContent = siteUrl + '/sales.html?ref=' + refCode
+  const badge = document.getElementById('aff-status-badge')
+  if (badge) { badge.textContent = 'Active Affiliate'; badge.className = 'bdg bdg-t' }
+  ;['b-728-link','b-300-link','b-468-link'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.href = affUrl
+  })
+  populatePromoContent(affUrl)
+
+  // ── BACKGROUND — save to Supabase after UI is shown ───
+  ;(async () => {
+    try {
+      // Get real email from auth session
+      const { data: { session } } = await _sb.auth.getSession()
+      const realEmail = session?.user?.email || email
+
+      if (!realEmail) return // not signed in — UI still works with generated code
+
+      // Check if already enrolled
+      const { data: existing } = await _sb
+        .from('affiliates').select('ref_code').eq('email', realEmail).maybeSingle()
+
+      if (existing?.ref_code) {
+        // Already enrolled — update UI with real ref code
+        const realUrl = siteUrl + '/?ref=' + existing.ref_code
+        const refEl2  = document.getElementById('aff-ref-link')
+        if (refEl2) refEl2.textContent = realUrl
+        set('aff-ref-code', existing.ref_code)
+        ;['b-728-link','b-300-link','b-468-link'].forEach(id => {
+          const el = document.getElementById(id); if (el) el.href = realUrl
+        })
+        populatePromoContent(realUrl)
+        return
+      }
+
+      // Insert new record with real email and real ref code
+      const realBase = realEmail.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,8)
+      const realCode = realBase + Math.random().toString(36).slice(2,6)
+      const realUrl  = siteUrl + '/?ref=' + realCode
+
+      await _sb.from('affiliates').insert([{
+        email: realEmail, ref_code: realCode,
+        commission_rate: 0.30, total_referrals: 0,
+        total_earned: 0, total_paid: 0,
+        created_at: new Date().toISOString()
+      }])
+
+      // Update UI with saved ref code
+      const refEl3 = document.getElementById('aff-ref-link')
+      if (refEl3) refEl3.textContent = realUrl
+      set('aff-ref-code', realCode)
+      ;['b-728-link','b-300-link','b-468-link'].forEach(id => {
+        const el = document.getElementById(id); if (el) el.href = realUrl
+      })
+      populatePromoContent(realUrl)
+
+    } catch(e) {
+      console.warn('Affiliate background save:', e.message)
+      // UI already showing — non-fatal
     }
-
-    // Check if already enrolled
-    const { data: existing } = await _sb.from('affiliates').select('id,ref_code').eq('email', email).maybeSingle()
-    if (existing) {
-      showFB('aff-enroll-fb','ok','✓ Already enrolled — loading your affiliate tools…')
-      setTimeout(async () => { await loadAffiliate(); affTab('banners') }, 600)
-      return
-    }
-
-    // Generate unique ref code
-    const base = email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,8)
-    const code  = base + Math.random().toString(36).slice(2,6)
-
-    const { error } = await _sb.from('affiliates').insert([{
-      email,
-      ref_code:        code,
-      commission_rate: 0.30,
-      total_referrals: 0,
-      total_earned:    0,
-      total_paid:      0,
-      created_at:      new Date().toISOString()
-    }])
-
-    if (error) throw error
-
-    showFB('aff-enroll-fb','ok','✓ Enrolled! Opening your affiliate tools…')
-    setTimeout(async () => {
-      await loadAffiliate()
-      affTab('banners')
-    }, 600)
-
-  } catch(e) {
-    console.error('enrollAffiliate error:', e)
-    showFB('aff-enroll-fb','err','⚠ ' + (e.message || 'Enrolment failed — try again'))
-    if (btn) { btn.disabled = false; btn.textContent = 'Join Affiliate Program →' }
-  }
+  })()
 }
+
 
 window.copyAffLink = function() {
   const link = document.getElementById('aff-ref-link').textContent
