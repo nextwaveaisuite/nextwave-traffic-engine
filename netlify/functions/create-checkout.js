@@ -8,7 +8,7 @@ export async function handler(event) {
   }
 
   try {
-    const { plan, email, name } = JSON.parse(event.body || '{}')
+    const { plan, email, name, ref } = JSON.parse(event.body || '{}')
     const stripeKey = process.env.STRIPE_SECRET_KEY
 
     if (!stripeKey) {
@@ -50,7 +50,7 @@ export async function handler(event) {
         price:    priceId,
         quantity: 1
       }],
-      metadata: { plan, name: name || '', ref: body.ref || '' },
+      metadata: { plan, name: name || '', ref: ref || '' },
       allow_promotion_codes: true
     }
 
