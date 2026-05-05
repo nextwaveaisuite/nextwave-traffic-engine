@@ -1521,50 +1521,144 @@ window.scrapeOffer = async function() {
   const url = document.getElementById('ai-url').value.trim()
   if (!url) { toast('Enter an affiliate URL first', 'err'); return }
   try { new URL(url) } catch { toast('URL must start with https://', 'err'); return }
+
   const btn = document.getElementById('scrape-btn')
   btn.disabled = true
   document.getElementById('scrape-btn-txt').textContent = '…'
-  setFB('scrape-fb','info','Fetching offer page…')
+  setFB('scrape-fb','info','Reading offer page…')
+
   try {
     const res  = await fetch('/.netlify/functions/scrape-offer', {
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ url })
     })
     const data = await res.json()
+
     if (data.success && data.extracted) {
-      const e = data.extracted
-      if (e.title    && !document.getElementById('ai-offer-name').value) document.getElementById('ai-offer-name').value = e.title.slice(0,80)
-      if (e.headline && !document.getElementById('ai-promise').value)    document.getElementById('ai-promise').value    = e.headline.slice(0,120)
-      if (e.metaDesc && !document.getElementById('ai-mechanism').value)  document.getElementById('ai-mechanism').value  = e.metaDesc.slice(0,120)
-      // Set price dropdown if extracted
+      const e       = data.extracted
+      let   filled  = []
+
+      // ── OFFER NAME ────────────────────────────────────────
+      const offerName = e.title || e.h1s?.[0] || ''
+      if (offerName) {
+        document.getElementById('ai-offer-name').value = offerName.slice(0,80)
+        filled.push('Offer Name')
+      }
+
+      // ── CORE PROMISE ──────────────────────────────────────
+      // Use first H1, or first H2 if H1 is same as title
+      const promise = e.h1s?.[0] || e.h2s?.[0] || e.headline || ''
+      if (promise) {
+        document.getElementById('ai-promise').value = promise.slice(0,150)
+        filled.push('Core Promise')
+      }
+
+      // ── MECHANISM ─────────────────────────────────────────
+      // Use second H2 or metaDesc as mechanism hint
+      const mechanism = e.h2s?.[1] || e.h3s?.[0] || e.metaDesc || ''
+      if (mechanism) {
+        document.getElementById('ai-mechanism').value = mechanism.slice(0,150)
+        filled.push('Mechanism')
+      }
+
+      // ── TARGET BUYER ──────────────────────────────────────
+      // Use H3s or third subheadline as avatar hint
+      const avatar = e.h3s?.[0] || e.h2s?.[2] || ''
+      if (avatar) {
+        document.getElementById('ai-avatar').value = avatar.slice(0,150)
+        filled.push('Target Buyer')
+      }
+
+      // ── BONUSES ───────────────────────────────────────────
+      if (e.bonuses?.length) {
+        document.getElementById('ai-bonuses').value = e.bonuses.slice(0,3).join(', ').slice(0,200)
+        filled.push('Bonuses')
+      }
+
+      // ── PRICE DROPDOWN ────────────────────────────────────
       if (e.prices?.length) {
         const priceEl = document.getElementById('ai-price')
-        if (priceEl && !priceEl.value) {
-          // Try to match extracted price to a dropdown option
-          const extracted = e.prices[0]
+        if (priceEl) {
+          const raw  = e.prices[0].replace(/[$,\s]/g,'')
+          const num  = parseFloat(raw)
           const opts = Array.from(priceEl.options)
-          const match = opts.find(o => o.value.includes(extracted.replace(/[$,]/g,'')))
-          if (match) priceEl.value = match.value
+          // Find closest match
+          const match = opts.find(o => {
+            const ov = parseFloat(o.value.replace(/[$,/a-z\s]/gi,''))
+            return !isNaN(ov) && Math.abs(ov - num) < 5
+          })
+          if (match) { priceEl.value = match.value; filled.push('Price') }
         }
       }
-      // Set guarantee dropdown if extracted
+
+      // ── GUARANTEE DROPDOWN ────────────────────────────────
       if (e.guarantee) {
-        const gEl = document.getElementById('ai-guarantee')
-        if (gEl && !gEl.value) {
-          const days = e.guarantee.match(/\d+/)
-          if (days) {
-            const opts = Array.from(gEl.options)
-            const match = opts.find(o => o.value.includes(days[0]+'-day'))
-            if (match) gEl.value = match.value
+        const gEl  = document.getElementById('ai-guarantee')
+        const days = e.guarantee.match(/\d+/)
+        if (gEl && days) {
+          const opts  = Array.from(gEl.options)
+          const match = opts.find(o => o.value.includes(days[0]+'-day'))
+          if (match) { gEl.value = match.value; filled.push('Guarantee') }
+        }
+      }
+
+      // ── NICHE AUTO-DETECT ─────────────────────────────────
+      // Try to detect niche from page content
+      const nicheEl   = document.getElementById('ai-niche')
+      const bodyLower = (e.bodyText || '').toLowerCase()
+      if (nicheEl && !nicheEl.value) {
+        const nicheMap = [
+          ['weight loss','weight loss'],['lose weight','weight loss'],['fat burn','weight loss'],
+          ['make money','make money online'],['earn money','make money online'],['income','make money online'],
+          ['forex','forex trading'],['trading','forex trading'],
+          ['crypto','cryptocurrency'],['bitcoin','cryptocurrency'],
+          ['dropshipping','e-commerce'],['ecommerce','e-commerce'],['shopify','e-commerce'],
+          ['real estate','real estate investing'],['property','real estate investing'],
+          ['muscle','fitness and muscle'],['workout','fitness and muscle'],['fitness','fitness and muscle'],
+          ['relationship','relationship and dating'],['dating','relationship and dating'],
+          ['affiliate','affiliate marketing'],
+          ['supplement','health and supplements'],['health','health and supplements'],
+        ]
+        for (const [keyword, niche] of nicheMap) {
+          if (bodyLower.includes(keyword)) {
+            const opts  = Array.from(nicheEl.options)
+            const match = opts.find(o => o.value === niche)
+            if (match) {
+              nicheEl.value = niche
+              onNicheChange()
+              filled.push('Niche')
+              break
+            }
           }
         }
       }
+
+      // ── AUTO-SLUG ─────────────────────────────────────────
+      const slugEl = document.getElementById('ai-slug')
+      if (slugEl && !slugEl.value && offerName) {
+        slugEl.value = offerName.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40)
+      }
+
+      // Store full summary for Claude
       window._scrapedCopy = data.summary || ''
-      setFB('scrape-fb','ok','✓ ' + (data.message || 'Details extracted — review fields then generate.'))
+
+      const resolvedMsg = data.resolvedFrom
+        ? ` (Wave Link → ${data.resolvedTo?.slice(0,50)}…)`
+        : ''
+      const filledMsg = filled.length
+        ? ` Pre-filled: ${filled.join(', ')}.`
+        : ' No fields could be auto-filled — add details manually.'
+
+      setFB('scrape-fb','ok','✓ Offer page analysed.' + filledMsg + resolvedMsg)
+
     } else {
-      setFB('scrape-fb','info','ℹ ' + (data.message || 'Fill in offer details manually for best results.'))
+      setFB('scrape-fb','info','ℹ ' + (data.message || 'Could not extract details — fill in manually.'))
     }
-  } catch(e) { setFB('scrape-fb','info','ℹ Could not reach offer page — fill in details manually.') }
+  } catch(err) {
+    console.error('scrapeOffer:', err)
+    setFB('scrape-fb','info','ℹ Could not reach offer page — fill in details manually.')
+  }
+
   btn.disabled = false
   document.getElementById('scrape-btn-txt').textContent = '⬇ Extract'
 }
@@ -1740,24 +1834,25 @@ window.loadLinks = async function() {
     document.getElementById('links-body').innerHTML = list.length
       ? list.map(l => {
           const displayLink = l.wave_link || l.short_link || (window.location.origin + '/l/' + l.slug)
-          const rowId       = l.id || l.slug
-          return `<tr id="lr-${esc(rowId)}">
+          const safeSlug    = esc(l.slug)
+          const safeId      = esc(l.id || l.slug)
+          return `<tr id="lr-${safeSlug}">
             <td><a href="${esc(displayLink)}" target="_blank" class="mono ct" style="text-decoration:none;font-size:11px">${esc(displayLink)}</a></td>
             <td class="cs">${esc(l.label||'—')}</td>
             <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
               <a href="${esc(l.original_url||'#')}" target="_blank" style="color:var(--blue);text-decoration:none;font-size:11px">${esc(l.original_url||'—')}</a>
             </td>
-            <td class="mono cg" id="clk-${esc(rowId)}">${l.clicks||0}</td>
+            <td class="mono cg" id="clk-${safeSlug}">${l.clicks||0}</td>
             <td>
               <div style="display:flex;gap:5px">
                 <button class="btn btn-sm"
                   style="background:rgba(79,142,247,.08);color:var(--blue);border:1px solid rgba(79,142,247,.2);font-size:10px;padding:3px 8px;white-space:nowrap"
-                  onclick="resetLinkClicks('${esc(l.id||'')}','${esc(l.slug)}')"
-                  title="Reset click count to zero">↺ Reset</button>
+                  onclick="resetLinkClicks('${safeId}','${safeSlug}')"
+                  title="Reset click count">↺ Reset</button>
                 <button class="btn btn-sm"
                   style="background:rgba(242,92,122,.08);color:var(--rose);border:1px solid rgba(242,92,122,.2);font-size:10px;padding:3px 8px;white-space:nowrap"
-                  onclick="deleteLink('${esc(l.id||'')}','${esc(l.slug)}')"
-                  title="Delete this Wave Link permanently">✕ Delete</button>
+                  onclick="deleteLink('${safeId}','${safeSlug}')"
+                  title="Delete this Wave Link">✕ Delete</button>
               </div>
             </td>
           </tr>`}).join('')
@@ -1767,59 +1862,58 @@ window.loadLinks = async function() {
 
 // ── RESET CLICK COUNT ─────────────────────────────────
 window.resetLinkClicks = async function(id, slug) {
-  if (!confirm('Reset click count to zero for this link? The link stays active.')) return
+  if (!confirm('Reset click count to zero? The link stays active.')) return
   try {
-    // Try by id first, fall back to slug
-    const filter = id && id !== 'undefined' ? _sb.from('links').update({ clicks: 0 }).eq('id', id)
-                                             : _sb.from('links').update({ clicks: 0 }).eq('slug', slug)
-    const { error } = await filter
+    // Always use slug — it always exists regardless of id type
+    const { error } = await _sb.from('links').update({ clicks: 0 }).eq('slug', slug)
     if (error) throw error
-    const cell = document.getElementById('clk-' + (id||slug))
-    if (cell) {
-      cell.textContent = '0'
-      cell.style.color = 'var(--muted)'
-      setTimeout(() => { cell.style.color = '' }, 800)
-    }
+    // Update cell immediately
+    const rowId = id || slug
+    const cell  = document.getElementById('clk-' + rowId)
+    if (cell) { cell.textContent = '0'; cell.style.color = 'var(--teal)'; setTimeout(()=>{ cell.style.color='' },800) }
+    toast('Clicks reset to zero', 'ok')
     loadLinks()
-    toast('Analytics reset to zero', 'ok')
   } catch(e) {
-    toast('Reset failed: ' + e.message, 'err')
+    console.error('resetLinkClicks:', e)
+    toast('Reset failed: ' + (e.message || 'Unknown error'), 'err')
   }
 }
 
 window.deleteLink = async function(id, slug) {
-  if (!confirm('Permanently delete Wave Link /l/' + slug + '? Anyone who clicks it after deletion will get a 404. This cannot be undone.')) return
+  if (!slug) { toast('Cannot identify link — refresh and try again', 'err'); return }
+  if (!confirm('Delete Wave Link /l/' + slug + '?\n\nClicks on this link will stop working. This cannot be undone.')) return
+
+  // Show immediate feedback
+  const rowId = id || slug
+  const row   = document.getElementById('lr-' + rowId)
+  if (row) { row.style.opacity = '0.3'; row.style.pointerEvents = 'none' }
+
   try {
-    // Try delete by id first, fall back to slug
-    let error
-    if (id && id !== 'undefined' && id !== 'null') {
-      const res = await _sb.from('links').delete().eq('id', id)
-      error = res.error
-      // If id delete failed try slug
-      if (error) {
-        const res2 = await _sb.from('links').delete().eq('slug', slug)
-        error = res2.error
-      }
-    } else {
-      const res = await _sb.from('links').delete().eq('slug', slug)
-      error = res.error
-    }
+    // Delete by slug — always works regardless of id format
+    const { error, count } = await _sb
+      .from('links')
+      .delete()
+      .eq('slug', slug)
+
     if (error) throw error
-    // Fade out and remove row
-    const rowId  = id && id !== 'undefined' ? 'lr-' + id : 'lr-' + slug
-    const row    = document.getElementById(rowId)
+
+    // Animate out and reload
     if (row) {
-      row.style.transition = 'opacity .25s ease'
+      row.style.transition = 'opacity .2s'
       row.style.opacity    = '0'
-      setTimeout(() => { row.remove(); loadLinks() }, 280)
+      setTimeout(() => { row.remove(); loadLinks(); loadOverview() }, 220)
     } else {
-      loadLinks()
+      loadLinks(); loadOverview()
     }
+
     toast('Wave Link deleted', 'ok')
-    addFeed('Wave Link deleted: /l/' + slug, 'w')
-    loadOverview()
+    addFeed('Deleted: /l/' + slug, 'w')
+
   } catch(e) {
-    toast('Delete failed: ' + e.message, 'err')
+    console.error('deleteLink error:', e)
+    // Restore row if delete failed
+    if (row) { row.style.opacity = '1'; row.style.pointerEvents = '' }
+    toast('Delete failed — ' + (e.message || 'check console'), 'err')
   }
 }
 
