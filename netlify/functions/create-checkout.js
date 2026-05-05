@@ -50,7 +50,7 @@ export async function handler(event) {
         price:    priceId,
         quantity: 1
       }],
-      metadata: { plan, name: name || '' },
+      metadata: { plan, name: name || '', ref: body.ref || '' },
       allow_promotion_codes: true
     }
 
