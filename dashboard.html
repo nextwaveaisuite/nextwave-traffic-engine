@@ -325,7 +325,7 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
   <div class="sg">
     <div class="sg-lbl">Tools</div>
     <div class="ni" onclick="nav('funnels',this)"><span class="ni-ic">◈</span>AI Funnels</div>
-    <div class="ni" onclick="nav('links',this)"><span class="ni-ic">⌖</span>Link Cloaker</div>
+    <div class="ni" onclick="nav('links',this)"><span class="ni-ic">⌖</span>Wave Link</div>
     <div class="ni" onclick="nav('leads',this)"><span class="ni-ic">◎</span>Leads<span class="ni-ct" id="sb-ct">0</span></div>
   </div>
   <div class="sg">
@@ -524,18 +524,18 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
 
 <!-- ══ LINK CLOAKER ══ -->
 <div class="page" id="page-links">
-  <div class="ph"><div class="pt">Link Cloaker <span class="ps">track every click</span></div></div>
+  <div class="ph"><div class="pt">Wave Link <span class="ps">track every click</span></div></div>
   <div class="gm" style="flex:1;min-height:0">
     <div class="gc">
       <div class="panel">
-        <div class="p-head"><div class="p-title"><span class="p-icon">⌖</span>Create Cloaked Link</div></div>
+        <div class="p-head"><div class="p-title"><span class="p-icon">⌖</span>Create Wave Link</div></div>
         <div class="p-body">
           <div class="fld"><label class="lbl">Destination URL (your affiliate link)</label><input class="inp" id="lnk-url" placeholder="https://yournetwork.com/offer?ref=yourcode" /></div>
           <div class="r2">
             <div class="fld"><label class="lbl">Custom slug (optional)</label><input class="inp" id="lnk-slug" placeholder="promo-jan" /></div>
             <div class="fld"><label class="lbl">Label / campaign</label><input class="inp" id="lnk-lbl" placeholder="TZ Campaign 1" /></div>
           </div>
-          <button class="btn btn-p btn-w" onclick="createLink()">Create Cloaked Link</button>
+          <button class="btn btn-p btn-w" onclick="createLink()">Create Wave Link</button>
           <div class="fb" id="lnk-fb"></div>
         </div>
       </div>
@@ -619,15 +619,15 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
     <div class="panel">
       <div class="p-head"><div class="p-title">⚡ TrafficZest</div><span class="bdg bdg-m" id="tz-bdg">Not configured</span></div>
       <div class="p-body">
-        <p style="font-size:12px;color:var(--dim);line-height:1.65;margin-bottom:13px">Point your TrafficZest campaign at a NextWave cloaked link. Each click is tracked, each opt-in captured, and leads sync to Forge Mail automatically.</p>
+        <p style="font-size:12px;color:var(--dim);line-height:1.65;margin-bottom:13px">Point your TrafficZest campaign at a Wave Link. Each click is tracked, each opt-in captured, and leads sync to Forge Mail automatically.</p>
         <div class="fld"><label class="lbl">Your TrafficZest campaign URL</label><input class="inp" id="tz-url" placeholder="https://trafficzest.com/c/your-campaign" /></div>
-        <div class="fld"><label class="lbl">Traffic destination (your cloaked link)</label><input class="inp" id="tz-dest" placeholder="https://nextwave-traffic-engine.netlify.app/l/my-funnel" /></div>
+        <div class="fld"><label class="lbl">Traffic destination (your Wave Link)</label><input class="inp" id="tz-dest" placeholder="https://nextwave-traffic-engine.netlify.app/l/my-funnel" /></div>
         <button class="btn btn-p btn-w" onclick="saveTZ()">Save Configuration</button>
         <div class="fb" id="tz-fb"></div>
         <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line)">
           <div style="font-family:var(--m);font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:9px">Setup steps</div>
           <div style="display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;gap:8px;font-size:11px;color:var(--dim)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">1.</span>Create a cloaked link in the Link Cloaker tab</div>
+            <div style="display:flex;gap:8px;font-size:11px;color:var(--dim)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">1.</span>Create a Wave Link in the Wave Link tab</div>
             <div style="display:flex;gap:8px;font-size:11px;color:var(--dim)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">2.</span>Paste that link as your TrafficZest destination URL</div>
             <div style="display:flex;gap:8px;font-size:11px;color:var(--dim)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">3.</span>Visitors land on your funnel and opt in — lead captured</div>
             <div style="display:flex;gap:8px;font-size:11px;color:var(--dim)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">4.</span>Lead syncs to Forge Mail — your sequence fires</div>
@@ -674,7 +674,7 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
           </div>
           <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:9px">
             <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>10 AI funnel builds/month</div>
-            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>25 cloaked links + lead capture</div>
+            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>25 Wave Links + lead capture</div>
             <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>TrafficZest pipeline</div>
           </div>
           <button class="btn btn-g btn-w" style="font-size:11px" onclick="toast('Connect Stripe in checkout.html to activate billing','info')">Upgrade to Starter — $19/mo</button>
@@ -926,7 +926,7 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
   <div class="sg">
     <div class="sg-lbl">Tools</div>
     <div class="ni" onclick="navMob('funnels',this)"><span class="ni-ic">◈</span>AI Funnels</div>
-    <div class="ni" onclick="navMob('links',this)"><span class="ni-ic">⌖</span>Link Cloaker</div>
+    <div class="ni" onclick="navMob('links',this)"><span class="ni-ic">⌖</span>Wave Link</div>
     <div class="ni" onclick="navMob('leads',this)"><span class="ni-ic">◎</span>Leads</div>
   </div>
   <div class="sg">
@@ -1249,31 +1249,31 @@ window.createLink = async function() {
     const data = await res.json()
     if (data.error) throw new Error(data.error)
 
-    // Show TinyURL as primary share link, tracking link as secondary
+    // Show Wave Link as primary share link, tracking link as secondary
     const el = document.getElementById('lnk-fb')
     el.className = 'fb on fb-ok'
 
     if (data.tiny_url) {
       el.innerHTML = `
         <div style="margin-bottom:8px;font-size:12px;font-weight:600">✓ Short link created</div>
-        <div style="font-size:11px;color:var(--dim);margin-bottom:4px">Share this TinyURL:</div>
+        <div style="font-size:11px;color:var(--dim);margin-bottom:4px">Your Wave Link — share this:</div>
         <div class="lk-row" style="margin-bottom:10px;border-color:var(--teal-bdr)">
           <code style="color:var(--teal);font-size:12px">${esc(data.tiny_url)}</code>
-          <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(data.tiny_url)}').then(()=>toast('TinyURL copied!','ok'))">Copy</span>
+          <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(data.tiny_url)}').then(()=>toast('Wave Link copied!','ok'))">Copy</span>
         </div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Tracking link (behind the TinyURL):</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Tracking link (behind your Wave Link):</div>
         <div class="lk-row">
           <code style="font-size:10px">${esc(data.short_link)}</code>
           <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(data.short_link)}').then(()=>toast('Copied','ok'))">Copy</span>
         </div>
         <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6">
-          ✓ Every click on the TinyURL is tracked through NextWave before reaching your offer.
+          ✓ Every click on your Wave Link is tracked through NextWave before reaching your offer.
         </div>`
     } else {
-      // TinyURL unavailable — show tracking link only
+      // Wave Link unavailable — show tracking link only
       el.innerHTML = `
         <div style="margin-bottom:8px;font-size:12px;font-weight:600">✓ Tracking link created</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">TinyURL service was unavailable — share this link:</div>
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Wave Link service temporarily unavailable — share this link:</div>
         <div class="lk-row">
           <code>${esc(data.short_link)}</code>
           <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(data.short_link)}').then(()=>toast('Copied','ok'))">Copy</span>
