@@ -2207,11 +2207,198 @@ window.affTab = function(tab) {
   })
 }
 
+// ── POPULATE PROMO CONTENT ────────────────────────────
+// Populates banner textareas, email swipes and social copy
+// Called immediately on enrollment — no network calls, pure string ops
+function populatePromoContent(affUrl) {
+  if (!affUrl) return
+
+  // ── BANNERS ──────────────────────────────────────────
+  const b728 = [
+    '<a href="' + affUrl + '" target="_blank" style="',
+    'display:flex;align-items:center;justify-content:space-between;',
+    'width:728px;height:90px;',
+    'background:linear-gradient(135deg,#0d1220,#111827);',
+    'border:1px solid #1e2d42;border-radius:8px;',
+    'text-decoration:none;padding:0 24px;font-family:sans-serif">',
+    '<div style="display:flex;align-items:center;gap:12px">',
+    '<div style="width:36px;height:36px;border-radius:7px;background:#19e6b0;',
+    'display:flex;align-items:center;justify-content:center;font-size:18px">⚡</div>',
+    '<div>',
+    '<div style="font-size:18px;font-weight:700;color:#dce8f5">NEXTWAVE TRAFFIC ENGINE</div>',
+    '<div style="font-size:12px;color:#8fa3c4">AI Funnels · Wave Links · Lead Capture · VSL Bridge Pages</div>',
+    '</div></div>',
+    '<div style="background:#19e6b0;color:#080c14;font-weight:700;font-size:13px;',
+    'padding:10px 20px;border-radius:6px;white-space:nowrap">Get Started Free →</div>',
+    '</a>'
+  ].join('')
+
+  const b300 = [
+    '<a href="' + affUrl + '" target="_blank" style="',
+    'display:block;width:300px;height:250px;',
+    'background:linear-gradient(160deg,#0d1220,#111827);',
+    'border:1px solid #1e2d42;border-radius:10px;',
+    'text-decoration:none;padding:24px;font-family:sans-serif">',
+    '<div style="font-size:10px;color:#19e6b0;letter-spacing:1px;margin-bottom:10px">',
+    'AFFILIATE MARKETING SYSTEM</div>',
+    '<div style="font-size:22px;font-weight:700;color:#dce8f5;line-height:1.1;margin-bottom:10px">',
+    'Stop Losing the Traffic You Paid For.</div>',
+    '<div style="font-size:12px;color:#8fa3c4;line-height:1.6;margin-bottom:16px">',
+    'AI funnels · Lead capture · VSL bridge pages · Wave Link tracking</div>',
+    '<div style="margin-bottom:18px">',
+    '<div style="font-size:11px;color:#dce8f5;margin-bottom:4px">✓ Free to start</div>',
+    '<div style="font-size:11px;color:#dce8f5;margin-bottom:4px">✓ No credit card needed</div>',
+    '<div style="font-size:11px;color:#dce8f5">✓ Live in 60 seconds</div>',
+    '</div>',
+    '<div style="background:#19e6b0;color:#080c14;font-weight:700;font-size:13px;',
+    'padding:10px;border-radius:6px;text-align:center">Get Free Access →</div>',
+    '</a>'
+  ].join('')
+
+  const b468 = [
+    '<a href="' + affUrl + '" target="_blank" style="',
+    'display:flex;align-items:center;justify-content:space-between;',
+    'width:468px;height:60px;',
+    'background:linear-gradient(135deg,#0d1220,#111827);',
+    'border:1px solid #1e2d42;border-radius:6px;',
+    'text-decoration:none;padding:0 16px;font-family:sans-serif">',
+    '<div>',
+    '<span style="font-weight:700;color:#19e6b0;font-size:14px">NEXTWAVE</span>',
+    '<span style="color:#8fa3c4;font-size:12px;margin-left:8px">',
+    '— AI Funnels + Lead Capture + Wave Links</span>',
+    '</div>',
+    '<div style="background:#19e6b0;color:#080c14;font-weight:700;font-size:11px;',
+    'padding:7px 14px;border-radius:5px;white-space:nowrap">Try Free →</div>',
+    '</a>'
+  ].join('')
+
+  const bmap = { 'b-728': b728, 'b-300': b300, 'b-468': b468 }
+  Object.entries(bmap).forEach(([id, val]) => {
+    const el = document.getElementById(id)
+    if (el) el.value = val
+  })
+
+  // ── EMAIL SWIPES ──────────────────────────────────────
+  const nl = '\n'
+  const s1 = 'Subject: Are you still doing this with your traffic?' + nl + nl
+    + 'Hey [First Name],' + nl + nl
+    + 'When someone clicks your affiliate link and does not buy... what happens to them?' + nl + nl
+    + 'If your answer is "they are gone forever" — that is the problem.' + nl + nl
+    + 'Most affiliates send cold traffic directly to an offer. The visitor lands, looks around, leaves. No list built. No second chance.' + nl + nl
+    + 'I have been using NextWave Traffic Engine to fix this. It puts a capture system between your traffic and your offer — every click goes through a funnel that captures the email first.' + nl + nl
+    + 'Check it out: ' + affUrl + nl + nl
+    + 'Free to get started.' + nl + nl
+    + '[Your name]'
+
+  const s2 = 'Subject: This is why your affiliate campaigns are not scaling' + nl + nl
+    + 'Hey [First Name],' + nl + nl
+    + '97% of visitors do not buy on the first visit. Without a system to capture and follow up with them, they are lost forever.' + nl + nl
+    + 'NextWave Traffic Engine solves this:' + nl + nl
+    + '→ Traffic hits a Wave Link (tracked, protected)' + nl
+    + '→ Lands on an AI-built lead capture page' + nl
+    + '→ Watches a short VSL that warms them up' + nl
+    + '→ Reaches your affiliate offer — ready to buy' + nl
+    + '→ Forge Mail follows up with everyone who did not convert' + nl + nl
+    + 'Free to start: ' + affUrl + nl + nl
+    + '[Your name]'
+
+  const s3 = 'Subject: The tool I use to run my affiliate campaigns' + nl + nl
+    + 'Hey [First Name],' + nl + nl
+    + 'AI FUNNEL BUILDER — Type your offer. Claude generates full funnel copy + VSL script in 60 seconds.' + nl + nl
+    + 'WAVE LINK — Every affiliate link becomes a short tracked URL.' + nl + nl
+    + 'LEAD CAPTURE — Every visitor who opts in syncs to Forge Mail automatically.' + nl + nl
+    + 'VSL BRIDGE PAGE — Warms leads between opt-in and your offer.' + nl + nl
+    + 'Starts at $19/month. Lifetime at $997.' + nl + nl
+    + 'Get started free: ' + affUrl + nl + nl
+    + '[Your name]'
+
+  const s4 = 'Subject: Last thing I will say about this' + nl + nl
+    + 'Hey [First Name],' + nl + nl
+    + 'If you are buying traffic and not capturing leads before sending them to your offer, you are burning money.' + nl + nl
+    + 'NextWave puts the system in place. Free to start. $19/month to go full speed.' + nl + nl
+    + affUrl + nl + nl
+    + '[Your name]'
+
+  const smap = { swipe1: s1, swipe2: s2, swipe3: s3, swipe4: s4 }
+  Object.entries(smap).forEach(([id, val]) => {
+    const el = document.getElementById(id)
+    if (el) el.value = val
+  })
+
+  // ── SOCIAL COPY ───────────────────────────────────────
+  const socials = {
+    'social-fb': [
+      '🔥 If you are buying solo ad traffic and sending it straight to an affiliate offer — stop.',
+      '',
+      'You are losing 97% of the people who click.',
+      '',
+      'NextWave Traffic Engine puts a full capture system between your traffic and your offers.',
+      'AI builds the funnel in 60 seconds. Forge Mail follows up automatically.',
+      '',
+      'Free to start 👇',
+      affUrl,
+      '',
+      '#affiliatemarketing #trafficzest #soloads'
+    ].join(nl),
+
+    'social-tw': [
+      'Most affiliates send traffic straight to an offer.',
+      '',
+      '97% do not buy. They leave forever.',
+      '',
+      'NextWave fixes this:',
+      '→ AI funnel in 60 seconds',
+      '→ Lead capture before the offer',
+      '→ VSL bridge page',
+      '→ Forge Mail auto follow-up',
+      '→ Wave Link tracking',
+      '',
+      'Free: ' + affUrl
+    ].join(nl),
+
+    'social-li': [
+      'I want to share something that changed how I run affiliate campaigns.',
+      '',
+      'The problem: I would buy traffic, people would not buy, and they would be gone forever.',
+      '',
+      'NextWave Traffic Engine fixes this automatically.',
+      '',
+      '• AI builds funnel copy in 60 seconds',
+      '• Wave Links track every click',
+      '• Lead capture before your offer',
+      '• VSL Bridge Page warms cold traffic',
+      '• Forge Mail sync for automatic follow-up',
+      '',
+      'Free to start: ' + affUrl
+    ].join(nl),
+
+    'social-yt': [
+      '🔗 Tools I use in this video:',
+      'NextWave Traffic Engine (AI funnels + lead capture + Wave Link tracking): ' + affUrl
+    ].join(nl)
+  }
+
+  Object.entries(socials).forEach(([id, val]) => {
+    const el = document.getElementById(id)
+    if (el) el.value = val
+  })
+}
+
 // ── COPY BANNER HTML ──────────────────────────────────
 window.copyBanner = function(id) {
   const el = document.getElementById(id)
-  if (!el) return
-  navigator.clipboard.writeText(el.value).then(() => toast('Banner HTML copied!', 'ok'))
+  if (!el || !el.value) {
+    toast('Banner not loaded yet — open My Affiliate tab first', 'err')
+    return
+  }
+  navigator.clipboard.writeText(el.value)
+    .then(() => toast('Banner HTML copied!', 'ok'))
+    .catch(() => {
+      // Fallback for mobile/restricted contexts
+      el.select()
+      document.execCommand('copy')
+      toast('Banner HTML copied!', 'ok')
+    })
 }
 
 // ── COPY SWIPE / SOCIAL ───────────────────────────────
