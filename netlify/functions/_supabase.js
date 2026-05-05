@@ -1,14 +1,14 @@
 // netlify/functions/_supabase.js
-// Server-side Supabase client — uses service role key
-// Used by ALL Netlify functions
+// Shared Supabase client — imported by all other functions
+// Uses service role key (server-side only, never expose to browser)
 
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.SUPABASE_URL
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY
+const url = process.env.SUPABASE_URL
+const key = process.env.SUPABASE_SERVICE_KEY
 
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('SUPABASE_URL and SUPABASE_SERVICE_KEY must be set in Netlify environment variables')
+if (!url || !key) {
+  throw new Error('Missing SUPABASE_URL or SUPABASE_SERVICE_KEY in Netlify environment variables')
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+export const supabase = createClient(url, key)
