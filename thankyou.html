@@ -3,336 +3,271 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Welcome to NextWave — You're In.</title>
+<title>Welcome to NextWave — Payment Confirmed</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#04060d;--surface:#090d18;--card:#0d1120;
-  --border:rgba(255,255,255,.06);
-  --green:#00ff88;--green2:#00e676;--blue:#00b4ff;
-  --gold:#ffb800;--text:#dce8f0;--dim:#6b7d95;--muted:#3a4558;
+  --bg:#080c14;--s1:#0d1220;--s2:#111827;--s3:#1a2235;
+  --line:#1e2d42;--b2:rgba(255,255,255,.04);
+  --teal:#19e6b0;--teal2:#13c99a;
+  --teal-bg:rgba(25,230,176,.07);--teal-bdr:rgba(25,230,176,.18);
+  --gold:#f0a500;--gold-bg:rgba(240,165,0,.06);
+  --blue:#4f8ef7;
+  --body:#dce8f5;--dim:#8fa3c4;--muted:#3d5275;
+  --f:'DM Sans',sans-serif;--m:'DM Mono',monospace;
 }
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.65;overflow-x:hidden;min-height:100vh}
-
-/* CONFETTI CANVAS */
-#confetti{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999}
+body{
+  background:var(--bg);color:var(--body);
+  font-family:var(--f);font-size:15px;line-height:1.65;
+  min-height:100vh;overflow-x:hidden;
+}
 
 /* NAV */
-nav{display:flex;justify-content:space-between;align-items:center;padding:16px 40px;border-bottom:1px solid var(--border);background:rgba(4,6,13,.95)}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px}
-.logo em{font-style:normal;color:var(--green)}
-.member-badge{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);border:1px solid rgba(0,255,136,.2);background:rgba(0,255,136,.06);padding:5px 14px;border-radius:20px;display:flex;align-items:center;gap:6px}
-.member-badge::before{content:'';width:5px;height:5px;background:var(--green);border-radius:50%;animation:blink 1.4s ease infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:54px;
+  background:rgba(8,12,20,.95);
+  border-bottom:1px solid var(--line);
+}
+.nav-brand{display:flex;align-items:center;gap:8px;text-decoration:none}
+.nav-logo{width:24px;height:24px;border-radius:5px;background:var(--teal);display:flex;align-items:center;justify-content:center}
+.nav-logo svg{width:13px;height:13px;fill:#080c14}
+.nav-name{font-family:var(--m);font-size:12px;font-weight:500;letter-spacing:.5px;color:var(--body)}
+.nav-name b{color:var(--teal)}
 
 /* HERO */
-.ty-hero{text-align:center;padding:80px 24px 60px;position:relative;overflow:hidden}
-.ty-glow{position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse,rgba(0,255,136,.1) 0%,transparent 65%);pointer-events:none}
-.ty-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,255,136,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,136,.02) 1px,transparent 1px);background-size:48px 48px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black,transparent)}
-.check-ring{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--blue));display:flex;align-items:center;justify-content:center;margin:0 auto 28px;font-size:36px;animation:popIn .6s cubic-bezier(.34,1.56,.64,1) both}
-@keyframes popIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-.ty-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);border:1px solid rgba(0,255,136,.2);background:rgba(0,255,136,.06);padding:6px 16px;border-radius:20px;margin-bottom:24px;letter-spacing:.5px;animation:fadeUp .5s .3s ease both}
-.ty-hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(40px,7vw,80px);line-height:1;letter-spacing:-1.5px;margin-bottom:14px;animation:fadeUp .5s .35s ease both}
-.ty-hero h1 em{font-style:normal;color:var(--green)}
-.ty-sub{font-size:18px;color:var(--dim);max-width:560px;margin:0 auto 0;font-weight:300;animation:fadeUp .5s .4s ease both}
-.ty-sub strong{color:var(--text);font-weight:600}
-.member-name{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--green);margin-top:6px;animation:fadeUp .5s .45s ease both}
+.hero{
+  max-width:640px;margin:0 auto;
+  padding:72px 24px 48px;
+  text-align:center;
+}
+.check-wrap{
+  width:80px;height:80px;border-radius:50%;
+  background:var(--teal-bg);border:2px solid var(--teal-bdr);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 28px;
+  animation:popIn .6s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes popIn{
+  from{transform:scale(0);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+.check-icon{font-size:36px}
+.plan-chip{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:var(--m);font-size:10px;letter-spacing:.8px;
+  color:var(--teal);border:1px solid var(--teal-bdr);
+  background:var(--teal-bg);padding:5px 13px;
+  border-radius:20px;margin-bottom:20px;
+}
+h1{
+  font-size:clamp(28px,5vw,48px);font-weight:700;
+  letter-spacing:-1px;line-height:1.08;margin-bottom:12px;
+}
+h1 em{font-style:normal;color:var(--teal)}
+.hero-sub{
+  font-size:16px;color:var(--dim);
+  max-width:460px;margin:0 auto 32px;
+  font-weight:300;line-height:1.75;
+}
 
-/* NEXT STEPS */
-.steps-section{max-width:900px;margin:0 auto;padding:0 24px 80px}
-.section-head{text-align:center;margin-bottom:40px}
-.stag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);letter-spacing:1.5px;margin-bottom:12px}
-.section-head h2{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(30px,4vw,48px);letter-spacing:-1px}
-.section-head h2 em{font-style:normal;color:var(--green)}
+/* CTA */
+.cta-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 32px;
+  background:var(--teal);color:#080c14;
+  border:none;border-radius:9px;
+  font-family:var(--f);font-size:16px;font-weight:700;
+  cursor:pointer;text-decoration:none;
+  transition:all .15s;
+  animation:fadeUp .5s .3s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.cta-btn:hover{background:var(--teal2);transform:translateY(-2px);box-shadow:0 10px 24px rgba(25,230,176,.2)}
+.cta-sub{font-size:12px;color:var(--muted);margin-top:10px;font-family:var(--m)}
 
-.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:40px}
-.step-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;transition:border-color .2s,transform .2s;animation:fadeUp .5s ease both}
-.step-card:nth-child(1){animation-delay:.5s}
-.step-card:nth-child(2){animation-delay:.6s}
-.step-card:nth-child(3){animation-delay:.7s}
-.step-card:hover{border-color:rgba(0,255,136,.25);transform:translateY(-3px)}
-.step-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);letter-spacing:2px;margin-bottom:12px}
-.step-icon{font-size:32px;margin-bottom:12px;display:block}
-.step-card h4{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;margin-bottom:8px}
-.step-card p{font-size:13px;color:var(--dim);line-height:1.55}
+/* WHAT'S NEXT */
+.next-section{
+  max-width:640px;margin:0 auto;
+  padding:0 24px 80px;
+}
+.next-title{
+  font-family:var(--m);font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--muted);
+  text-align:center;margin-bottom:20px;
+}
+.steps{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.step{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:18px 20px;border-bottom:1px solid var(--line);
+  transition:background .12s;
+}
+.step:last-child{border-bottom:none}
+.step:hover{background:rgba(255,255,255,.015)}
+.step-num{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--teal);color:#080c14;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--m);font-size:11px;font-weight:700;
+  flex-shrink:0;margin-top:1px;
+}
+.step-body{}
+.step-title{font-size:13px;font-weight:600;margin-bottom:3px}
+.step-desc{font-size:12px;color:var(--dim);line-height:1.6}
 
-/* ACCESS CARDS */
-.access-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px}
-.access-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;display:flex;gap:16px;align-items:flex-start;transition:border-color .2s}
-.access-card:hover{border-color:rgba(0,255,136,.2)}
-.access-card.primary{border-color:rgba(0,255,136,.25);background:rgba(0,255,136,.04)}
-.ac-icon{font-size:24px;flex-shrink:0;margin-top:2px}
-.ac-title{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;margin-bottom:6px}
-.ac-desc{font-size:13px;color:var(--dim);line-height:1.5;margin-bottom:12px}
-.ac-btn{display:inline-block;padding:9px 18px;border-radius:6px;font-weight:600;font-size:13px;text-decoration:none;transition:all .15s}
-.ac-btn.pri{background:var(--green);color:#000}
-.ac-btn.pri:hover{background:var(--green2)}
-.ac-btn.sec{background:var(--surface);color:var(--text);border:1px solid var(--border)}
-.ac-btn.sec:hover{border-color:rgba(255,255,255,.2)}
+/* PLAN SUMMARY */
+.plan-summary{
+  background:var(--s1);border:1px solid var(--line);
+  border-radius:12px;padding:20px;
+  margin:0 auto 28px;max-width:640px;
+  margin-left:24px;margin-right:24px;
+}
+.ps-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--b2)}
+.ps-row:last-child{border-bottom:none}
+.ps-label{font-size:12px;color:var(--dim)}
+.ps-val{font-family:var(--m);font-size:12px;font-weight:500;color:var(--body)}
+.ps-val.teal{color:var(--teal)}.ps-val.gold{color:var(--gold)}
 
-/* REFERRAL BOX */
-.referral-box{background:linear-gradient(135deg,rgba(0,180,255,.06),rgba(0,255,136,.04));border:1px solid rgba(0,180,255,.2);border-radius:14px;padding:32px;text-align:center;margin-bottom:40px}
-.referral-box h3{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;margin-bottom:10px}
-.referral-box h3 em{font-style:normal;color:var(--green)}
-.referral-box p{font-size:14px;color:var(--dim);line-height:1.65;margin-bottom:20px;max-width:560px;margin-left:auto;margin-right:auto}
-.ref-amount{font-family:'Syne',sans-serif;font-weight:800;font-size:48px;color:var(--green);line-height:1;margin-bottom:6px}
-.ref-label{font-size:13px;color:var(--dim);margin-bottom:20px}
-.ref-link-row{display:flex;gap:10px;max-width:480px;margin:0 auto}
-.ref-link-input{flex:1;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;color:var(--green);padding:11px 14px;font-size:13px;font-family:'JetBrains Mono',monospace;outline:none}
-.copy-btn{background:var(--surface);color:var(--text);border:1px solid var(--border);padding:11px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap}
-.copy-btn:hover{border-color:var(--green);color:var(--green)}
-
-/* WHAT'S WAITING */
-.waiting-box{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:32px}
-.waiting-box h3{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;margin-bottom:20px}
-.waiting-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.w-item{display:flex;gap:10px;font-size:13px;color:var(--dim);padding:8px 0;border-bottom:1px solid var(--border)}
-.w-item:nth-child(odd):last-child,.w-item:last-child{border-bottom:none}
-.wc{color:var(--green);flex-shrink:0}
+/* LIFETIME SPECIAL */
+.lifetime-note{
+  background:var(--gold-bg);border:1px solid rgba(240,165,0,.2);
+  border-radius:10px;padding:16px 20px;
+  margin:0 24px 28px;
+  font-size:13px;color:var(--dim);line-height:1.65;
+}
+.lifetime-note strong{color:var(--gold);display:block;margin-bottom:4px}
 
 /* FOOTER */
-footer{background:var(--surface);border-top:1px solid var(--border);padding:32px 24px;text-align:center}
-footer p{font-size:13px;color:var(--muted);line-height:1.8}
-footer a{color:var(--dim);text-decoration:none}
-footer a:hover{color:var(--green)}
-.flinks{display:flex;justify-content:center;gap:24px;margin-bottom:12px;flex-wrap:wrap}
-
-/* ANIM */
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-
-/* RESPONSIVE */
-@media(max-width:700px){
-  nav{padding:14px 20px}
-  .steps-grid{grid-template-columns:1fr}
-  .access-grid{grid-template-columns:1fr}
-  .ref-link-row{flex-direction:column}
-  .waiting-grid{grid-template-columns:1fr}
+footer{
+  background:var(--s1);border-top:1px solid var(--line);
+  padding:24px 28px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
 }
+.footer-brand{font-family:var(--m);font-size:11px;color:var(--teal)}
+.footer-links{display:flex;gap:16px}
+.footer-links a{font-size:11px;color:var(--muted);text-decoration:none}
+.footer-links a:hover{color:var(--body)}
+
+@media(max-width:600px){nav{padding:0 16px}.hero{padding:48px 16px 32px}.next-section{padding:0 16px 60px}.plan-summary,.lifetime-note{margin-left:16px;margin-right:16px}}
 </style>
 </head>
 <body>
 
-<canvas id="confetti"></canvas>
-
 <nav>
-  <div class="logo">Next<em>Wave</em></div>
-  <div class="member-badge">MEMBER ACCESS ACTIVE</div>
+  <a href="/" class="nav-brand">
+    <div class="nav-logo"><svg viewBox="0 0 14 14"><path d="M1 11 L4.5 3.5 L8 8 L10.5 4.5 L13 11 Z"/></svg></div>
+    <div class="nav-name"><b>NEXT</b>WAVE</div>
+  </a>
 </nav>
 
 <!-- HERO -->
-<div class="ty-hero">
-  <div class="ty-grid"></div>
-  <div class="ty-glow"></div>
-
-  <div class="check-ring">✓</div>
-  <div class="ty-tag">ENROLLMENT CONFIRMED</div>
-
-  <h1>YOU'RE <em>IN.</em><br>LET'S BUILD.</h1>
-  <p class="ty-sub">Welcome to the system. <strong>Your access is active right now.</strong> Follow the three steps below to get your first funnel live within the hour.</p>
-  <div class="member-name" id="member-name">Welcome aboard.</div>
+<div class="hero">
+  <div class="check-wrap"><div class="check-icon">✓</div></div>
+  <div class="plan-chip" id="plan-chip">PAYMENT CONFIRMED</div>
+  <h1>YOU'RE IN.<br><em>LET'S BUILD.</em></h1>
+  <p class="hero-sub" id="hero-sub">
+    Your NextWave account is active. Your dashboard is ready.
+    Everything is set up — just click below to start.
+  </p>
+  <a href="/dashboard.html" class="cta-btn">
+    Open Your Dashboard →
+  </a>
+  <div class="cta-sub">Your account is fully activated</div>
 </div>
 
-<!-- NEXT STEPS -->
-<div class="steps-section">
+<!-- PLAN SUMMARY -->
+<div class="plan-summary" id="plan-summary">
+  <div class="ps-row"><span class="ps-label">Plan</span><span class="ps-val teal" id="ps-plan">—</span></div>
+  <div class="ps-row"><span class="ps-label">Billing</span><span class="ps-val" id="ps-billing">—</span></div>
+  <div class="ps-row"><span class="ps-label">Amount paid</span><span class="ps-val" id="ps-amount">—</span></div>
+  <div class="ps-row"><span class="ps-label">Access</span><span class="ps-val teal">Immediate — all features unlocked</span></div>
+  <div class="ps-row"><span class="ps-label">Receipt</span><span class="ps-val">Sent to your email by Stripe</span></div>
+</div>
 
-  <div class="section-head">
-    <div class="stag">// YOUR FIRST HOUR</div>
-    <h2>THREE STEPS.<br><em>DO THESE NOW.</em></h2>
-  </div>
+<!-- LIFETIME SPECIAL MESSAGE (hidden by default) -->
+<div class="lifetime-note" id="lifetime-note" style="display:none">
+  <strong>🏆 Founding Member — Lifetime Access</strong>
+  You paid once. You own NextWave forever. Every feature we add from this point forward is included at no extra cost. You will never receive a billing email from us again. Thank you for being a founding member.
+</div>
 
-  <div class="steps-grid">
-    <div class="step-card">
-      <div class="step-num">STEP 01 — NOW</div>
-      <span class="step-icon">📬</span>
-      <h4>Check Your Email</h4>
-      <p>Your login credentials and welcome pack are on their way. Check your inbox (and spam) for an email from NextWave. This has everything you need to get started.</p>
-    </div>
-    <div class="step-card">
-      <div class="step-num">STEP 02 — NEXT 15 MIN</div>
-      <span class="step-icon">🤖</span>
-      <h4>Build Your First Funnel</h4>
-      <p>Head to the dashboard and use the AI Funnel Builder. Type your niche, hit generate, and have a live funnel URL in under 60 seconds. Your first campaign infrastructure — done.</p>
-    </div>
-    <div class="step-card">
-      <div class="step-num">STEP 03 — NEXT HOUR</div>
-      <span class="step-icon">🔗</span>
-      <h4>Set Up Your Tracked Links</h4>
-      <p>Create tracked short links for your existing affiliate offers. Send traffic to your new funnel. Watch leads start capturing in your dashboard in real time.</p>
-    </div>
-  </div>
-
-  <!-- ACCESS CARDS -->
-  <div class="section-head" style="margin-top:16px">
-    <div class="stag">// YOUR ACCESS</div>
-    <h2>EVERYTHING<br><em>WAITING FOR YOU.</em></h2>
-  </div>
-
-  <div class="access-grid">
-    <div class="access-card primary">
-      <span class="ac-icon">📊</span>
-      <div>
-        <div class="ac-title">Live Dashboard</div>
-        <div class="ac-desc">Your command centre. Leads, clicks, revenue, funnels, and link tracking — all live, all in one place. This is where you run your business from.</div>
-        <a href="/dashboard.html" class="ac-btn pri">Open Dashboard →</a>
+<!-- WHAT'S NEXT -->
+<div class="next-section">
+  <div class="next-title">// YOUR FIRST 3 STEPS</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">Build your first AI funnel</div>
+        <div class="step-desc">Go to AI Funnels → enter your offer details → click Generate. Your opt-in page, VSL bridge page, and email sequence are ready in under 60 seconds.</div>
       </div>
     </div>
-    <div class="access-card">
-      <span class="ac-icon">🤖</span>
-      <div>
-        <div class="ac-title">AI Funnel Builder</div>
-        <div class="ac-desc">Generate complete funnel copy for any niche in under 30 seconds. Powered by Claude AI. Publish to a live URL instantly.</div>
-        <a href="/dashboard.html#funnels" class="ac-btn sec">Build a Funnel →</a>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Create a Wave Link for your traffic</div>
+        <div class="step-desc">Go to Wave Link → paste your affiliate URL → create. Share that link with your TrafficZest campaign. Every click is tracked from that moment.</div>
       </div>
     </div>
-    <div class="access-card">
-      <span class="ac-icon">🔗</span>
-      <div>
-        <div class="ac-title">Link Tracker</div>
-        <div class="ac-desc">Create tracked short links for every campaign. Know which traffic source is driving your commissions. This alone is worth the investment.</div>
-        <a href="/dashboard.html#links" class="ac-btn sec">Create First Link →</a>
-      </div>
-    </div>
-    <div class="access-card">
-      <span class="ac-icon">👥</span>
-      <div>
-        <div class="ac-title">Expert Community</div>
-        <div class="ac-desc">You're not doing this alone. The community is active with solo ad and cold traffic specialists. Post your campaign, get real answers.</div>
-        <a href="#" class="ac-btn sec" onclick="comingSoon(this)">Join Community →</a>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">Connect Forge Mail</div>
+        <div class="step-desc">Go to Integrations → Forge Mail → enter your API key. Every lead captured through your funnels syncs instantly and your sequence fires automatically.</div>
       </div>
     </div>
   </div>
-
-  <!-- REFERRAL BOX -->
-  <div class="referral-box">
-    <div class="ref-amount">$498.50</div>
-    <div class="ref-label">per referral — 50% commission on every $997 enrollment you send</div>
-    <h3>Turn Your Access Into<br><em>Another Income Stream</em></h3>
-    <p>You now have the right to promote NextWave and earn 50% on every sale. Share your link. When someone enrolls, you earn $498.50. No extra work — you're already using the system.</p>
-    <div class="ref-link-row">
-      <input class="ref-link-input" id="ref-link" readonly value="https://nextwave-traffic-engine.netlify.app/sales.html?ref=member" />
-      <button class="copy-btn" onclick="copyRef()">Copy Link</button>
-    </div>
-  </div>
-
-  <!-- WHAT'S WAITING -->
-  <div class="waiting-box">
-    <h3>✅ Everything Now Available Inside</h3>
-    <div class="waiting-grid">
-      <div class="w-item"><span class="wc">✓</span>Monthly Live Strategy Calls with James</div>
-      <div class="w-item"><span class="wc">✓</span>Done-For-You Shared Funnels (LP + CF2)</div>
-      <div class="w-item"><span class="wc">✓</span>AI-Powered Funnel & Email Copy Builder</div>
-      <div class="w-item"><span class="wc">✓</span>Offer Alignment System — JVZoo + Explodely</div>
-      <div class="w-item"><span class="wc">✓</span>Email Segmentation & Automation Strategy</div>
-      <div class="w-item"><span class="wc">✓</span>Expert Community — Solo Ads Specialists</div>
-      <div class="w-item"><span class="wc">✓</span>$500K+ Tested Traffic Sources (Vetted)</div>
-      <div class="w-item"><span class="wc">✓</span>Traffic Tracking & Campaign Optimisation</div>
-      <div class="w-item"><span class="wc">✓</span>High-Ticket Affiliate Offer Creation</div>
-      <div class="w-item"><span class="wc">✓</span>Full Archive — Every Past Call</div>
-      <div class="w-item"><span class="wc">✓</span>50% Affiliate Commission Rights — $498.50/sale</div>
-      <div class="w-item"><span class="wc">✓</span>Course Creation Bonus Module</div>
-    </div>
-  </div>
-
 </div>
 
 <footer>
-  <div class="flinks">
+  <div class="footer-brand">NEXTWAVE</div>
+  <div class="footer-links">
     <a href="/dashboard.html">Dashboard</a>
-    <a href="/sales.html">Sales Page (Share This)</a>
-    <a href="#">Support</a>
-    <a href="#">Privacy Policy</a>
+    <a href="mailto:support@nextwaveaisuite.com">Support</a>
   </div>
-  <p>You're now a member of NextWave Traffic Engine. Your confirmation email is on its way.<br>
-  Questions? Reply to your welcome email or contact support.<br>
-  <span style="font-size:11px;color:var(--muted)">© 2025 NextWave Traffic Engine / Breakout Industries Inc. All rights reserved.</span></p>
 </footer>
 
 <script>
-// Read URL params
-const params = new URLSearchParams(window.location.search)
-const name   = params.get('name') || ''
-const email  = params.get('email') || ''
-const plan   = params.get('plan') || 'lifetime'
+// Read plan from URL — passed by Stripe success redirect
+// URL format: /thankyou.html?plan=pro&session_id=cs_xxx
+const params  = new URLSearchParams(window.location.search)
+const plan    = params.get('plan') || sessionStorage.getItem('nw_plan') || 'pro'
+const session = params.get('session_id') || ''
 
-if (name) document.getElementById('member-name').textContent = 'Welcome, ' + name + '!'
-if (email) document.getElementById('ref-link').value = `https://nextwave-traffic-engine.netlify.app/sales.html?ref=${encodeURIComponent(email)}`
-
-// Track conversion
-if (email) {
-  fetch('/.netlify/functions/track', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({
-      email,
-      funnel: 'checkout',
-      type: 'conversion',
-      value: plan === 'lifetime' ? 997 : 497
-    })
-  }).catch(()=>{})
+const PLANS = {
+  starter:  { name: 'Starter',  billing: 'Monthly',  amount: '$19/month', chip: 'STARTER PLAN ACTIVE' },
+  pro:      { name: 'Pro',      billing: 'Monthly',  amount: '$49/month', chip: 'PRO PLAN ACTIVE'     },
+  scale:    { name: 'Scale',    billing: 'Monthly',  amount: '$99/month', chip: 'SCALE PLAN ACTIVE'   },
+  lifetime: { name: 'Lifetime', billing: 'One-time', amount: '$997',      chip: 'LIFETIME ACCESS'     }
 }
 
-// Copy referral link
-function copyRef() {
-  const el = document.getElementById('ref-link')
-  navigator.clipboard.writeText(el.value).then(() => {
-    const btn = document.querySelector('.copy-btn')
-    btn.textContent = '✓ Copied!'
-    btn.style.color = 'var(--green)'
-    btn.style.borderColor = 'var(--green)'
-    setTimeout(() => { btn.textContent = 'Copy Link'; btn.style.color = ''; btn.style.borderColor = '' }, 2000)
-  })
+const p = PLANS[plan] || PLANS.pro
+
+// Update page content
+document.getElementById('plan-chip').textContent  = p.chip
+document.getElementById('ps-plan').textContent    = p.name
+document.getElementById('ps-billing').textContent = p.billing
+document.getElementById('ps-amount').textContent  = p.amount
+
+// Lifetime special message
+if (plan === 'lifetime') {
+  document.getElementById('lifetime-note').style.display = 'block'
+  document.getElementById('ps-amount').className         = 'ps-val gold'
+  document.getElementById('ps-plan').className           = 'ps-val gold'
+  document.getElementById('plan-chip').style.color       = 'var(--gold)'
+  document.getElementById('plan-chip').style.borderColor = 'rgba(240,165,0,.3)'
+  document.getElementById('plan-chip').style.background  = 'rgba(240,165,0,.06)'
 }
 
-function comingSoon(el) {
-  el.textContent = 'Coming Soon!'
-  setTimeout(() => el.textContent = 'Join Community →', 2000)
-}
+// Save plan to session so dashboard knows
+sessionStorage.setItem('nw_plan', plan)
 
-// Confetti
-;(function(){
-  const canvas = document.getElementById('confetti')
-  const ctx    = canvas.getContext('2d')
-  canvas.width = window.innerWidth
-  canvas.height = window.innerHeight
-
-  const colors = ['#00ff88','#00b4ff','#ffb800','#ffffff','#00e676']
-  const pieces = Array.from({length:120},()=>({
-    x: Math.random()*canvas.width,
-    y: Math.random()*-canvas.height,
-    r: Math.random()*6+3,
-    d: Math.random()*2+1,
-    color: colors[Math.floor(Math.random()*colors.length)],
-    tilt: Math.random()*10-5,
-    tiltAngle: 0,
-    tiltAngleInc: Math.random()*.07+.05
-  }))
-
-  let frame = 0
-  function draw() {
-    if (frame > 280) { ctx.clearRect(0,0,canvas.width,canvas.height); return }
-    ctx.clearRect(0,0,canvas.width,canvas.height)
-    pieces.forEach(p => {
-      p.tiltAngle += p.tiltAngleInc
-      p.y += p.d + Math.sin(p.tiltAngle)*.8
-      p.x += Math.sin(p.tiltAngle)*.5
-      p.tilt = Math.sin(p.tiltAngle)*12
-      if (p.y > canvas.height) { p.y = -10; p.x = Math.random()*canvas.width }
-      ctx.beginPath()
-      ctx.lineWidth = p.r/2
-      ctx.strokeStyle = p.color
-      ctx.moveTo(p.x+p.tilt+p.r/3, p.y)
-      ctx.lineTo(p.x+p.tilt, p.y+p.tilt+p.r/3)
-      ctx.stroke()
-    })
-    frame++
-    requestAnimationFrame(draw)
-  }
-  setTimeout(draw, 200)
-})()
+// Clear checkout session data
+sessionStorage.removeItem('nw_ref')
 </script>
 </body>
 </html>
