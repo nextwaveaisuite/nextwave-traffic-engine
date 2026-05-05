@@ -551,10 +551,10 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
       </div>
     </div>
     <div class="panel">
-      <div class="p-head"><div class="p-title"><span class="p-icon">▤</span>All Links</div><button class="btn btn-g btn-sm" onclick="loadLinks()">↻</button></div>
+      <div class="p-head"><div class="p-title"><span class="p-icon">▤</span>All Wave Links</div><button class="btn btn-g btn-sm" onclick="loadLinks()">↻</button></div>
       <div class="p-body np">
-        <table class="tbl"><thead><tr><th>Short link</th><th>Label</th><th>Destination</th><th>Clicks</th></tr></thead>
-        <tbody id="links-body"><tr><td colspan="4"><div class="empty"><div class="empty-ic">⌖</div><p>No links yet.</p></div></td></tr></tbody></table>
+        <table class="tbl"><thead><tr><th>Wave Link</th><th>Label</th><th>Destination</th><th>Clicks</th><th>Actions</th></tr></thead>
+        <tbody id="links-body"><tr><td colspan="5"><div class="empty"><div class="empty-ic">⌖</div><p>No Wave Links yet.</p></div></td></tr></tbody></table>
       </div>
     </div>
   </div>
@@ -1240,7 +1240,7 @@ window.createLink = async function() {
   if (!url) { toast('Enter a destination URL', 'err'); return }
   try { new URL(url) } catch { toast('URL must start with https://', 'err'); return }
   const fb = document.getElementById('lnk-fb')
-  fb.className = 'fb on fb-info'; fb.textContent = 'Creating short link…'
+  fb.className = 'fb on fb-info'; fb.textContent = 'Creating Wave Link…'
   try {
     const res = await fetch('/.netlify/functions/createLink', {
       method: 'POST', headers: {'Content-Type':'application/json'},
@@ -1248,44 +1248,25 @@ window.createLink = async function() {
     })
     const data = await res.json()
     if (data.error) throw new Error(data.error)
-
-    // Show Wave Link as primary share link, tracking link as secondary
-    const el = document.getElementById('lnk-fb')
+    const link = data.wave_link || data.short_link
+    const el   = document.getElementById('lnk-fb')
     el.className = 'fb on fb-ok'
-
-    if (data.tiny_url) {
-      el.innerHTML = `
-        <div style="margin-bottom:8px;font-size:12px;font-weight:600">✓ Short link created</div>
-        <div style="font-size:11px;color:var(--dim);margin-bottom:4px">Your Wave Link — share this:</div>
-        <div class="lk-row" style="margin-bottom:10px;border-color:var(--teal-bdr)">
-          <code style="color:var(--teal);font-size:12px">${esc(data.tiny_url)}</code>
-          <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(data.tiny_url)}').then(()=>toast('Wave Link copied!','ok'))">Copy</span>
-        </div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Tracking link (behind your Wave Link):</div>
-        <div class="lk-row">
-          <code style="font-size:10px">${esc(data.short_link)}</code>
-          <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(data.short_link)}').then(()=>toast('Copied','ok'))">Copy</span>
-        </div>
-        <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6">
-          ✓ Every click on your Wave Link is tracked through NextWave before reaching your offer.
-        </div>`
-    } else {
-      // Wave Link unavailable — show tracking link only
-      el.innerHTML = `
-        <div style="margin-bottom:8px;font-size:12px;font-weight:600">✓ Tracking link created</div>
-        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Wave Link service temporarily unavailable — share this link:</div>
-        <div class="lk-row">
-          <code>${esc(data.short_link)}</code>
-          <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(data.short_link)}').then(()=>toast('Copied','ok'))">Copy</span>
-        </div>`
-    }
-
+    el.innerHTML = `
+      <div style="font-size:12px;font-weight:600;margin-bottom:10px">✓ Wave Link created</div>
+      <div class="lk-row" style="border-color:var(--teal-bdr)">
+        <code style="color:var(--teal);font-size:12px;flex:1">${esc(link)}</code>
+        <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(link)}').then(()=>toast('Wave Link copied!','ok'))">Copy</span>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.65">
+        Every click is tracked. Redirects to your affiliate offer.
+        <br>💡 Want a cleaner domain? Add a custom short domain in Netlify → Domain Management and update <code style="font-family:var(--m)">SITE_URL</code>.
+      </div>`
     document.getElementById('lnk-url').value  = ''
     document.getElementById('lnk-slug').value = ''
     document.getElementById('lnk-lbl').value  = ''
-    addFeed('Short link created: ' + (data.tiny_url || data.short_link), 'ok')
+    addFeed('Wave Link created: ' + link, 'ok')
     loadLinks()
-    toast('Short link ready', 'ok')
+    toast('Wave Link created', 'ok')
   } catch(e) { setFB('lnk-fb', 'err', '⚠ ' + e.message) }
 }
 
@@ -1296,23 +1277,77 @@ window.loadLinks = async function() {
     const total = list.reduce((s,l) => s + (l.clicks||0), 0)
     set('l-tot', list.length)
     set('l-clk', total)
-    set('l-top', list[0] ? (list[0].tiny_url || '/l/' + list[0].slug) : '—')
+    set('l-top', list[0] ? (list[0].wave_link || list[0].short_link || '/l/' + list[0].slug) : '—')
     document.getElementById('links-body').innerHTML = list.length
-      ? list.map(l => `<tr>
-          <td>
-            ${l.tiny_url
-              ? `<a href="${esc(l.tiny_url)}" target="_blank" class="mono ct" style="text-decoration:none;font-size:11px">${esc(l.tiny_url)}</a>`
-              : `<span class="mono ct" style="font-size:11px">/l/${esc(l.slug)}</span>`
-            }
-          </td>
-          <td class="cs">${esc(l.label||'—')}</td>
-          <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
-            <a href="${esc(l.original_url||'#')}" target="_blank" style="color:var(--blue);text-decoration:none;font-size:11px">${esc(l.original_url||'—')}</a>
-          </td>
-          <td class="mono cg">${l.clicks||0}</td>
-        </tr>`).join('')
-      : emptyRow(4, '⌖', 'No links yet.')
+      ? list.map(l => {
+          const displayLink = l.wave_link || l.short_link || (window.location.origin + '/l/' + l.slug)
+          return `<tr id="lr-${esc(l.id)}">
+            <td><a href="${esc(displayLink)}" target="_blank" class="mono ct" style="text-decoration:none;font-size:11px">${esc(displayLink)}</a></td>
+            <td class="cs">${esc(l.label||'—')}</td>
+            <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+              <a href="${esc(l.original_url||'#')}" target="_blank" style="color:var(--blue);text-decoration:none;font-size:11px">${esc(l.original_url||'—')}</a>
+            </td>
+            <td class="mono cg" id="clk-${esc(l.id)}">${l.clicks||0}</td>
+            <td>
+              <div style="display:flex;gap:5px">
+                <button class="btn btn-sm"
+                  style="background:rgba(79,142,247,.08);color:var(--blue);border:1px solid rgba(79,142,247,.2);font-size:10px;padding:3px 8px;white-space:nowrap"
+                  onclick="resetLinkClicks('${esc(l.id)}')"
+                  title="Reset click count to zero">↺ Reset</button>
+                <button class="btn btn-sm"
+                  style="background:rgba(242,92,122,.08);color:var(--rose);border:1px solid rgba(242,92,122,.2);font-size:10px;padding:3px 8px;white-space:nowrap"
+                  onclick="deleteLink('${esc(l.id)}','${esc(l.slug)}')"
+                  title="Delete this Wave Link permanently">✕ Delete</button>
+              </div>
+            </td>
+          </tr>`}).join('')
+      : emptyRow(5, '⌖', 'No Wave Links yet.')
   } catch(e) { console.error(e) }
+}
+
+// ── RESET CLICK COUNT ─────────────────────────────────
+window.resetLinkClicks = async function(id) {
+  if (!confirm('Reset click count to zero for this link? The link will stay active.')) return
+  try {
+    const { error } = await _sb.from('links').update({ clicks: 0 }).eq('id', id)
+    if (error) throw error
+    // Update just the clicks cell without reloading the whole table
+    const cell = document.getElementById('clk-' + id)
+    if (cell) {
+      cell.textContent = '0'
+      cell.style.color = 'var(--muted)'
+      setTimeout(() => { cell.style.color = '' }, 800)
+    }
+    // Update summary stats
+    loadLinks()
+    toast('Analytics reset to zero', 'ok')
+    addFeed('Wave Link analytics reset', 'ok')
+  } catch(e) {
+    toast('Reset failed: ' + e.message, 'err')
+  }
+}
+
+// ── DELETE LINK ───────────────────────────────────────
+window.deleteLink = async function(id, slug) {
+  if (!confirm(`Permanently delete Wave Link /l/${slug}?\n\nAnyone who clicks this link after deletion will get a 404. This cannot be undone.`)) return
+  try {
+    const { error } = await _sb.from('links').delete().eq('id', id)
+    if (error) throw error
+    // Remove row immediately without full reload
+    const row = document.getElementById('lr-' + id)
+    if (row) {
+      row.style.transition = 'opacity .25s ease'
+      row.style.opacity    = '0'
+      setTimeout(() => { row.remove(); loadLinks() }, 280)
+    } else {
+      loadLinks()
+    }
+    toast('Wave Link deleted', 'ok')
+    addFeed('Wave Link deleted: /l/' + slug, 'w')
+    loadOverview()
+  } catch(e) {
+    toast('Delete failed: ' + e.message, 'err')
+  }
 }
 
 // LEADS
