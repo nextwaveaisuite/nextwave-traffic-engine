@@ -418,81 +418,144 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
         </div>
         <div class="p-body">
 
-          <!-- STEP 1: URL + Auto-extract -->
           <div style="background:var(--teal-bg);border:1px solid var(--teal-bdr);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;font-size:11px;color:var(--teal);line-height:1.6">
-            <strong style="display:block;margin-bottom:2px">For congruent copy, fill in your offer details below.</strong>
-            The more specific you are, the more the VSL and funnel match your exact offer.
+            <strong style="display:block;margin-bottom:2px">Paste your affiliate URL to auto-fill, or select from the proven prompts below.</strong>
+            The more specific you are, the more your VSL and opt-in page match the exact offer.
           </div>
 
           <div class="fld">
-            <label class="lbl">Affiliate / Offer URL <span style="color:var(--muted);font-size:9px;font-weight:400">(paste link → auto-extract details)</span></label>
+            <label class="lbl">Affiliate / Offer URL <span style="color:var(--muted);font-size:9px;font-weight:400">(paste → auto-extract details)</span></label>
             <div style="display:flex;gap:6px">
               <input class="inp" id="ai-url" placeholder="https://your-offer.com/link" style="flex:1" onblur="autoScrape()" />
-              <button class="btn btn-g btn-sm" id="scrape-btn" onclick="scrapeOffer()" title="Extract offer details from URL" style="flex-shrink:0;white-space:nowrap">
-                <span id="scrape-btn-txt">⬇ Extract</span>
-              </button>
+              <button class="btn btn-g btn-sm" id="scrape-btn" onclick="scrapeOffer()" style="flex-shrink:0;white-space:nowrap"><span id="scrape-btn-txt">⬇ Extract</span></button>
             </div>
             <div class="fb" id="scrape-fb"></div>
           </div>
 
-          <!-- STEP 2: Offer Details -->
           <div style="border-top:1px solid var(--line);padding-top:12px;margin-top:4px">
-            <div style="font-family:var(--m);font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Offer Details — the more you fill in, the better the copy</div>
+            <div style="font-family:var(--m);font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Offer Details — click any chip to prefill, or type your own</div>
 
+            <!-- NICHE SELECT -->
+            <div class="fld">
+              <label class="lbl">Niche / Category</label>
+              <select class="sel" id="ai-niche" onchange="onNicheChange()">
+                <option value="">— Select a niche —</option>
+                <option value="weight loss">⚖️ Weight Loss</option>
+                <option value="make money online">💰 Make Money Online</option>
+                <option value="affiliate marketing">🔗 Affiliate Marketing</option>
+                <option value="forex trading">📈 Forex / Trading</option>
+                <option value="cryptocurrency">₿ Cryptocurrency</option>
+                <option value="e-commerce">🛒 E-Commerce / Dropshipping</option>
+                <option value="real estate investing">🏠 Real Estate Investing</option>
+                <option value="health and supplements">💊 Health &amp; Supplements</option>
+                <option value="fitness and muscle">🏋️ Fitness &amp; Muscle Building</option>
+                <option value="relationship and dating">❤️ Relationship &amp; Dating</option>
+                <option value="personal development">🧠 Personal Development</option>
+                <option value="business and entrepreneurship">🚀 Business &amp; Entrepreneurship</option>
+                <option value="social media marketing">📱 Social Media Marketing</option>
+                <option value="email marketing">📧 Email Marketing</option>
+                <option value="software and saas">💻 Software / SaaS</option>
+                <option value="other">✏️ Other (type below)</option>
+              </select>
+              <input class="inp" id="ai-niche-custom" placeholder="Type your niche if not listed above" style="margin-top:6px;display:none" />
+            </div>
+
+            <!-- OFFER NAME -->
             <div class="fld">
               <label class="lbl">Offer Name <span style="color:var(--rose);font-size:9px">required</span></label>
               <input class="inp" id="ai-offer-name" placeholder="e.g. Ikaria Lean Belly Juice, Perpetual Income 365…" />
+              <div class="chips" id="chips-name"></div>
             </div>
 
+            <!-- CORE PROMISE -->
             <div class="fld">
               <label class="lbl">Core Promise (what does it deliver?)</label>
-              <input class="inp" id="ai-promise" placeholder="e.g. Lose 30lbs in 90 days using a Japanese morning ritual" />
+              <input class="inp" id="ai-promise" placeholder="e.g. Lose 30lbs in 90 days without dieting or exercise" />
+              <div class="chips" id="chips-promise"></div>
             </div>
 
+            <!-- MECHANISM -->
             <div class="fld">
               <label class="lbl">Unique Mechanism (how does it work?)</label>
-              <input class="inp" id="ai-mechanism" placeholder="e.g. Targets ceramide compounds that trap fat — no diet changes needed" />
+              <input class="inp" id="ai-mechanism" placeholder="e.g. Targets ceramide compounds that trap fat in cells" />
+              <div class="chips" id="chips-mechanism"></div>
             </div>
 
+            <!-- TARGET BUYER -->
             <div class="fld">
               <label class="lbl">Target Buyer (who is this for?)</label>
-              <input class="inp" id="ai-avatar" placeholder="e.g. Women over 40 who have tried every diet and feel like their metabolism is broken" />
+              <input class="inp" id="ai-avatar" placeholder="e.g. Women over 40 who have tried every diet" />
+              <div class="chips" id="chips-avatar"></div>
             </div>
 
+            <!-- PRICE + GUARANTEE -->
             <div class="r2">
               <div class="fld">
                 <label class="lbl">Price</label>
-                <input class="inp" id="ai-price" placeholder="e.g. $67 one-time" />
+                <select class="sel" id="ai-price">
+                  <option value="">— Select price —</option>
+                  <option value="$9.95 one-time">$9.95 one-time</option>
+                  <option value="$19.95 one-time">$19.95 one-time</option>
+                  <option value="$27 one-time">$27 one-time</option>
+                  <option value="$37 one-time">$37 one-time</option>
+                  <option value="$47 one-time">$47 one-time</option>
+                  <option value="$67 one-time">$67 one-time</option>
+                  <option value="$97 one-time">$97 one-time</option>
+                  <option value="$197 one-time">$197 one-time</option>
+                  <option value="$297 one-time">$297 one-time</option>
+                  <option value="$497 one-time">$497 one-time</option>
+                  <option value="$17/month">$17/month</option>
+                  <option value="$27/month">$27/month</option>
+                  <option value="$47/month">$47/month</option>
+                  <option value="$97/month">$97/month</option>
+                  <option value="$197/month">$197/month</option>
+                </select>
               </div>
               <div class="fld">
                 <label class="lbl">Guarantee</label>
-                <input class="inp" id="ai-guarantee" placeholder="e.g. 180-day money back" />
+                <select class="sel" id="ai-guarantee">
+                  <option value="">— Select guarantee —</option>
+                  <option value="30-day money back guarantee">30-day money back</option>
+                  <option value="60-day money back guarantee">60-day money back</option>
+                  <option value="90-day money back guarantee">90-day money back</option>
+                  <option value="180-day money back guarantee">180-day money back</option>
+                  <option value="365-day money back guarantee">365-day / 1 year</option>
+                  <option value="no questions asked 30-day refund">No questions asked — 30 days</option>
+                  <option value="no questions asked 60-day refund">No questions asked — 60 days</option>
+                  <option value="lifetime guarantee">Lifetime guarantee</option>
+                </select>
               </div>
             </div>
 
+            <!-- BONUSES -->
             <div class="fld">
               <label class="lbl">Bonuses (optional)</label>
-              <input class="inp" id="ai-bonuses" placeholder="e.g. Bonus 1: Metabolic Reset Guide, Bonus 2: VIP coaching call" />
+              <input class="inp" id="ai-bonuses" placeholder="e.g. Bonus 1: Fast Start Checklist, Bonus 2: VIP coaching call" />
+              <div class="chips">
+                <span class="chip" onclick="fill('ai-bonuses','Bonus 1: Fast Start Checklist ($97 value), Bonus 2: Private Community Access ($47 value)')">Fast Start + Community</span>
+                <span class="chip" onclick="fill('ai-bonuses','Bonus 1: Done-For-You Templates ($197 value), Bonus 2: 30-min Strategy Call ($297 value)')">Templates + Strategy Call</span>
+                <span class="chip" onclick="fill('ai-bonuses','Bonus 1: Advanced Training Series ($97 value), Bonus 2: Exclusive Members Area ($67 value), Bonus 3: Email Swipe File ($47 value)')">Training + Members + Swipes</span>
+                <span class="chip" onclick="fill('ai-bonuses','Bonus 1: Quick Start Video Guide ($47 value), Bonus 2: Live Q&A Access ($97 value)')">Video Guide + Live Q&A</span>
+              </div>
             </div>
 
-            <div class="fld">
-              <label class="lbl">Niche / Category</label>
-              <input class="inp" id="ai-niche" placeholder="e.g. weight loss, make money online, forex, relationship…" />
-            </div>
-
+            <!-- TRAFFIC + SLUG -->
             <div class="r2">
               <div class="fld">
                 <label class="lbl">Traffic source</label>
                 <select class="sel" id="ai-src">
-                  <option value="trafficzest">TrafficZest</option>
-                  <option value="solo-ads">Solo Ads</option>
+                  <option value="trafficzest">TrafficZest Solo Ads</option>
+                  <option value="solo-ads">Solo Ads (other)</option>
                   <option value="cold-traffic">Cold Traffic</option>
-                  <option value="email-list">Email List</option>
+                  <option value="email-list">Email List / Warm Traffic</option>
+                  <option value="facebook-ads">Facebook / Instagram Ads</option>
+                  <option value="youtube-ads">YouTube Ads</option>
+                  <option value="google-ads">Google Ads</option>
                 </select>
               </div>
               <div class="fld">
                 <label class="lbl">Funnel slug</label>
-                <input class="inp" id="ai-slug" placeholder="my-offer" />
+                <input class="inp" id="ai-slug" placeholder="auto-generated from offer name" />
               </div>
             </div>
           </div>
@@ -1265,6 +1328,129 @@ async function loadOverview() {
 let savedCopy = null
 window._scrapedCopy = ''
 
+// ── NICHE CHIP DATA ────────────────────────────────────
+const NICHE_DATA = {
+  'weight loss': {
+    names:      ['Ikaria Lean Belly Juice','Java Burn','Alpilean','LeanBiome','PhenQ','Okinawa Flat Belly Tonic'],
+    promises:   ['Lose 30lbs in 90 days without dieting or exercise','Melt stubborn belly fat using a simple morning ritual','Drop 2 dress sizes in 60 days with one daily habit','Burn fat 24/7 while you sleep using this odd trick'],
+    mechanisms: ['Targets ceramide compounds that trap fat in cells','Activates fat-burning hormones with a rare Japanese herb','Resets a sluggish metabolism with a specific nutrient blend','Uses thermogenesis to turn your body into a fat-burning machine'],
+    avatars:    ['Women over 40 who have tried every diet and still can\'t lose weight','Men and women frustrated with slow metabolism who eat right but still gain weight','People who have failed with keto, intermittent fasting, and every other diet','Anyone who feels like their body is working against them despite doing everything right']
+  },
+  'make money online': {
+    names:      ['Perpetual Income 365','Commission Hero','Clickbank University','Super Affiliate System','12 Minute Affiliate','The Affiliate Lab'],
+    promises:   ['Generate $1,000+ per day working just 2 hours from your laptop','Build a $5K/month passive income stream in 90 days or less','Quit your job in 6 months using this proven online income system','Make your first $100 online today with zero experience needed'],
+    mechanisms: ['Copy-paste affiliate campaigns proven to convert cold traffic','AI-powered funnel system that automates leads and sales 24/7','Done-for-you email sequences that sell while you sleep','3-step system that turns $10 in ads into $100 in commissions'],
+    avatars:    ['Complete beginners with no experience who want to escape their 9-5','People who have tried and failed at online business before','Stay-at-home parents looking for flexible income from home','Employees who hate their job and want financial freedom in 12 months']
+  },
+  'affiliate marketing': {
+    names:      ['Affiliate Marketing Mastery','Commission Kickstart','ClickBank Success Formula','Affiliate Escape Plan','The Super Affiliate Handbook'],
+    promises:   ['Earn $300/day in affiliate commissions within 90 days','Build recurring passive income promoting other people\'s products','Generate 6-figure affiliate income without a product or audience','Land your first $1,000 affiliate commission this month'],
+    mechanisms: ['Solo ad + funnel system that builds your list while earning commissions','AI-generated funnel copy that converts cold traffic into buyers','Bridge page strategy that warms leads before hitting the offer','Email follow-up sequences that turn one opt-in into multiple commissions'],
+    avatars:    ['Aspiring affiliates who have tried but never made consistent money','Marketers with a list who want to monetise it better','TrafficZest buyers who want to stop losing traffic and start converting it','Complete beginners who want a step-by-step system that actually works']
+  },
+  'forex trading': {
+    names:      ['Forex Fury','1000pip Builder','GPS Forex Robot','Forex Trendy','Omni Trading System'],
+    promises:   ['Generate $500-$1000 per week trading forex part-time','Turn a $500 account into $5,000 in 60 days with this proven strategy','Beat the market consistently with AI-powered trade signals','Copy professional trader signals and profit without knowing charts'],
+    mechanisms: ['AI signal software that scans 28 currency pairs for high-probability setups','Proprietary algorithm that identifies trend reversals before they happen','Automated trading bot that executes trades while you sleep','Copy-trade system linked directly to a proven 7-figure trader\'s account'],
+    avatars:    ['Beginners who want to trade forex but don\'t know where to start','Part-time traders frustrated with inconsistent results','People who have blown accounts and want a more systematic approach','Anyone who wants a second income stream that doesn\'t require a boss']
+  },
+  'cryptocurrency': {
+    names:      ['Crypto Quantum Leap','Bitcoin Breakthrough','Altcoin Alerts','Crypto Ultimatum','Coin Research Pro'],
+    promises:   ['Turn $500 into $5,000 with this crypto profit strategy','Spot the next 10x altcoin before it explodes using insider signals','Build a $10K crypto portfolio in 90 days starting from scratch','Never miss another crypto moon shot with real-time AI alerts'],
+    mechanisms: ['On-chain data analysis that identifies accumulation phases before big moves','AI pattern recognition that spots breakouts 72 hours in advance','Social sentiment scanning across 500+ crypto communities','Insider wallet tracking that follows smart money movements'],
+    avatars:    ['Crypto beginners who missed Bitcoin and don\'t want to miss the next wave','People tired of losing money buying at the top and panic selling the bottom','Investors who want systematic crypto exposure without the emotional rollercoaster','Anyone who believes in crypto but doesn\'t know how to profit consistently']
+  },
+  'e-commerce': {
+    names:      ['eCom Elites','Dropship Lifestyle','Zero Up','eCom Success Academy','Wholesale Ted'],
+    promises:   ['Build a $10K/month dropshipping store in 90 days','Launch your first profitable Shopify store this weekend','Find winning products before your competition with AI-powered research','Scale from $0 to $100K in ecom revenue in your first year'],
+    mechanisms: ['AI product research tool that identifies trending items 30 days early','Done-for-you store templates that convert visitors into buyers','Supplier network with 48-hour US shipping that beats Amazon','TikTok organic traffic method that generates sales without ad spend'],
+    avatars:    ['Beginners who want to start a business with no inventory or risk','9-5 employees looking for a scalable online business model','People who tried dropshipping before and failed due to wrong products','Entrepreneurs who want to sell physical products without holding stock']
+  },
+  'real estate investing': {
+    names:      ['Real Estate Wholesaling Mastery','Land Flipping Formula','Tax Lien Investing Blueprint','Creative Finance Playbook','Multifamily Millions'],
+    promises:   ['Close your first real estate deal in 30 days with zero credit or cash','Make $10K-$50K per deal wholesaling houses part-time','Build passive monthly income through rental properties without a mortgage','Find off-market properties and flip them for profit using this simple system'],
+    mechanisms: ['Direct mail + text blast system for finding motivated sellers before realtors','Zero-money-down creative financing methods banks don\'t want you to know','Tax lien certificate strategy that legally acquires properties at 10 cents on the dollar','Virtual wholesaling system that works in any market from anywhere'],
+    avatars:    ['People who want to invest in real estate but think they need money','W-2 employees looking to build wealth outside their job','Beginners who want financial freedom through real estate in 12 months','Anyone frustrated with the stock market who wants tangible asset investments']
+  },
+  'health and supplements': {
+    names:      ['ProDentim','Steel Bite Pro','Synogut','GlucoTrust','Nervogen Pro','BioOptimizers Magnesium Breakthrough'],
+    promises:   ['Restore your gut health in 30 days using this unique probiotic blend','Eliminate chronic pain and inflammation naturally without medication','Reverse type-2 diabetes symptoms with this one daily supplement','Regrow thick hair in 60 days using ancient Ayurvedic herbs'],
+    mechanisms: ['6-strain probiotic formula targeting the root cause of digestive issues','Proprietary blend of 11 adaptogenic herbs that reduce cortisol naturally','Blood sugar support matrix combining berberine and chromium picolinate','DHT-blocking herbal complex that reactivates dormant hair follicles'],
+    avatars:    ['People suffering from chronic health issues who are tired of prescription drugs','Adults over 50 looking for natural alternatives to manage aging symptoms','Anyone whose doctor has told them their condition is just something to live with','Health-conscious people who want to optimise their body without pharmaceuticals']
+  },
+  'fitness and muscle': {
+    names:      ['Kinobody','V-Shred','Old School New Body','Anabolic Running','Visual Impact Muscle Building'],
+    promises:   ['Build a lean muscular physique in 12 weeks training just 3 days per week','Gain 10lbs of lean muscle in 90 days without steroids or supplements','Get six-pack abs in 60 days with this simple home workout system','Transform your body at 40+ using this counter-intuitive training method'],
+    mechanisms: ['Reverse pyramid training protocol that triggers maximum muscle growth in minimum time','Strategic intermittent fasting combined with macro cycling for rapid fat loss','Anabolic stretching method that increases muscle size 24% faster','Isometric contraction technique proven to build strength without joint pain'],
+    avatars:    ['Men and women over 35 who want to get fit but are too busy for the gym','Beginners who are intimidated by the gym and don\'t know where to start','People who have been training for years but stopped seeing results','Anyone who wants a lean athletic physique without spending hours in the gym']
+  },
+  'relationship and dating': {
+    names:      ['Text Chemistry','His Secret Obsession','Language of Desire','Get Your Ex Back','The Attraction Code'],
+    promises:   ['Make him obsess over you and only you using these psychological triggers','Get your ex back in 30 days even if they\'ve moved on','Triple your matches and land dates using these proven conversation openers','Create deep emotional attraction with any man using the right words'],
+    mechanisms: ['Psychological attachment theory applied to modern dating communication','Oxytocin bonding triggers hidden in everyday text messages','Primal desire sequences that activate the masculine protection instinct','Subconscious rapport-building language patterns that create instant chemistry'],
+    avatars:    ['Women who feel like great guys always end up in the friend zone','People who have been ghosted or broken up with and can\'t understand why','Singles over 35 who are frustrated with dating apps and want real connection','Anyone who keeps attracting the wrong type of person and wants to break the pattern']
+  },
+  'personal development': {
+    names:      ['Mind Zoom','Manifestation Magic','Raikov Effect','Midas Manifestation','Limitless Labs'],
+    promises:   ['Reprogram your subconscious mind for success in just 7 minutes per day','Manifest your dream life in 30 days using this ancient law of attraction secret','Eliminate self-sabotage and unlock your full potential in 21 days','Build unshakeable confidence and abundance mindset using this audio method'],
+    mechanisms: ['Theta wave audio entrainment that bypasses the conscious mind\'s resistance','Subliminal affirmation system embedded in binaural beats','Neuro-linguistic programming techniques condensed into a 10-minute daily practice','Quantum manifestation protocol based on quantum physics and neuroscience'],
+    avatars:    ['People who feel stuck despite working hard and doing everything right','Anyone who has tried affirmations, vision boards, and meditation without results','Ambitious people who self-sabotage their own success and can\'t figure out why','Those who believe in personal growth but haven\'t found a system that actually works']
+  },
+  'business and entrepreneurship': {
+    names:      ['ClickFunnels','Legendary Marketer','Tai Lopez SMMA','Agency Incubator','Consulting Accelerator'],
+    promises:   ['Launch a profitable online business in 30 days even with no experience','Build a 6-figure consulting business in 90 days starting from scratch','Go from $0 to $10K per month with your own digital agency','Create a location-independent business that runs without you in 6 months'],
+    mechanisms: ['Proven business model that generates recurring revenue from day one','Client acquisition system that lands $2K-$10K contracts without cold calling','Funnel-based lead generation that attracts high-ticket clients on autopilot','Productised service model that scales without hiring a team'],
+    avatars:    ['Employees who want to escape their job and build their own business','Freelancers who want to scale beyond trading time for money','Entrepreneurs stuck under $5K/month who can\'t break through the ceiling','Anyone with valuable skills who doesn\'t know how to package and sell them']
+  }
+}
+
+// ── FILL FIELD FROM CHIP ────────────────────────────────
+window.fill = function(id, val) {
+  const el = document.getElementById(id)
+  if (el) { el.value = val; el.focus() }
+}
+
+// ── NICHE CHANGE → UPDATE CHIPS ────────────────────────
+window.onNicheChange = function() {
+  const niche  = document.getElementById('ai-niche').value
+  const custom = document.getElementById('ai-niche-custom')
+  if (niche === 'other') {
+    custom.style.display = 'block'; custom.focus()
+  } else {
+    custom.style.display = 'none'
+  }
+
+  const data = NICHE_DATA[niche]
+  if (!data) {
+    // Clear chips if no data for this niche
+    ;['chips-name','chips-promise','chips-mechanism','chips-avatar'].forEach(id => {
+      const el = document.getElementById(id)
+      if (el) el.innerHTML = ''
+    })
+    return
+  }
+
+  // Render chips for each field
+  renderChips('chips-name',      'ai-offer-name', data.names)
+  renderChips('chips-promise',   'ai-promise',    data.promises)
+  renderChips('chips-mechanism', 'ai-mechanism',  data.mechanisms)
+  renderChips('chips-avatar',    'ai-avatar',     data.avatars)
+
+  // Auto-suggest slug from niche
+  const slugEl = document.getElementById('ai-slug')
+  if (slugEl && !slugEl.value) {
+    slugEl.value = niche.replace(/[^a-z0-9]+/gi,'-').toLowerCase()
+  }
+}
+
+function renderChips(containerId, targetId, items) {
+  const container = document.getElementById(containerId)
+  if (!container) return
+  container.innerHTML = items.map(item =>
+    `<span class="chip" onclick="fill('${targetId}','${item.replace(/'/g,"\\'")}'); this.style.background='var(--teal-bg)'; this.style.borderColor='var(--teal-bdr)'; this.style.color='var(--teal)'">${item.length > 45 ? item.slice(0,45)+'…' : item}</span>`
+  ).join('')
+}
+
 // ── OFFER SCRAPER ─────────────────────────────────────
 window.scrapeOffer = async function() {
   const url = document.getElementById('ai-url').value.trim()
@@ -1285,8 +1471,29 @@ window.scrapeOffer = async function() {
       if (e.title    && !document.getElementById('ai-offer-name').value) document.getElementById('ai-offer-name').value = e.title.slice(0,80)
       if (e.headline && !document.getElementById('ai-promise').value)    document.getElementById('ai-promise').value    = e.headline.slice(0,120)
       if (e.metaDesc && !document.getElementById('ai-mechanism').value)  document.getElementById('ai-mechanism').value  = e.metaDesc.slice(0,120)
-      if (e.prices?.length && !document.getElementById('ai-price').value) document.getElementById('ai-price').value = e.prices[0]
-      if (e.guarantee && !document.getElementById('ai-guarantee').value)  document.getElementById('ai-guarantee').value = e.guarantee
+      // Set price dropdown if extracted
+      if (e.prices?.length) {
+        const priceEl = document.getElementById('ai-price')
+        if (priceEl && !priceEl.value) {
+          // Try to match extracted price to a dropdown option
+          const extracted = e.prices[0]
+          const opts = Array.from(priceEl.options)
+          const match = opts.find(o => o.value.includes(extracted.replace(/[$,]/g,'')))
+          if (match) priceEl.value = match.value
+        }
+      }
+      // Set guarantee dropdown if extracted
+      if (e.guarantee) {
+        const gEl = document.getElementById('ai-guarantee')
+        if (gEl && !gEl.value) {
+          const days = e.guarantee.match(/\d+/)
+          if (days) {
+            const opts = Array.from(gEl.options)
+            const match = opts.find(o => o.value.includes(days[0]+'-day'))
+            if (match) gEl.value = match.value
+          }
+        }
+      }
       window._scrapedCopy = data.summary || ''
       setFB('scrape-fb','ok','✓ ' + (data.message || 'Details extracted — review fields then generate.'))
     } else {
@@ -1303,9 +1510,16 @@ window.autoScrape = function() {
 }
 
 window.buildFunnel = async function() {
-  const offerName = document.getElementById('ai-offer-name').value.trim()
-  const niche     = document.getElementById('ai-niche').value.trim()
-  if (!offerName && !niche) { toast('Enter an offer name or niche first', 'err'); return }
+  const offerName  = document.getElementById('ai-offer-name').value.trim()
+  // Get niche from select or custom field
+  const nicheSelect = document.getElementById('ai-niche').value
+  const nicheCustom = document.getElementById('ai-niche-custom')?.value.trim() || ''
+  const niche       = nicheSelect === 'other' ? nicheCustom : nicheSelect
+  if (!offerName && !niche) { toast('Select a niche and enter an offer name', 'err'); return }
+
+  // Get price and guarantee from selects
+  const price     = document.getElementById('ai-price').value
+  const guarantee = document.getElementById('ai-guarantee').value
 
   const btn = document.getElementById('ai-btn')
   btnLoad(btn, true, 'Generating congruent copy…')
@@ -1313,18 +1527,24 @@ window.buildFunnel = async function() {
   set('ai-bdg', 'generating…')
   document.getElementById('ai-bdg').className = 'bdg bdg-m'
 
+  // Auto-generate slug from offer name if empty
+  const slugEl = document.getElementById('ai-slug')
+  if (slugEl && !slugEl.value && offerName) {
+    slugEl.value = offerName.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40)
+  }
+
   try {
     const res = await fetch('/.netlify/functions/ai', {
       method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
         prompt:       niche || offerName,
-        niche:        niche,
-        offerName:    offerName,
+        niche,
+        offerName,
         offerPromise: document.getElementById('ai-promise').value.trim(),
         mechanism:    document.getElementById('ai-mechanism').value.trim(),
         avatar:       document.getElementById('ai-avatar').value.trim(),
-        price:        document.getElementById('ai-price').value.trim(),
-        guarantee:    document.getElementById('ai-guarantee').value.trim(),
+        price,
+        guarantee,
         bonuses:      document.getElementById('ai-bonuses').value.trim(),
         source:       document.getElementById('ai-src').value,
         scrapedCopy:  window._scrapedCopy || ''
