@@ -1939,7 +1939,9 @@ let affPeriod  = 'week'
 let allConvs   = []
 
 async function loadAffiliate() {
-  const email = sessionStorage.getItem('nw_email') || ''
+  // Get email from Supabase Auth session — most reliable source
+  const { data: { session } } = await _sb.auth.getSession()
+  const email = session?.user?.email || sessionStorage.getItem('nw_email') || ''
   if (!email) { showAffState('not-enrolled'); return }
 
   try {
@@ -2268,45 +2270,54 @@ function updatePeriod(period) {
 }
 
 window.enrollAffiliate = async function() {
-  const email = sessionStorage.getItem('nw_email') || ''
-  if (!email) {
-    showFB('aff-enroll-fb','err','⚠ Please sign in first to join the affiliate program')
-    return
-  }
+  const btn = document.querySelector('[onclick="enrollAffiliate()"]')
+  if (btn) { btn.disabled = true; btn.textContent = 'Setting up…' }
 
   try {
-    // Generate ref code from email
-    const code = email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,10)
-      + Math.random().toString(36).slice(2,5)
+    // Get email from Supabase Auth session — most reliable source
+    const { data: { session } } = await _sb.auth.getSession()
+    const email = session?.user?.email || sessionStorage.getItem('nw_email') || ''
+
+    if (!email) {
+      showFB('aff-enroll-fb','err','⚠ Could not detect your email. Please sign out and sign back in, then try again.')
+      if (btn) { btn.disabled = false; btn.textContent = 'Join Affiliate Program →' }
+      return
+    }
+
+    // Check if already enrolled
+    const { data: existing } = await _sb.from('affiliates').select('id,ref_code').eq('email', email).maybeSingle()
+    if (existing) {
+      showFB('aff-enroll-fb','ok','✓ Already enrolled — loading your affiliate tools…')
+      setTimeout(async () => { await loadAffiliate(); affTab('banners') }, 600)
+      return
+    }
+
+    // Generate unique ref code
+    const base = email.split('@')[0].toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,8)
+    const code  = base + Math.random().toString(36).slice(2,6)
 
     const { error } = await _sb.from('affiliates').insert([{
       email,
-      ref_code:         code,
-      commission_rate:  0.30,
-      total_referrals:  0,
-      total_earned:     0,
-      total_paid:       0,
-      created_at:       new Date().toISOString()
+      ref_code:        code,
+      commission_rate: 0.30,
+      total_referrals: 0,
+      total_earned:    0,
+      total_paid:      0,
+      created_at:      new Date().toISOString()
     }])
+
     if (error) throw error
 
-    showFB('aff-enroll-fb','ok','✓ Enrolled! Loading your affiliate tools…')
-    // Load affiliate data then jump straight to banners tab
+    showFB('aff-enroll-fb','ok','✓ Enrolled! Opening your affiliate tools…')
     setTimeout(async () => {
       await loadAffiliate()
       affTab('banners')
-    }, 800)
+    }, 600)
+
   } catch(e) {
-    // Handle duplicate enrollment gracefully
-    if (e.message?.includes('duplicate') || e.message?.includes('unique')) {
-      showFB('aff-enroll-fb','info','ℹ You are already enrolled — loading your dashboard…')
-      setTimeout(async () => {
-        await loadAffiliate()
-        affTab('banners')
-      }, 800)
-    } else {
-      showFB('aff-enroll-fb','err','⚠ ' + e.message)
-    }
+    console.error('enrollAffiliate error:', e)
+    showFB('aff-enroll-fb','err','⚠ ' + (e.message || 'Enrolment failed — try again'))
+    if (btn) { btn.disabled = false; btn.textContent = 'Join Affiliate Program →' }
   }
 }
 
