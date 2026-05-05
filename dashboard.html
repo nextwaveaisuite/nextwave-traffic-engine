@@ -210,7 +210,17 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
 @keyframes tu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 @media(max-width:860px){#toast{bottom:74px;right:12px;left:12px;max-width:none;text-align:center;justify-content:center}}
 
-@media(max-width:1080px){.krow{grid-template-columns:1fr 1fr}}
+/* ── SUGGESTION CHIPS ─────────────────────────────── */
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.chip{
+  font-size:10px;padding:3px 9px;border-radius:20px;
+  background:var(--ink4);border:1px solid var(--line);
+  color:var(--dim);cursor:pointer;transition:all .1s;
+  white-space:nowrap;font-family:var(--f);line-height:1.4;
+}
+.chip:hover{border-color:var(--teal);color:var(--teal);background:var(--teal-bg)}
+.chip:active{transform:scale(.97)}
+.chip-label{font-family:var(--m);font-size:9px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block}
 @media(max-width:860px){
   .sidebar{display:none}
   .g2,.g3,.gm{grid-template-columns:1fr}
@@ -780,17 +790,16 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
       <div class="p-head"><div class="p-title">💸 Join the Affiliate Program</div></div>
       <div class="p-body">
         <p style="font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:16px">
-          Promote NextWave and earn commissions on every sale you refer.
-          No cap on earnings. Commissions tracked in real time.
+          Promote NextWave and earn commissions on every sale you refer. No cap. Tracked in real time.
         </p>
         <div style="background:var(--teal-bg);border:1px solid var(--teal-bdr);border-radius:var(--r2);padding:16px;margin-bottom:16px">
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;text-align:center">
-            <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--teal)">$5.70</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Starter sale</div></div>
-            <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--teal)">$14.70</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Pro sale</div></div>
-            <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--teal)">$29.70</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Scale sale</div></div>
-            <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--gold)">$299.10</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Lifetime sale</div></div>
+            <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--teal)">$5.70</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Starter</div></div>
+            <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--teal)">$14.70</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Pro</div></div>
+            <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--teal)">$29.70</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Scale</div></div>
+            <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--gold)">$299.10</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Lifetime</div></div>
           </div>
-          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:10px;font-family:var(--m)">30% commission on all plans · Paid monthly via PayPal</div>
+          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:10px;font-family:var(--m)">30% commission · Paid monthly via PayPal · No cap</div>
         </div>
         <button class="btn btn-p btn-w" onclick="enrollAffiliate()">Join Affiliate Program →</button>
         <div class="fb" id="aff-enroll-fb"></div>
@@ -806,101 +815,232 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
       <div class="kc kt"><div class="k-lbl">Total Earned</div><div class="k-val" id="aff-total-earned">$0.00</div><div class="k-sub">all commissions</div></div>
       <div class="kc kb"><div class="k-lbl">Paid Out</div><div class="k-val" id="aff-paid-out">$0.00</div><div class="k-sub">received</div></div>
       <div class="kc kg"><div class="k-lbl">Pending</div><div class="k-val" id="aff-pending">$0.00</div><div class="k-sub">awaiting payout</div></div>
-      <div class="kc kr"><div class="k-lbl">Total Referrals</div><div class="k-val" id="aff-ref-count">0</div><div class="k-sub">paying customers</div></div>
+      <div class="kc kr"><div class="k-lbl">Referrals</div><div class="k-val" id="aff-ref-count">0</div><div class="k-sub">paying customers</div></div>
     </div>
 
-    <div class="g2">
-      <!-- YOUR LINK -->
+    <!-- TABS -->
+    <div style="display:flex;gap:0;background:var(--ink3);border-radius:var(--r2);padding:3px;border:1px solid var(--line);width:fit-content">
+      <button class="btn btn-sm" id="atab-stats"  onclick="affTab('stats')"  style="background:var(--teal);color:var(--ink);border:none">📊 My Stats</button>
+      <button class="btn btn-sm btn-g" id="atab-link"   onclick="affTab('link')"   style="border:none">🔗 My Link</button>
+      <button class="btn btn-sm btn-g" id="atab-banners" onclick="affTab('banners')" style="border:none">🖼 Banners</button>
+      <button class="btn btn-sm btn-g" id="atab-swipes"  onclick="affTab('swipes')"  style="border:none">📧 Email Swipes</button>
+      <button class="btn btn-sm btn-g" id="atab-social"  onclick="affTab('social')"  style="border:none">📱 Social</button>
+    </div>
+
+    <!-- STATS TAB -->
+    <div id="atab-stats-content">
+      <div class="g2">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="panel">
+            <div class="p-head">
+              <div class="p-title">📅 Commission Periods</div>
+              <div style="display:flex;gap:5px">
+                <button class="btn btn-g btn-sm" onclick="setPeriod('today',this)" id="p-today">Today</button>
+                <button class="btn btn-g btn-sm" onclick="setPeriod('week',this)" id="p-week" style="color:var(--teal);border-color:var(--teal-bdr)">Week</button>
+                <button class="btn btn-g btn-sm" onclick="setPeriod('month',this)" id="p-month">Month</button>
+              </div>
+            </div>
+            <div class="p-body">
+              <div class="slist">
+                <div class="sr"><span class="sr-l">Commissions earned</span><span class="sr-v ct" id="period-earned">$0.00</span></div>
+                <div class="sr"><span class="sr-l">Sales generated</span><span class="sr-v" id="period-sales">0</span></div>
+                <div class="sr"><span class="sr-l">Avg per sale</span><span class="sr-v" id="period-avg">$0</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="p-head"><div class="p-title">💳 Payout Status</div></div>
+            <div class="p-body">
+              <div class="slist">
+                <div class="sr"><span class="sr-l">Balance pending</span><span class="sr-v cg" id="aff-balance">$0.00</span></div>
+                <div class="sr"><span class="sr-l">Minimum payout</span><span class="sr-v mono">$50.00</span></div>
+                <div class="sr"><span class="sr-l">Payout method</span><span class="sr-v mono">PayPal</span></div>
+                <div class="sr"><span class="sr-l">Next payout</span><span class="sr-v mono cs" id="aff-next-payout">—</span></div>
+              </div>
+              <div style="margin-top:12px;padding:10px;background:var(--s2);border-radius:var(--r);font-size:11px;color:var(--muted);line-height:1.6" id="payout-note">
+                Payouts sent monthly when balance reaches $50.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="p-head"><div class="p-title">📋 Commission Log</div><span style="font-size:11px;color:var(--muted)">No buyer names shown</span></div>
+          <div class="p-body np" style="overflow-y:auto">
+            <table class="tbl">
+              <thead><tr><th>Date</th><th>Plan Sold</th><th>Commission</th><th>Status</th></tr></thead>
+              <tbody id="aff-log-body">
+                <tr><td colspan="4"><div class="empty"><div class="empty-ic">💸</div><p>No commissions yet.</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINK TAB -->
+    <div id="atab-link-content" style="display:none">
+      <div class="panel" style="max-width:600px">
+        <div class="p-head"><div class="p-title">🔗 Your Unique Affiliate Link</div></div>
+        <div class="p-body">
+          <p style="font-size:12px;color:var(--dim);margin-bottom:14px;line-height:1.65">This is your unique referral link. Every visitor who signs up or purchases through this link is tracked to you and earns you a commission.</p>
+          <div class="lk-row" style="margin:0 0 14px;border-color:var(--teal-bdr)">
+            <code id="aff-ref-link" style="font-family:var(--m);font-size:12px;color:var(--teal);word-break:break-all;flex:1">Loading…</code>
+            <span class="cp-btn" onclick="copyAffLink()">Copy</span>
+          </div>
+          <div class="slist">
+            <div class="sr"><span class="sr-l">Your ref code</span><span class="sr-v mono ct" id="aff-ref-code">—</span></div>
+            <div class="sr"><span class="sr-l">Cookie duration</span><span class="sr-v mono">30 days</span></div>
+            <div class="sr"><span class="sr-l">Commission rate</span><span class="sr-v mono ct">30%</span></div>
+            <div class="sr"><span class="sr-l">Tracks via</span><span class="sr-v mono">?ref= parameter</span></div>
+          </div>
+          <div style="margin-top:14px;padding:12px;background:var(--s2);border-radius:var(--r);font-size:11px;color:var(--muted);line-height:1.65">
+            💡 You can add your ref code to any NextWave page URL. Example:<br>
+            <code style="font-family:var(--m);color:var(--dim)" id="aff-example-link">https://nextwave-traffic-engine.netlify.app/sales.html?ref=yourcode</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BANNERS TAB -->
+    <div id="atab-banners-content" style="display:none">
       <div style="display:flex;flex-direction:column;gap:14px">
+
+        <!-- BANNER INSTRUCTIONS -->
         <div class="panel">
-          <div class="p-head"><div class="p-title">🔗 Your Referral Link</div></div>
+          <div class="p-head"><div class="p-title">🖼 HTML Banners</div><span style="font-size:11px;color:var(--muted)">Copy the code — paste into any website or email</span></div>
           <div class="p-body">
-            <div class="lk-row" style="margin-top:0">
-              <code id="aff-ref-link" style="font-family:var(--m);font-size:11px;color:var(--teal);word-break:break-all;flex:1">Loading…</code>
-              <span class="cp-btn" onclick="copyAffLink()">Copy</span>
-            </div>
-            <p style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6">
-              Share this link anywhere — social media, email, blog, YouTube description.
-              Every signup through your link is tracked to you automatically.
-            </p>
+            <p style="font-size:12px;color:var(--dim);line-height:1.65;margin-bottom:4px">Each banner links to your affiliate URL automatically. Copy the HTML code and paste it anywhere.</p>
           </div>
         </div>
 
-        <!-- PERIOD BREAKDOWN -->
+        <!-- BANNER 728x90 LEADERBOARD -->
         <div class="panel">
-          <div class="p-head">
-            <div class="p-title">📅 Commission Periods</div>
-            <div style="display:flex;gap:5px">
-              <button class="btn btn-g btn-sm" onclick="setPeriod('today',this)" id="p-today">Today</button>
-              <button class="btn btn-g btn-sm on" onclick="setPeriod('week',this)" id="p-week" style="color:var(--teal);border-color:var(--teal-bdr)">Week</button>
-              <button class="btn btn-g btn-sm" onclick="setPeriod('month',this)" id="p-month">Month</button>
-            </div>
-          </div>
+          <div class="p-head"><div class="p-title">728 × 90 — Leaderboard</div><button class="btn btn-g btn-sm" onclick="copyBanner('b-728')">Copy HTML</button></div>
           <div class="p-body">
-            <div class="slist">
-              <div class="sr">
-                <span class="sr-l">Commissions earned</span>
-                <span class="sr-v ct" id="period-earned">$0.00</span>
-              </div>
-              <div class="sr">
-                <span class="sr-l">Sales generated</span>
-                <span class="sr-v" id="period-sales">0</span>
-              </div>
-              <div class="sr">
-                <span class="sr-l">Avg per sale</span>
-                <span class="sr-v" id="period-avg">$0</span>
-              </div>
+            <div id="b-728-preview" style="overflow-x:auto;margin-bottom:12px">
+              <a id="b-728-link" href="#" target="_blank" style="display:block;width:728px;height:90px;background:linear-gradient(135deg,#0d1220,#111827);border:1px solid #1e2d42;border-radius:8px;text-decoration:none;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-family:DM Sans,sans-serif;overflow:hidden;position:relative">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <div style="width:36px;height:36px;border-radius:7px;background:#19e6b0;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">⚡</div>
+                  <div>
+                    <div style="font-size:18px;font-weight:700;color:#dce8f5;letter-spacing:-.3px">NEXTWAVE TRAFFIC ENGINE</div>
+                    <div style="font-size:12px;color:#8fa3c4;margin-top:1px">AI Funnels · Wave Links · Lead Capture · VSL Bridge Pages</div>
+                  </div>
+                </div>
+                <div style="background:#19e6b0;color:#080c14;font-weight:700;font-size:13px;padding:10px 20px;border-radius:6px;white-space:nowrap;flex-shrink:0">Get Started Free →</div>
+              </a>
             </div>
+            <textarea id="b-728" class="inp" style="height:60px;font-family:var(--m);font-size:10px;resize:none" readonly></textarea>
           </div>
         </div>
 
-        <!-- PAYOUT STATUS -->
+        <!-- BANNER 300x250 RECTANGLE -->
         <div class="panel">
-          <div class="p-head"><div class="p-title">💳 Payout Status</div></div>
-          <div class="p-body">
-            <div class="slist">
-              <div class="sr"><span class="sr-l">Balance pending</span><span class="sr-v cg" id="aff-balance">$0.00</span></div>
-              <div class="sr"><span class="sr-l">Minimum payout</span><span class="sr-v mono">$50.00</span></div>
-              <div class="sr"><span class="sr-l">Payout method</span><span class="sr-v mono">PayPal</span></div>
-              <div class="sr"><span class="sr-l">Next payout</span><span class="sr-v mono cs" id="aff-next-payout">—</span></div>
+          <div class="p-head"><div class="p-title">300 × 250 — Medium Rectangle</div><button class="btn btn-g btn-sm" onclick="copyBanner('b-300')">Copy HTML</button></div>
+          <div class="p-body" style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
+            <div id="b-300-preview" style="flex-shrink:0">
+              <a id="b-300-link" href="#" target="_blank" style="display:block;width:300px;height:250px;background:linear-gradient(160deg,#0d1220,#111827);border:1px solid #1e2d42;border-radius:10px;text-decoration:none;padding:24px;font-family:DM Sans,sans-serif;position:relative;overflow:hidden">
+                <div style="font-family:DM Mono,monospace;font-size:10px;color:#19e6b0;letter-spacing:1px;margin-bottom:10px">AFFILIATE MARKETING SYSTEM</div>
+                <div style="font-size:22px;font-weight:700;color:#dce8f5;line-height:1.1;margin-bottom:10px;letter-spacing:-.5px">Stop Losing the Traffic You Paid For.</div>
+                <div style="font-size:12px;color:#8fa3c4;line-height:1.6;margin-bottom:16px">AI funnels · Lead capture · VSL bridge pages · Wave Link tracking</div>
+                <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:18px">
+                  <div style="font-size:11px;color:#dce8f5;display:flex;gap:6px"><span style="color:#19e6b0">✓</span>Free to start</div>
+                  <div style="font-size:11px;color:#dce8f5;display:flex;gap:6px"><span style="color:#19e6b0">✓</span>No credit card needed</div>
+                  <div style="font-size:11px;color:#dce8f5;display:flex;gap:6px"><span style="color:#19e6b0">✓</span>Live in 60 seconds</div>
+                </div>
+                <div style="background:#19e6b0;color:#080c14;font-weight:700;font-size:13px;padding:10px;border-radius:6px;text-align:center">Get Free Access →</div>
+              </a>
             </div>
-            <div style="margin-top:12px;padding:10px;background:var(--s2);border-radius:var(--r);font-size:11px;color:var(--muted);line-height:1.6" id="payout-note">
-              Payouts are sent monthly when your balance reaches $50. You'll receive an email notification when a payout is processed.
-            </div>
+            <textarea id="b-300" class="inp" style="flex:1;min-width:200px;height:180px;font-family:var(--m);font-size:10px;resize:none" readonly></textarea>
           </div>
         </div>
-      </div>
 
-      <!-- COMMISSION LOG -->
-      <div class="panel">
-        <div class="p-head"><div class="p-title">📋 Commission Log</div><span style="font-size:11px;color:var(--muted)">No buyer names shown</span></div>
-        <div class="p-body np" style="overflow-y:auto">
-          <table class="tbl">
-            <thead><tr><th>Date</th><th>Plan Sold</th><th>Commission</th><th>Status</th></tr></thead>
-            <tbody id="aff-log-body">
-              <tr><td colspan="4"><div class="empty"><div class="empty-ic">💸</div><p>No commissions yet.<br>Share your link to start earning.</p></div></td></tr>
-            </tbody>
-          </table>
+        <!-- BANNER 468x60 -->
+        <div class="panel">
+          <div class="p-head"><div class="p-title">468 × 60 — Standard Banner</div><button class="btn btn-g btn-sm" onclick="copyBanner('b-468')">Copy HTML</button></div>
+          <div class="p-body">
+            <div id="b-468-preview" style="overflow-x:auto;margin-bottom:12px">
+              <a id="b-468-link" href="#" target="_blank" style="display:block;width:468px;height:60px;background:linear-gradient(135deg,#0d1220,#111827);border:1px solid #1e2d42;border-radius:6px;text-decoration:none;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-family:DM Sans,sans-serif">
+                <div>
+                  <span style="font-weight:700;color:#19e6b0;font-size:14px">NEXTWAVE</span>
+                  <span style="color:#8fa3c4;font-size:12px;margin-left:8px">— AI Funnels + Lead Capture + Wave Links</span>
+                </div>
+                <div style="background:#19e6b0;color:#080c14;font-weight:700;font-size:11px;padding:7px 14px;border-radius:5px;white-space:nowrap">Try Free →</div>
+              </a>
+            </div>
+            <textarea id="b-468" class="inp" style="height:50px;font-family:var(--m);font-size:10px;resize:none" readonly></textarea>
+          </div>
         </div>
+
       </div>
     </div>
 
-    <!-- PROMO TIPS -->
-    <div class="panel">
-      <div class="p-head"><div class="p-title">🚀 Promotion Tips</div></div>
-      <div class="p-body" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">
-        <div style="padding:12px;background:var(--s2);border-radius:var(--r);border:1px solid var(--line)">
-          <div style="font-size:13px;font-weight:600;margin-bottom:6px">⚡ TrafficZest</div>
-          <div style="font-size:11px;color:var(--dim);line-height:1.6">Buy solo ad traffic and point it at your referral link. Visitors see the NextWave sales page — every conversion earns you a commission.</div>
+    <!-- EMAIL SWIPES TAB -->
+    <div id="atab-swipes-content" style="display:none">
+      <div style="display:flex;flex-direction:column;gap:14px">
+
+        <div class="panel">
+          <div class="p-head"><div class="p-title">📧 Email Swipe 1 — The Problem</div><button class="btn btn-g btn-sm" onclick="copySwipe('swipe1')">Copy</button></div>
+          <div class="p-body">
+            <textarea id="swipe1" class="inp" style="height:220px;font-family:var(--m);font-size:11px;line-height:1.7;resize:none" readonly></textarea>
+          </div>
         </div>
-        <div style="padding:12px;background:var(--s2);border-radius:var(--r);border:1px solid var(--line)">
-          <div style="font-size:13px;font-weight:600;margin-bottom:6px">📧 Email List</div>
-          <div style="font-size:11px;color:var(--dim);line-height:1.6">Send your list a quick email about the tool you use to run your affiliate campaigns. Authentic recommendations convert better than ads.</div>
+
+        <div class="panel">
+          <div class="p-head"><div class="p-title">📧 Email Swipe 2 — The Solution</div><button class="btn btn-g btn-sm" onclick="copySwipe('swipe2')">Copy</button></div>
+          <div class="p-body">
+            <textarea id="swipe2" class="inp" style="height:220px;font-family:var(--m);font-size:11px;line-height:1.7;resize:none" readonly></textarea>
+          </div>
         </div>
-        <div style="padding:12px;background:var(--s2);border-radius:var(--r);border:1px solid var(--line)">
-          <div style="font-size:13px;font-weight:600;margin-bottom:6px">🎥 Content</div>
-          <div style="font-size:11px;color:var(--dim);line-height:1.6">Show the dashboard in action on YouTube or social media. A screen recording of real results is the most powerful promotion you can do.</div>
+
+        <div class="panel">
+          <div class="p-head"><div class="p-title">📧 Email Swipe 3 — Direct Pitch</div><button class="btn btn-g btn-sm" onclick="copySwipe('swipe3')">Copy</button></div>
+          <div class="p-body">
+            <textarea id="swipe3" class="inp" style="height:220px;font-family:var(--m);font-size:11px;line-height:1.7;resize:none" readonly></textarea>
+          </div>
         </div>
+
+        <div class="panel">
+          <div class="p-head"><div class="p-title">📧 Email Swipe 4 — Last Chance</div><button class="btn btn-g btn-sm" onclick="copySwipe('swipe4')">Copy</button></div>
+          <div class="p-body">
+            <textarea id="swipe4" class="inp" style="height:220px;font-family:var(--m);font-size:11px;line-height:1.7;resize:none" readonly></textarea>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- SOCIAL TAB -->
+    <div id="atab-social-content" style="display:none">
+      <div style="display:flex;flex-direction:column;gap:14px">
+
+        <div class="panel">
+          <div class="p-head"><div class="p-title">📱 Facebook / Instagram Post</div><button class="btn btn-g btn-sm" onclick="copySwipe('social-fb')">Copy</button></div>
+          <div class="p-body">
+            <textarea id="social-fb" class="inp" style="height:160px;font-family:var(--m);font-size:11px;line-height:1.7;resize:none" readonly></textarea>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="p-head"><div class="p-title">🐦 Twitter / X Thread Starter</div><button class="btn btn-g btn-sm" onclick="copySwipe('social-tw')">Copy</button></div>
+          <div class="p-body">
+            <textarea id="social-tw" class="inp" style="height:120px;font-family:var(--m);font-size:11px;line-height:1.7;resize:none" readonly></textarea>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="p-head"><div class="p-title">💼 LinkedIn Post</div><button class="btn btn-g btn-sm" onclick="copySwipe('social-li')">Copy</button></div>
+          <div class="p-body">
+            <textarea id="social-li" class="inp" style="height:200px;font-family:var(--m);font-size:11px;line-height:1.7;resize:none" readonly></textarea>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="p-head"><div class="p-title">📹 YouTube Description Snippet</div><button class="btn btn-g btn-sm" onclick="copySwipe('social-yt')">Copy</button></div>
+          <div class="p-body">
+            <textarea id="social-yt" class="inp" style="height:120px;font-family:var(--m);font-size:11px;line-height:1.7;resize:none" readonly></textarea>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -1564,11 +1704,7 @@ let allConvs   = []
 
 async function loadAffiliate() {
   const email = sessionStorage.getItem('nw_email') || ''
-  if (!email) {
-    // No email in session — show enroll form
-    showAffState('not-enrolled')
-    return
-  }
+  if (!email) { showAffState('not-enrolled'); return }
 
   try {
     const { data: aff } = await _sb
@@ -1577,19 +1713,23 @@ async function loadAffiliate() {
       .eq('email', email)
       .maybeSingle()
 
-    if (!aff) {
-      showAffState('not-enrolled')
-      return
-    }
+    if (!aff) { showAffState('not-enrolled'); return }
 
     affData = aff
     showAffState('enrolled')
 
-    // Set ref link
-    const siteUrl = 'https://nextwave-traffic-engine.netlify.app'
-    document.getElementById('aff-ref-link').textContent = `${siteUrl}/?ref=${aff.ref_code}`
+    const siteUrl  = window.location.origin
+    const affUrl   = `${siteUrl}/?ref=${aff.ref_code}`
+    const salesUrl = `${siteUrl}/sales.html?ref=${aff.ref_code}`
 
-    // Update status badge
+    // Set ref link in Link tab
+    const refEl = document.getElementById('aff-ref-link')
+    if (refEl) refEl.textContent = affUrl
+    set('aff-ref-code', aff.ref_code)
+    const exEl = document.getElementById('aff-example-link')
+    if (exEl) exEl.textContent = salesUrl
+
+    // Status badge
     const badge = document.getElementById('aff-status-badge')
     badge.textContent = 'Active Affiliate'
     badge.className   = 'bdg bdg-t'
@@ -1603,36 +1743,241 @@ async function loadAffiliate() {
 
     allConvs = convs || []
 
-    // KPIs
-    const totalEarned  = allConvs.reduce((s,c) => s + (c.commission||0), 0)
-    const totalPaid    = (aff.total_paid || 0)
-    const pending      = allConvs.filter(c => c.status === 'pending').reduce((s,c) => s + (c.commission||0), 0)
-    const refCount     = allConvs.length
+    const totalEarned = allConvs.reduce((s,c) => s + (c.commission||0), 0)
+    const totalPaid   = (aff.total_paid || 0)
+    const pending     = allConvs.filter(c => c.status === 'pending').reduce((s,c) => s + (c.commission||0), 0)
 
     set('aff-total-earned', '$' + totalEarned.toFixed(2))
     set('aff-paid-out',     '$' + totalPaid.toFixed(2))
     set('aff-pending',      '$' + pending.toFixed(2))
-    set('aff-ref-count',    refCount)
+    set('aff-ref-count',    allConvs.length)
     set('aff-balance',      '$' + pending.toFixed(2))
 
-    // Next payout estimate
     if (pending >= 50) {
       set('aff-next-payout', 'End of this month')
-      document.getElementById('payout-note').style.color = 'var(--teal)'
+      const pn = document.getElementById('payout-note')
+      if (pn) pn.style.color = 'var(--teal)'
     } else {
-      const needed = (50 - pending).toFixed(2)
-      set('aff-next-payout', `$${needed} more needed`)
+      set('aff-next-payout', '$' + (50 - pending).toFixed(2) + ' more needed')
     }
 
-    // Render commission log (no buyer names)
     renderAffLog(allConvs)
-
-    // Load period stats
     updatePeriod(affPeriod)
+
+    // ── POPULATE BANNERS ────────────────────────────────
+    // Set banner links to affiliate URL
+    const bannerLinks = ['b-728-link','b-300-link','b-468-link']
+    bannerLinks.forEach(id => {
+      const el = document.getElementById(id)
+      if (el) el.href = affUrl
+    })
+
+    // Generate banner HTML code for copy
+    const b728html = `<a href="${affUrl}" target="_blank" style="display:block;width:728px;height:90px;background:linear-gradient(135deg,#0d1220,#111827);border:1px solid #1e2d42;border-radius:8px;text-decoration:none;display:flex;align-items:center;justify-content:space-between;padding:0 24px;font-family:sans-serif"><div style="display:flex;align-items:center;gap:12px"><div style="width:36px;height:36px;border-radius:7px;background:#19e6b0;display:flex;align-items:center;justify-content:center;font-size:18px">⚡</div><div><div style="font-size:18px;font-weight:700;color:#dce8f5">NEXTWAVE TRAFFIC ENGINE</div><div style="font-size:12px;color:#8fa3c4">AI Funnels · Wave Links · Lead Capture · VSL Bridge Pages</div></div></div><div style="background:#19e6b0;color:#080c14;font-weight:700;font-size:13px;padding:10px 20px;border-radius:6px">Get Started Free →</div></a>`
+
+    const b300html = `<a href="${affUrl}" target="_blank" style="display:block;width:300px;height:250px;background:linear-gradient(160deg,#0d1220,#111827);border:1px solid #1e2d42;border-radius:10px;text-decoration:none;padding:24px;font-family:sans-serif"><div style="font-size:10px;color:#19e6b0;letter-spacing:1px;margin-bottom:10px">AFFILIATE MARKETING SYSTEM</div><div style="font-size:22px;font-weight:700;color:#dce8f5;line-height:1.1;margin-bottom:10px">Stop Losing the Traffic You Paid For.</div><div style="font-size:12px;color:#8fa3c4;line-height:1.6;margin-bottom:16px">AI funnels · Lead capture · VSL bridge pages · Wave Link tracking</div><div style="margin-bottom:18px"><div style="font-size:11px;color:#dce8f5;margin-bottom:4px">✓ Free to start</div><div style="font-size:11px;color:#dce8f5;margin-bottom:4px">✓ No credit card needed</div><div style="font-size:11px;color:#dce8f5">✓ Live in 60 seconds</div></div><div style="background:#19e6b0;color:#080c14;font-weight:700;font-size:13px;padding:10px;border-radius:6px;text-align:center">Get Free Access →</div></a>`
+
+    const b468html = `<a href="${affUrl}" target="_blank" style="display:block;width:468px;height:60px;background:linear-gradient(135deg,#0d1220,#111827);border:1px solid #1e2d42;border-radius:6px;text-decoration:none;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-family:sans-serif"><div><span style="font-weight:700;color:#19e6b0;font-size:14px">NEXTWAVE</span><span style="color:#8fa3c4;font-size:12px;margin-left:8px">— AI Funnels + Lead Capture + Wave Links</span></div><div style="background:#19e6b0;color:#080c14;font-weight:700;font-size:11px;padding:7px 14px;border-radius:5px">Try Free →</div></a>`
+
+    const b728El = document.getElementById('b-728')
+    const b300El = document.getElementById('b-300')
+    const b468El = document.getElementById('b-468')
+    if (b728El) b728El.value = b728html
+    if (b300El) b300El.value = b300html
+    if (b468El) b468El.value = b468html
+
+    // ── POPULATE EMAIL SWIPES ────────────────────────────
+    const swipe1 = `Subject: Are you still doing this with your traffic?
+
+Hey [First Name],
+
+Quick question — when someone clicks your affiliate link and doesn't buy... what happens to them?
+
+If your answer is "they're gone forever" — that's the problem.
+
+Most affiliates send cold traffic directly to an offer. The visitor lands, looks around, leaves. That's it. No list built. No second chance. No follow-up. Just money spent with nothing to show for it.
+
+I've been using a tool called NextWave Traffic Engine that fixes this.
+
+It puts a capture system between your traffic and your offer. Every click goes through a funnel that captures the email first — then sends them to the offer. If they don't buy, Forge Mail follows up automatically.
+
+Your list grows with every campaign whether people buy or not.
+
+Check it out here: ${affUrl}
+
+It's free to get started.
+
+[Your name]`
+
+    const swipe2 = `Subject: This is why your affiliate campaigns aren't scaling
+
+Hey [First Name],
+
+Here's the honest truth about most affiliate campaigns:
+
+The traffic is fine. The offer is fine. The math just doesn't work because 97% of visitors don't buy on the first visit — and without a system to capture and follow up with them, they're lost forever.
+
+NextWave Traffic Engine solves this with a complete pipeline:
+
+→ Your traffic hits a Wave Link (tracked, protected)
+→ They land on an AI-built lead capture page
+→ They watch a short VSL that warms them up
+→ They reach your affiliate offer — ready to buy
+→ Forge Mail follows up with everyone who didn't convert
+
+The AI builds your funnel copy in under 60 seconds. The system runs automatically after that.
+
+Free to start: ${affUrl}
+
+This is what a real affiliate system looks like.
+
+[Your name]`
+
+    const swipe3 = `Subject: The tool I use to run my affiliate campaigns
+
+Hey [First Name],
+
+I want to show you exactly what I've been using to run my affiliate campaigns.
+
+It's called NextWave Traffic Engine. Here's what it does:
+
+AI FUNNEL BUILDER — Type your niche and offer details. Claude generates your full funnel copy: headline, hook, benefits, CTA, email sequence, and a complete VSL script. Done in under 60 seconds.
+
+WAVE LINK — Every affiliate link becomes a short tracked URL. You see exactly how many clicks each campaign sends. No more guessing what's working.
+
+LEAD CAPTURE — Every visitor who opts in goes into your database and syncs to Forge Mail automatically. Your follow-up sequence fires the moment they sign up.
+
+VSL BRIDGE PAGE — Between the opt-in and your offer, a short video warms the lead. Cold traffic converts at 1-3%. Warmed traffic converts at 3-8%.
+
+REVENUE DASHBOARD — Live data. Leads, clicks, conversions, revenue all in one place.
+
+Pricing starts at $19/month. There's also a Lifetime option at $997 — cheaper than 21 months of the Pro plan.
+
+Get started free: ${affUrl}
+
+[Your name]`
+
+    const swipe4 = `Subject: Last thing I'll say about this
+
+Hey [First Name],
+
+I've mentioned NextWave Traffic Engine a couple of times this week.
+
+I'll keep this short.
+
+If you're buying traffic — TrafficZest, solo ads, anything — and you're not capturing leads before sending them to your offer, you're burning money.
+
+Every click that doesn't convert is gone forever without a system in place.
+
+NextWave puts that system in place. AI-built funnels. Lead capture. VSL bridge page. Forge Mail automation. Wave Link tracking. All connected.
+
+Free to start. $19/month to go full speed.
+
+${affUrl}
+
+That's all from me on this.
+
+[Your name]`
+
+    // ── SOCIAL COPY ──────────────────────────────────────
+    const socialFb = `🔥 If you're buying solo ad traffic and sending it straight to an affiliate offer — stop.
+
+You're losing 97% of the people who click.
+
+I've been using NextWave Traffic Engine to put a full capture system between my traffic and my offers. Every visitor gets captured as a lead first, then warmed up with a VSL, then sent to the offer.
+
+The AI builds the funnel in 60 seconds. Forge Mail follows up automatically.
+
+Free to start 👇
+${affUrl}
+
+#affiliatemarketing #trafficzest #soloads #onlinebusiness`
+
+    const socialTw = `Most affiliates send traffic straight to an offer.
+
+97% don't buy. They leave forever.
+
+NextWave Traffic Engine fixes this:
+→ AI funnel in 60 seconds
+→ Lead capture before the offer
+→ VSL bridge page that warms cold traffic
+→ Forge Mail auto follow-up
+→ Wave Link click tracking
+
+Free to start: ${affUrl}`
+
+    const socialLi = `I want to share something that changed how I run affiliate campaigns.
+
+The problem I kept running into: I'd buy traffic, people would land on my offer, most wouldn't buy, and they'd be gone forever. No list built. No follow-up. Just money spent.
+
+The fix was simple in theory — capture the lead before sending them to the offer. Hard in practice without the right tools.
+
+I've been using NextWave Traffic Engine for the past few weeks. Here's what it does:
+
+• AI builds your funnel copy in under 60 seconds
+• Wave Links track every click from every campaign  
+• Lead capture page sits before your affiliate offer
+• VSL Bridge Page warms cold traffic before the sale
+• Forge Mail sync means every lead gets followed up automatically
+
+The dashboard shows leads, clicks, conversions and revenue in real time.
+
+It's free to start. Paid plans from $19/month.
+
+If you're doing any kind of affiliate marketing with paid traffic, this is worth looking at:
+${affUrl}`
+
+    const socialYt = `🔗 Tools I use in this video:
+NextWave Traffic Engine (AI funnels + lead capture + Wave Link tracking): ${affUrl}
+
+--- ABOUT NEXTWAVE ---
+NextWave builds your affiliate marketing pipeline automatically. AI-generated funnel copy, lead capture, VSL bridge pages, Wave Link tracking, and Forge Mail automation — all connected.
+Free to start at the link above.`
+
+    // Set all swipe values
+    const swipes = { swipe1, swipe2, swipe3, swipe4 }
+    Object.entries(swipes).forEach(([id, val]) => {
+      const el = document.getElementById(id)
+      if (el) el.value = val
+    })
+
+    const socials = { 'social-fb': socialFb, 'social-tw': socialTw, 'social-li': socialLi, 'social-yt': socialYt }
+    Object.entries(socials).forEach(([id, val]) => {
+      const el = document.getElementById(id)
+      if (el) el.value = val
+    })
 
   } catch(e) {
     console.error('loadAffiliate:', e)
   }
+}
+
+// ── AFFILIATE TAB SWITCHING ───────────────────────────
+window.affTab = function(tab) {
+  const tabs    = ['stats','link','banners','swipes','social']
+  const btnBase = 'btn btn-sm btn-g'
+  const btnOn   = 'btn btn-sm'
+  tabs.forEach(t => {
+    const btn     = document.getElementById('atab-' + t)
+    const content = document.getElementById('atab-' + t + '-content')
+    if (btn)     btn.className     = t === tab ? btnOn : btnBase
+    if (btn)     btn.style.cssText = t === tab ? 'background:var(--teal);color:var(--ink);border:none' : 'border:none'
+    if (content) content.style.display = t === tab ? 'block' : 'none'
+  })
+}
+
+// ── COPY BANNER HTML ──────────────────────────────────
+window.copyBanner = function(id) {
+  const el = document.getElementById(id)
+  if (!el) return
+  navigator.clipboard.writeText(el.value).then(() => toast('Banner HTML copied!', 'ok'))
+}
+
+// ── COPY SWIPE / SOCIAL ───────────────────────────────
+window.copySwipe = function(id) {
+  const el = document.getElementById(id)
+  if (!el) return
+  navigator.clipboard.writeText(el.value).then(() => toast('Copied to clipboard!', 'ok'))
 }
 
 function showAffState(state) {
