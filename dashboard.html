@@ -424,10 +424,16 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
           </div>
 
           <div class="fld">
-            <label class="lbl">Affiliate / Offer URL <span style="color:var(--muted);font-size:9px;font-weight:400">(paste → auto-extract details)</span></label>
+            <label class="lbl">Affiliate / Offer URL <span style="color:var(--muted);font-size:9px;font-weight:400">(paste direct URL or select a Wave Link below)</span></label>
             <div style="display:flex;gap:6px">
               <input class="inp" id="ai-url" placeholder="https://your-offer.com/link" style="flex:1" onblur="autoScrape()" />
               <button class="btn btn-g btn-sm" id="scrape-btn" onclick="scrapeOffer()" style="flex-shrink:0;white-space:nowrap"><span id="scrape-btn-txt">⬇ Extract</span></button>
+            </div>
+            <!-- WAVE LINKS DROPDOWN -->
+            <div style="margin-top:6px">
+              <select class="sel" id="ai-wavelink-select" onchange="onWaveLinkSelect()" style="font-size:11px">
+                <option value="">— Or select an existing Wave Link —</option>
+              </select>
             </div>
             <div class="fb" id="scrape-fb"></div>
           </div>
@@ -1304,7 +1310,7 @@ window.nav = function(id, el) {
       if (n.getAttribute('onclick')?.includes(`'${id}'`)) n.classList.add('on')
     })
   }
-  const fns = { overview: loadOverview, leads: loadLeads, links: loadLinks, conversions: loadConversions, traffic: loadTraffic, settings: checkTables, affiliate: loadAffiliate }
+  const fns = { overview: loadOverview, leads: loadLeads, links: loadLinks, conversions: loadConversions, traffic: loadTraffic, settings: checkTables, affiliate: loadAffiliate, funnels: loadFunnelsTab }
   fns[id]?.()
 }
 
@@ -1350,6 +1356,11 @@ async function loadOverview() {
 
     addFeed(`Loaded — ${leads.length} leads, ${clicks} clicks, $${revenue.toFixed(2)}`, 'ok')
   } catch(e) { addFeed('Error: ' + e.message, 'w') }
+}
+
+// ── FUNNELS TAB INIT ──────────────────────────────────
+function loadFunnelsTab() {
+  loadWaveLinksDropdown()
 }
 
 // AI FUNNELS
@@ -1477,6 +1488,32 @@ function renderChips(containerId, targetId, items) {
   container.innerHTML = items.map(item =>
     `<span class="chip" onclick="fill('${targetId}','${item.replace(/'/g,"\\'")}'); this.style.background='var(--teal-bg)'; this.style.borderColor='var(--teal-bdr)'; this.style.color='var(--teal)'">${item.length > 45 ? item.slice(0,45)+'…' : item}</span>`
   ).join('')
+}
+
+// ── WAVE LINK DROPDOWN IN FUNNEL BUILDER ─────────────
+async function loadWaveLinksDropdown() {
+  try {
+    const { data: links } = await _sb.from('links').select('slug,label,original_url,wave_link').order('created_at',{ascending:false})
+    const sel = document.getElementById('ai-wavelink-select')
+    if (!sel || !links?.length) return
+    sel.innerHTML = '<option value="">— Or select an existing Wave Link —</option>'
+      + links.map(l => {
+          const siteUrl    = window.location.origin
+          const waveUrl    = l.wave_link || `${siteUrl}/l/${l.slug}`
+          const labelText  = l.label || l.original_url?.slice(0,50) || l.slug
+          return `<option value="${esc(waveUrl)}" data-original="${esc(l.original_url||'')}">${esc(waveUrl)} — ${esc(labelText)}</option>`
+        }).join('')
+  } catch(e) { console.warn('loadWaveLinksDropdown:', e.message) }
+}
+
+window.onWaveLinkSelect = function() {
+  const sel = document.getElementById('ai-wavelink-select')
+  if (!sel?.value) return
+  // Set the URL field to the selected Wave Link
+  document.getElementById('ai-url').value = sel.value
+  // Auto-trigger scrape — scraper follows Wave Link redirect to real offer page
+  setFB('scrape-fb','info','Wave Link selected — extracting offer details from destination page…')
+  scrapeOffer()
 }
 
 // ── OFFER SCRAPER ─────────────────────────────────────
@@ -1636,13 +1673,15 @@ window.deployFunnel = async function() {
         <code>${esc(data.bridgeUrl)}</code>
         <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(data.bridgeUrl)}').then(()=>toast('Copied','ok'))">Copy</span>
       </div>
-      ${data.videoReady
-        ? `<div style="margin-top:8px;font-size:11px;color:var(--teal)">🎬 VSL video generated successfully</div>`
-        : `<div style="margin-top:8px;font-size:11px;color:var(--muted)">ℹ No D-ID key set — bridge page shows script as text. Add DID_API_KEY to Netlify to enable video.</div>`
-      }
+      <div style="margin-top:10px;padding:10px;background:var(--s2);border-radius:var(--r);font-size:11px;line-height:1.65">
+        ${data.videoStatus === 'processing'
+          ? `<span style="color:var(--teal)">🎬 VSL video is generating in the background — bridge page shows the script now and updates automatically when video is ready (2-5 mins).</span>`
+          : `<span style="color:var(--muted)">ℹ Add DID_API_KEY to Netlify to enable automatic VSL video generation.</span>`
+        }
+      </div>
       <div style="margin-top:10px;font-size:11px;color:var(--dim);line-height:1.6">
         <strong style="color:var(--body)">Your funnel flow:</strong><br>
-        Traffic → <a href="${esc(data.url)}" target="_blank" style="color:var(--teal);text-decoration:none">Opt-in page</a> → <a href="${esc(data.bridgeUrl)}" target="_blank" style="color:var(--blue);text-decoration:none">VSL Bridge</a> → Affiliate offer
+        Traffic → <a href="${esc(data.url)}" target="_blank" style="color:var(--teal);text-decoration:none">Opt-in</a> → <a href="${esc(data.bridgeUrl)}" target="_blank" style="color:var(--blue);text-decoration:none">VSL Bridge</a> → Affiliate offer
       </div>`
 
     addFeed('Funnel deployed: ' + name, 'ok')
@@ -1701,22 +1740,23 @@ window.loadLinks = async function() {
     document.getElementById('links-body').innerHTML = list.length
       ? list.map(l => {
           const displayLink = l.wave_link || l.short_link || (window.location.origin + '/l/' + l.slug)
-          return `<tr id="lr-${esc(l.id)}">
+          const rowId       = l.id || l.slug
+          return `<tr id="lr-${esc(rowId)}">
             <td><a href="${esc(displayLink)}" target="_blank" class="mono ct" style="text-decoration:none;font-size:11px">${esc(displayLink)}</a></td>
             <td class="cs">${esc(l.label||'—')}</td>
             <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
               <a href="${esc(l.original_url||'#')}" target="_blank" style="color:var(--blue);text-decoration:none;font-size:11px">${esc(l.original_url||'—')}</a>
             </td>
-            <td class="mono cg" id="clk-${esc(l.id)}">${l.clicks||0}</td>
+            <td class="mono cg" id="clk-${esc(rowId)}">${l.clicks||0}</td>
             <td>
               <div style="display:flex;gap:5px">
                 <button class="btn btn-sm"
                   style="background:rgba(79,142,247,.08);color:var(--blue);border:1px solid rgba(79,142,247,.2);font-size:10px;padding:3px 8px;white-space:nowrap"
-                  onclick="resetLinkClicks('${esc(l.id)}')"
+                  onclick="resetLinkClicks('${esc(l.id||'')}','${esc(l.slug)}')"
                   title="Reset click count to zero">↺ Reset</button>
                 <button class="btn btn-sm"
                   style="background:rgba(242,92,122,.08);color:var(--rose);border:1px solid rgba(242,92,122,.2);font-size:10px;padding:3px 8px;white-space:nowrap"
-                  onclick="deleteLink('${esc(l.id)}','${esc(l.slug)}')"
+                  onclick="deleteLink('${esc(l.id||'')}','${esc(l.slug)}')"
                   title="Delete this Wave Link permanently">✕ Delete</button>
               </div>
             </td>
@@ -1726,35 +1766,48 @@ window.loadLinks = async function() {
 }
 
 // ── RESET CLICK COUNT ─────────────────────────────────
-window.resetLinkClicks = async function(id) {
-  if (!confirm('Reset click count to zero for this link? The link will stay active.')) return
+window.resetLinkClicks = async function(id, slug) {
+  if (!confirm('Reset click count to zero for this link? The link stays active.')) return
   try {
-    const { error } = await _sb.from('links').update({ clicks: 0 }).eq('id', id)
+    // Try by id first, fall back to slug
+    const filter = id && id !== 'undefined' ? _sb.from('links').update({ clicks: 0 }).eq('id', id)
+                                             : _sb.from('links').update({ clicks: 0 }).eq('slug', slug)
+    const { error } = await filter
     if (error) throw error
-    // Update just the clicks cell without reloading the whole table
-    const cell = document.getElementById('clk-' + id)
+    const cell = document.getElementById('clk-' + (id||slug))
     if (cell) {
       cell.textContent = '0'
       cell.style.color = 'var(--muted)'
       setTimeout(() => { cell.style.color = '' }, 800)
     }
-    // Update summary stats
     loadLinks()
     toast('Analytics reset to zero', 'ok')
-    addFeed('Wave Link analytics reset', 'ok')
   } catch(e) {
     toast('Reset failed: ' + e.message, 'err')
   }
 }
 
-// ── DELETE LINK ───────────────────────────────────────
 window.deleteLink = async function(id, slug) {
-  if (!confirm(`Permanently delete Wave Link /l/${slug}?\n\nAnyone who clicks this link after deletion will get a 404. This cannot be undone.`)) return
+  if (!confirm('Permanently delete Wave Link /l/' + slug + '? Anyone who clicks it after deletion will get a 404. This cannot be undone.')) return
   try {
-    const { error } = await _sb.from('links').delete().eq('id', id)
+    // Try delete by id first, fall back to slug
+    let error
+    if (id && id !== 'undefined' && id !== 'null') {
+      const res = await _sb.from('links').delete().eq('id', id)
+      error = res.error
+      // If id delete failed try slug
+      if (error) {
+        const res2 = await _sb.from('links').delete().eq('slug', slug)
+        error = res2.error
+      }
+    } else {
+      const res = await _sb.from('links').delete().eq('slug', slug)
+      error = res.error
+    }
     if (error) throw error
-    // Remove row immediately without full reload
-    const row = document.getElementById('lr-' + id)
+    // Fade out and remove row
+    const rowId  = id && id !== 'undefined' ? 'lr-' + id : 'lr-' + slug
+    const row    = document.getElementById(rowId)
     if (row) {
       row.style.transition = 'opacity .25s ease'
       row.style.opacity    = '0'
