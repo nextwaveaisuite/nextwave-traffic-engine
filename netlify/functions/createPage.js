@@ -1,7 +1,6 @@
 // netlify/functions/createPage.js
-// Saves funnel record and bridge page to Supabase
-// Triggers D-ID video generation if DID_API_KEY is configured
-// Returns funnel URL, bridge URL, and whether video was generated
+// Saves funnel to Supabase and triggers background D-ID video generation
+// Video generates asynchronously — bridge page polls for status
 
 import { supabase } from './_supabase.js'
 
@@ -26,54 +25,53 @@ export async function handler(event) {
     const pageUrl   = `${siteUrl}/funnel/${slug}`
     const bridgeUrl = `${siteUrl}/bridge/${slug}`
 
-    // Generate VSL video if D-ID key exists and script is available
-    let vslVideoUrl = null
-    const didKey    = process.env.DID_API_KEY
-    const vslScript = copy?.vslScript
-
-    if (didKey && vslScript) {
-      try {
-        const videoRes  = await fetch(`${siteUrl}/.netlify/functions/video`, {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body:    JSON.stringify({ script: vslScript, voice: 'en-US-JennyNeural' })
-        })
-        const videoData = await videoRes.json()
-        if (videoData.videoUrl) vslVideoUrl = videoData.videoUrl
-      } catch(e) {
-        console.warn('D-ID video generation error (non-fatal):', e.message)
-      }
-    }
-
-    // Save to funnels table — add vsl_video_url column if needed
+    // Save funnel with status 'processing' if D-ID key exists
+    const hasVideo = !!process.env.DID_API_KEY && !!copy?.vslScript
     const { data, error } = await supabase
       .from('funnels')
       .insert([{
-        funnel_name:    name,
-        affiliate_link: link,
+        funnel_name:      name,
+        affiliate_link:   link,
         slug,
-        copy:           copy || null,
-        vsl_video_url:  vslVideoUrl,
-        created_at:     new Date().toISOString()
+        copy:             copy || null,
+        vsl_video_url:    null,
+        vsl_video_status: hasVideo ? 'processing' : 'no_key',
+        created_at:       new Date().toISOString()
       }])
       .select()
       .single()
 
     if (error) throw error
 
+    // ── TRIGGER BACKGROUND VIDEO GENERATION ──────────────
+    // Background function returns 202 immediately, generates video async
+    // Bridge page polls /.netlify/functions/video-status?slug=xxx
+    if (hasVideo) {
+      fetch(`${siteUrl}/.netlify/functions/video-background`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({
+          script: copy.vslScript,
+          slug,
+          voice:  'en-US-JennyNeural'
+        })
+      }).catch(e => console.warn('Background video trigger non-fatal:', e.message))
+      // Non-blocking — do not await
+    }
+
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        url:        pageUrl,
+        url:          pageUrl,
         bridgeUrl,
         slug,
-        videoReady: !!vslVideoUrl,
+        videoStatus:  hasVideo ? 'processing' : 'no_key',
         data
       })
     }
 
-  } catch (err) {
+  } catch(err) {
     console.error('createPage error:', err)
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) }
   }
