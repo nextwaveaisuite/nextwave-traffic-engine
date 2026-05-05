@@ -18,31 +18,21 @@ export async function handler(event) {
     }
 
     if (action === 'reset') {
-      // Reset click count
-      const { error } = await supabase
-        .from('links')
-        .update({ clicks: 0 })
-        .eq('slug', slug)
-
+      const { error } = await supabase.from('links').update({ clicks: 0 }).eq('slug', slug)
       if (error) throw error
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ success: true, action: 'reset', slug })
-      }
+      return { statusCode: 200, body: JSON.stringify({ success: true, action: 'reset', slug }) }
     }
 
-    // Default action: delete
-    const { error } = await supabase
-      .from('links')
-      .delete()
-      .eq('slug', slug)
+    if (action === 'deleteFunnel') {
+      const { error } = await supabase.from('funnels').delete().eq('slug', slug)
+      if (error) throw error
+      return { statusCode: 200, body: JSON.stringify({ success: true, action: 'deleteFunnel', slug }) }
+    }
 
+    // Default: delete Wave Link
+    const { error } = await supabase.from('links').delete().eq('slug', slug)
     if (error) throw error
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true, action: 'deleted', slug })
-    }
+    return { statusCode: 200, body: JSON.stringify({ success: true, action: 'deleted', slug }) }
 
   } catch(err) {
     console.error('deleteLink error:', err)
