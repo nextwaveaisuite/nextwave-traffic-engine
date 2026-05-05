@@ -1,6 +1,6 @@
 // netlify/functions/createPage.js
-// Saves funnel to Supabase and triggers background D-ID video generation
-// Video generates asynchronously — bridge page polls for status
+// Saves funnel to Supabase using UPSERT (handles duplicate slugs)
+// Triggers background D-ID video generation if DID_API_KEY is set
 
 import { supabase } from './_supabase.js'
 
@@ -15,64 +15,101 @@ export async function handler(event) {
     const link = body.link?.trim() || null
     const copy = body.copy || null
 
+    // Build slug
     const slug = name
       .toLowerCase()
       .replace(/\s+/g, '-')
       .replace(/[^a-z0-9-]/g, '')
-      .slice(0, 60)
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '')
+      .slice(0, 60) || 'funnel'
 
     const siteUrl   = process.env.SITE_URL || 'https://nextwave-traffic-engine.netlify.app'
     const pageUrl   = `${siteUrl}/funnel/${slug}`
     const bridgeUrl = `${siteUrl}/bridge/${slug}`
+    const hasVideo  = !!process.env.DID_API_KEY && !!copy?.vslScript
 
-    // Save funnel with status 'processing' if D-ID key exists
-    const hasVideo = !!process.env.DID_API_KEY && !!copy?.vslScript
-    const { data, error } = await supabase
+    console.log('createPage: saving slug =', slug, '| hasVideo =', hasVideo)
+
+    // ── UPSERT — handles duplicate slugs gracefully ───────
+    // If slug already exists, update it with new copy
+    // onConflict: 'slug' requires a unique constraint on slug column
+    const record = {
+      funnel_name:      name,
+      affiliate_link:   link,
+      slug,
+      copy:             copy ? JSON.stringify(copy) : null,
+      vsl_video_url:    null,
+      vsl_video_status: hasVideo ? 'processing' : 'no_key',
+      created_at:       new Date().toISOString()
+    }
+
+    // Try upsert first
+    let data, error
+    const upsertRes = await supabase
       .from('funnels')
-      .insert([{
-        funnel_name:      name,
-        affiliate_link:   link,
-        slug,
-        copy:             copy || null,
-        vsl_video_url:    null,
-        vsl_video_status: hasVideo ? 'processing' : 'no_key',
-        created_at:       new Date().toISOString()
-      }])
+      .upsert([record], { onConflict: 'slug' })
       .select()
       .single()
 
-    if (error) throw error
+    data  = upsertRes.data
+    error = upsertRes.error
 
-    // ── TRIGGER BACKGROUND VIDEO GENERATION ──────────────
-    // Background function returns 202 immediately, generates video async
-    // Bridge page polls /.netlify/functions/video-status?slug=xxx
+    // If upsert failed (e.g. no unique constraint) try plain insert
+    if (error) {
+      console.warn('createPage upsert error:', error.message, '— trying insert')
+
+      // Try deleting existing record first then inserting
+      await supabase.from('funnels').delete().eq('slug', slug)
+
+      const insertRes = await supabase
+        .from('funnels')
+        .insert([record])
+        .select()
+        .single()
+
+      data  = insertRes.data
+      error = insertRes.error
+    }
+
+    if (error) {
+      console.error('createPage fatal error:', JSON.stringify(error))
+      throw new Error(error.message || 'Supabase insert failed — ' + JSON.stringify(error))
+    }
+
+    if (!data) {
+      console.error('createPage: no data returned from Supabase')
+      throw new Error('Supabase returned no data — record may not have saved')
+    }
+
+    console.log('createPage: saved successfully, id =', data.id || 'unknown')
+
+    // ── TRIGGER BACKGROUND VIDEO ──────────────────────────
     if (hasVideo) {
       fetch(`${siteUrl}/.netlify/functions/video-background`, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({
-          script: copy.vslScript,
-          slug,
-          voice:  'en-US-JennyNeural'
-        })
-      }).catch(e => console.warn('Background video trigger non-fatal:', e.message))
-      // Non-blocking — do not await
+        body:    JSON.stringify({ script: copy.vslScript, slug, voice: 'en-US-JennyNeural' })
+      }).catch(e => console.warn('Background video non-fatal:', e.message))
     }
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        url:          pageUrl,
+        url:         pageUrl,
         bridgeUrl,
         slug,
-        videoStatus:  hasVideo ? 'processing' : 'no_key',
+        videoStatus: hasVideo ? 'processing' : 'no_key',
         data
       })
     }
 
   } catch(err) {
-    console.error('createPage error:', err)
-    return { statusCode: 500, body: JSON.stringify({ error: err.message }) }
+    console.error('createPage unhandled error:', err.message)
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: err.message || 'Unknown error in createPage' })
+    }
   }
 }
