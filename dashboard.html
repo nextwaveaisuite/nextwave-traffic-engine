@@ -849,23 +849,39 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
 
   <!-- NOT ENROLLED STATE -->
   <div id="aff-not-enrolled" style="display:none">
-    <div class="panel" style="max-width:560px">
-      <div class="p-head"><div class="p-title">💸 Join the Affiliate Program</div></div>
-      <div class="p-body">
-        <p style="font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:16px">
-          Promote NextWave and earn commissions on every sale you refer. No cap. Tracked in real time.
-        </p>
-        <div style="background:var(--teal-bg);border:1px solid var(--teal-bdr);border-radius:var(--r2);padding:16px;margin-bottom:16px">
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;text-align:center">
-            <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--teal)">$5.70</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Starter</div></div>
-            <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--teal)">$14.70</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Pro</div></div>
-            <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--teal)">$29.70</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Scale</div></div>
-            <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--gold)">$299.10</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Lifetime</div></div>
+    <div class="g2" style="align-items:start">
+      <div class="panel">
+        <div class="p-head"><div class="p-title">💸 Join the Affiliate Program</div></div>
+        <div class="p-body">
+          <p style="font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:16px">
+            Promote NextWave and earn commissions on every sale you refer. No cap. Tracked in real time.
+          </p>
+          <div style="background:var(--teal-bg);border:1px solid var(--teal-bdr);border-radius:var(--r2);padding:16px;margin-bottom:16px">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;text-align:center">
+              <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--teal)">$5.70</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Starter</div></div>
+              <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--teal)">$14.70</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Pro</div></div>
+              <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--teal)">$29.70</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Scale</div></div>
+              <div><div style="font-family:var(--m);font-size:16px;font-weight:500;color:var(--gold)">$299.10</div><div style="font-size:10px;color:var(--muted);margin-top:2px">per Lifetime</div></div>
+            </div>
+            <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:10px;font-family:var(--m)">30% commission · Paid monthly via PayPal · No cap</div>
           </div>
-          <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:10px;font-family:var(--m)">30% commission · Paid monthly via PayPal · No cap</div>
+          <button class="btn btn-p btn-w" onclick="enrollAffiliate()">Join Affiliate Program →</button>
+          <div class="fb" id="aff-enroll-fb"></div>
         </div>
-        <button class="btn btn-p btn-w" onclick="enrollAffiliate()">Join Affiliate Program →</button>
-        <div class="fb" id="aff-enroll-fb"></div>
+      </div>
+      <div class="panel">
+        <div class="p-head"><div class="p-title">📦 What you get when you join</div></div>
+        <div class="p-body">
+          <div class="slist">
+            <div class="sr"><span class="sr-l">🔗 Unique affiliate link</span><span class="sr-v ct" style="font-size:10px">Tracked 30-day cookie</span></div>
+            <div class="sr"><span class="sr-l">🖼 HTML banners</span><span class="sr-v" style="font-size:10px">3 sizes ready to use</span></div>
+            <div class="sr"><span class="sr-l">📧 Email swipes</span><span class="sr-v" style="font-size:10px">4 proven campaigns</span></div>
+            <div class="sr"><span class="sr-l">📱 Social copy</span><span class="sr-v" style="font-size:10px">Facebook, Twitter, LinkedIn, YouTube</span></div>
+            <div class="sr"><span class="sr-l">📊 Live commission dashboard</span><span class="sr-v" style="font-size:10px">Real-time earnings</span></div>
+            <div class="sr"><span class="sr-l">💳 Monthly PayPal payouts</span><span class="sr-v" style="font-size:10px">From $50 balance</span></div>
+          </div>
+          <p style="font-size:11px;color:var(--muted);margin-top:12px;line-height:1.6">Click Join above — your link, banners, and email swipes are ready instantly.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -2167,6 +2183,9 @@ Free to start at the link above.`
       if (el) el.value = val
     })
 
+    // Force stats tab active after load
+    affTab('stats')
+
   } catch(e) {
     console.error('loadAffiliate:', e)
   }
@@ -2271,10 +2290,23 @@ window.enrollAffiliate = async function() {
     }])
     if (error) throw error
 
-    showFB('aff-enroll-fb','ok','✓ You are now enrolled! Loading your dashboard…')
-    setTimeout(() => loadAffiliate(), 1200)
+    showFB('aff-enroll-fb','ok','✓ Enrolled! Loading your affiliate tools…')
+    // Load affiliate data then jump straight to banners tab
+    setTimeout(async () => {
+      await loadAffiliate()
+      affTab('banners')
+    }, 800)
   } catch(e) {
-    showFB('aff-enroll-fb','err','⚠ ' + e.message)
+    // Handle duplicate enrollment gracefully
+    if (e.message?.includes('duplicate') || e.message?.includes('unique')) {
+      showFB('aff-enroll-fb','info','ℹ You are already enrolled — loading your dashboard…')
+      setTimeout(async () => {
+        await loadAffiliate()
+        affTab('banners')
+      }, 800)
+    } else {
+      showFB('aff-enroll-fb','err','⚠ ' + e.message)
+    }
   }
 }
 
