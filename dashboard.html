@@ -357,7 +357,7 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
   <div style="flex:1"></div>
   <div class="si-row">
     <div class="si-pill off" id="pi-tz" onclick="nav('integrations',null)"><div class="si-pip"></div>TrafficZest</div>
-    <div class="si-pill off" id="pi-fm" onclick="nav('integrations',null)"><div class="si-pip"></div>Forge Mail</div>
+    <div class="si-pill off" id="pi-fm" onclick="nav('integrations',null)"><div class="si-pip"></div>Forge Mail <span style="font-size:9px;color:var(--teal)">Lead Gen + Email</span></div>
   </div>
   <div class="s-plan">
     <div class="s-plan-lbl">PLAN</div>
@@ -542,21 +542,33 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
             <!-- TRAFFIC + SLUG -->
             <div class="r2">
               <div class="fld">
-                <label class="lbl">Traffic source</label>
+                <label class="lbl">Traffic Source <span style="color:var(--muted);font-size:9px;font-weight:400">where visitors come from</span></label>
                 <select class="sel" id="ai-src">
-                  <option value="trafficzest">TrafficZest Solo Ads</option>
-                  <option value="solo-ads">Solo Ads (other)</option>
-                  <option value="cold-traffic">Cold Traffic</option>
-                  <option value="email-list">Email List / Warm Traffic</option>
-                  <option value="facebook-ads">Facebook / Instagram Ads</option>
-                  <option value="youtube-ads">YouTube Ads</option>
-                  <option value="google-ads">Google Ads</option>
+                  <option value="trafficzest">⚡ TrafficZest Solo Ads</option>
+                  <option value="solo-ads">📨 Solo Ads (other)</option>
+                  <option value="cold-traffic">❄️ Cold Traffic</option>
+                  <option value="facebook-ads">📘 Facebook / Instagram Ads</option>
+                  <option value="youtube-ads">▶️ YouTube Ads</option>
+                  <option value="google-ads">🔍 Google Ads</option>
+                  <option value="organic">🌱 Organic / Content</option>
                 </select>
               </div>
               <div class="fld">
-                <label class="lbl">Funnel slug</label>
-                <input class="inp" id="ai-slug" placeholder="auto-generated from offer name" />
+                <label class="lbl">Follow-up Method <span style="color:var(--muted);font-size:9px;font-weight:400">where leads go after opt-in</span></label>
+                <select class="sel" id="ai-followup">
+                  <option value="forgemail">⚡ Forge Mail — Lead Gen + Email Platform</option>
+                  <option value="aweber">📧 AWeber</option>
+                  <option value="getresponse">📧 GetResponse</option>
+                  <option value="mailchimp">📧 Mailchimp</option>
+                  <option value="activecampaign">📧 ActiveCampaign</option>
+                  <option value="convertkit">📧 ConvertKit</option>
+                  <option value="none">— No email follow-up yet</option>
+                </select>
               </div>
+            </div>
+            <div class="fld">
+              <label class="lbl">Funnel slug</label>
+              <input class="inp" id="ai-slug" placeholder="auto-generated from offer name" />
             </div>
           </div>
 
@@ -640,7 +652,7 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
   <div class="ph"><div class="pt">Leads</div><div class="pa"><span class="bdg bdg-t" id="ld-ct-bdg">0 leads</span></div></div>
   <div class="panel" style="flex:1;min-height:0">
     <div class="p-body np" style="overflow-y:auto">
-      <table class="tbl"><thead><tr><th>Email</th><th>Funnel</th><th>Forge Mail</th><th>Captured</th></tr></thead>
+      <table class="tbl"><thead><tr><th>Email</th><th>Funnel</th><th>Forge Mail Sync</th><th>Captured</th></tr></thead>
       <tbody id="leads-body"><tr><td colspan="4"><div class="empty"><div class="empty-ic">◎</div><p>No leads yet.<br>Share a funnel link to start building your list.</p></div></td></tr></tbody></table>
     </div>
   </div>
@@ -694,7 +706,7 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
     <div class="panel">
       <div class="p-head"><div class="p-title">⚡ TrafficZest</div><span class="bdg bdg-m" id="tz-bdg">Not configured</span></div>
       <div class="p-body">
-        <p style="font-size:12px;color:var(--dim);line-height:1.65;margin-bottom:13px">Point your TrafficZest campaign at a Wave Link. Each click is tracked, each opt-in captured, and leads sync to Forge Mail automatically.</p>
+        <p style="font-size:12px;color:var(--dim);line-height:1.65;margin-bottom:13px">Point your TrafficZest campaign at a Wave Link. Each click is tracked, each opt-in captured, and leads sync directly into Forge Mail — joining the Forge Mail lead generation database and triggering your email sequence automatically.</p>
         <div class="fld"><label class="lbl">Your TrafficZest campaign URL</label><input class="inp" id="tz-url" placeholder="https://trafficzest.com/c/your-campaign" /></div>
         <div class="fld"><label class="lbl">Traffic destination (your Wave Link)</label><input class="inp" id="tz-dest" placeholder="https://nextwave-traffic-engine.netlify.app/l/my-funnel" /></div>
         <button class="btn btn-p btn-w" onclick="saveTZ()">Save Configuration</button>
@@ -705,16 +717,16 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
             <div style="display:flex;gap:8px;font-size:11px;color:var(--dim)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">1.</span>Create a Wave Link in the Wave Link tab</div>
             <div style="display:flex;gap:8px;font-size:11px;color:var(--dim)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">2.</span>Paste that link as your TrafficZest destination URL</div>
             <div style="display:flex;gap:8px;font-size:11px;color:var(--dim)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">3.</span>Visitors land on your funnel and opt in — lead captured</div>
-            <div style="display:flex;gap:8px;font-size:11px;color:var(--dim)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">4.</span>Lead syncs to Forge Mail — your sequence fires</div>
+            <div style="display:flex;gap:8px;font-size:11px;color:var(--dim)"><span style="color:var(--teal);font-family:var(--m);flex-shrink:0">4.</span>Lead syncs to Forge Mail — sequence fires + lead joins the Forge Mail database</div>
           </div>
         </div>
       </div>
     </div>
     <div class="panel">
-      <div class="p-head"><div class="p-title">✉ Forge Mail</div><span class="bdg bdg-m" id="fm-bdg">Not configured</span></div>
+      <div class="p-head"><div class="p-title">⚡ Forge Mail</div><span class="bdg bdg-m" id="fm-bdg">Not configured</span></div>
       <div class="p-body">
-        <p style="font-size:12px;color:var(--dim);line-height:1.65;margin-bottom:13px">Every lead captured through your funnels syncs to Forge Mail automatically, tagged with funnel name and traffic source.</p>
-        <div class="fld"><label class="lbl">Forge Mail API key</label><input class="inp" id="fm-key" type="password" placeholder="Your Forge Mail API key" /></div>
+        <p style="font-size:12px;color:var(--dim);line-height:1.65;margin-bottom:13px">Forge Mail is a lead generation and email marketing platform with its own built-in lead database — currently 1,200+ leads and growing. Connect NextWave and every opt-in syncs directly into Forge Mail, tagged with funnel name and traffic source, and joins the broader Forge Mail lead database automatically.</p>
+        <div class="fld"><label class="lbl">Forge Mail API key</label><input class="inp" id="fm-key" type="password" placeholder="Your Forge Mail API key — connects NextWave to your Forge Mail lead database" /></div>
         <div class="fld"><label class="lbl">Default list name</label><input class="inp" id="fm-list" placeholder="nextwave-leads" /></div>
         <button class="btn btn-p btn-w" onclick="saveFM()">Save & Connect</button>
         <div class="fb" id="fm-fb"></div>
@@ -764,7 +776,7 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
           </div>
           <div style="display:flex;flex-direction:column;gap:3px;margin-bottom:9px">
             <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>Unlimited AI builds + links</div>
-            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>Full Forge Mail automation</div>
+            <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>Full Forge Mail lead gen + email automation</div>
             <div style="font-size:11px;color:var(--dim);display:flex;gap:5px"><span style="color:var(--teal)">✓</span>Revenue attribution + priority support</div>
           </div>
           <button class="btn btn-p btn-w" style="font-size:11px" onclick="toast('Connect Stripe in checkout.html to activate billing','info')">Upgrade to Pro — $49/mo</button>
@@ -1169,7 +1181,7 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
 
   <div class="si-row">
     <div class="si-pill off" id="mob-pi-tz"><div class="si-pip"></div>TrafficZest</div>
-    <div class="si-pill off" id="mob-pi-fm"><div class="si-pip"></div>Forge Mail</div>
+    <div class="si-pill off" id="mob-pi-fm"><div class="si-pip"></div>Forge Mail — Lead Gen <span style="font-size:9px;color:var(--teal)">Lead Gen + Email</span></div>
   </div>
   <div class="s-plan" style="margin:0 10px 16px">
     <div class="s-plan-lbl">PLAN</div>
@@ -1563,6 +1575,7 @@ window.buildFunnel = async function() {
         guarantee,
         bonuses:      document.getElementById('ai-bonuses').value.trim(),
         source:       document.getElementById('ai-src').value,
+        followup:     document.getElementById('ai-followup').value,
         scrapedCopy:  window._scrapedCopy || ''
       })
     })
@@ -2037,7 +2050,7 @@ Most affiliates send cold traffic directly to an offer. The visitor lands, looks
 
 I've been using a tool called NextWave Traffic Engine that fixes this.
 
-It puts a capture system between your traffic and your offer. Every click goes through a funnel that captures the email first — then sends them to the offer. If they don't buy, Forge Mail follows up automatically.
+It puts a capture system between your traffic and your offer. Every click goes through a funnel that captures the email first — then sends them to the offer. If they don't buy, Forge Mail follows up automatically — and they join the Forge Mail lead generation database, giving them multiple chances to convert.
 
 Your list grows with every campaign whether people buy or not.
 
@@ -2061,7 +2074,7 @@ NextWave Traffic Engine solves this with a complete pipeline:
 → They land on an AI-built lead capture page
 → They watch a short VSL that warms them up
 → They reach your affiliate offer — ready to buy
-→ Forge Mail follows up with everyone who didn't convert
+→ Forge Mail follows up with everyone who didn't convert and adds them to its lead generation database
 
 The AI builds your funnel copy in under 60 seconds. The system runs automatically after that.
 
@@ -2083,7 +2096,7 @@ AI FUNNEL BUILDER — Type your niche and offer details. Claude generates your f
 
 WAVE LINK — Every affiliate link becomes a short tracked URL. You see exactly how many clicks each campaign sends. No more guessing what's working.
 
-LEAD CAPTURE — Every visitor who opts in goes into your database and syncs to Forge Mail automatically. Your follow-up sequence fires the moment they sign up.
+LEAD CAPTURE — Every visitor who opts in syncs to Forge Mail automatically. They join the Forge Mail lead generation database (1,200+ leads and growing) and your follow-up sequence fires the moment they sign up.
 
 VSL BRIDGE PAGE — Between the opt-in and your offer, a short video warms the lead. Cold traffic converts at 1-3%. Warmed traffic converts at 3-8%.
 
@@ -2107,7 +2120,7 @@ If you're buying traffic — TrafficZest, solo ads, anything — and you're not 
 
 Every click that doesn't convert is gone forever without a system in place.
 
-NextWave puts that system in place. AI-built funnels. Lead capture. VSL bridge page. Forge Mail automation. Wave Link tracking. All connected.
+NextWave puts that system in place. AI-built funnels. Lead capture. VSL bridge page. Forge Mail lead generation + email automation. Wave Link tracking. All connected.
 
 Free to start. $19/month to go full speed.
 
@@ -2156,7 +2169,7 @@ I've been using NextWave Traffic Engine for the past few weeks. Here's what it d
 • Wave Links track every click from every campaign  
 • Lead capture page sits before your affiliate offer
 • VSL Bridge Page warms cold traffic before the sale
-• Forge Mail sync means every lead gets followed up automatically
+• Forge Mail lead generation database captures every opt-in and follows up automatically
 
 The dashboard shows leads, clicks, conversions and revenue in real time.
 
@@ -2298,7 +2311,7 @@ function populatePromoContent(affUrl) {
     + '→ Lands on an AI-built lead capture page' + nl
     + '→ Watches a short VSL that warms them up' + nl
     + '→ Reaches your affiliate offer — ready to buy' + nl
-    + '→ Forge Mail follows up with everyone who did not convert' + nl + nl
+    + '→ Forge Mail follows up automatically — adds every lead to its built-in lead generation database' + nl + nl
     + 'Free to start: ' + affUrl + nl + nl
     + '[Your name]'
 
@@ -2306,7 +2319,7 @@ function populatePromoContent(affUrl) {
     + 'Hey [First Name],' + nl + nl
     + 'AI FUNNEL BUILDER — Type your offer. Claude generates full funnel copy + VSL script in 60 seconds.' + nl + nl
     + 'WAVE LINK — Every affiliate link becomes a short tracked URL.' + nl + nl
-    + 'LEAD CAPTURE — Every visitor who opts in syncs to Forge Mail automatically.' + nl + nl
+    + 'LEAD CAPTURE — Every opt-in syncs to Forge Mail automatically. They join the Forge Mail lead generation database and your sequence fires instantly.' + nl + nl
     + 'VSL BRIDGE PAGE — Warms leads between opt-in and your offer.' + nl + nl
     + 'Starts at $19/month. Lifetime at $997.' + nl + nl
     + 'Get started free: ' + affUrl + nl + nl
@@ -2333,7 +2346,7 @@ function populatePromoContent(affUrl) {
       'You are losing 97% of the people who click.',
       '',
       'NextWave Traffic Engine puts a full capture system between your traffic and your offers.',
-      'AI builds the funnel in 60 seconds. Forge Mail follows up automatically.',
+      'AI builds the funnel in 60 seconds. Forge Mail captures leads into its database and follows up automatically.',
       '',
       'Free to start 👇',
       affUrl,
@@ -2350,7 +2363,7 @@ function populatePromoContent(affUrl) {
       '→ AI funnel in 60 seconds',
       '→ Lead capture before the offer',
       '→ VSL bridge page',
-      '→ Forge Mail auto follow-up',
+      '→ Forge Mail lead gen database + auto follow-up',
       '→ Wave Link tracking',
       '',
       'Free: ' + affUrl
@@ -2374,7 +2387,7 @@ function populatePromoContent(affUrl) {
 
     'social-yt': [
       '🔗 Tools I use in this video:',
-      'NextWave Traffic Engine (AI funnels + lead capture + Wave Link tracking): ' + affUrl
+      'NextWave Traffic Engine (AI funnels + Forge Mail lead gen + Wave Link tracking): ' + affUrl
     ].join(nl)
   }
 
