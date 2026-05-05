@@ -1883,9 +1883,9 @@ window.buildFunnel = async function() {
 }
 
 window.deployFunnel = async function() {
-  const name = document.getElementById('ai-slug').value.trim() || document.getElementById('ai-niche').value.trim()
+  const name = document.getElementById('ai-slug').value.trim() || document.getElementById('ai-offer-name').value.trim()
   const link = document.getElementById('ai-url').value.trim()
-  if (!name) { toast('Enter a funnel slug first', 'err'); return }
+  if (!name) { toast('Enter a funnel name or slug first', 'err'); return }
   const btn = document.getElementById('dep-btn')
   btnLoad(btn, true, 'Deploying…')
   try {
@@ -1895,38 +1895,48 @@ window.deployFunnel = async function() {
     })
     const data = await res.json()
     if (data.error) throw new Error(data.error)
+    if (!data.saved && !data.slug) throw new Error('Funnel did not save — check Netlify function logs')
 
-    // Show both funnel URL and bridge page URL
+    // Build URLs from current origin — always correct regardless of SITE_URL env var
+    const origin    = window.location.origin
+    const slug      = data.slug
+    const funnelUrl = `${origin}/funnel/${slug}`
+    const bridgeUrl = `${origin}/bridge/${slug}`
+
     const el = document.getElementById('dep-fb')
     el.className = 'fb on fb-ok'
     el.innerHTML = `
-      <div style="margin-bottom:8px;font-size:12px">✓ Deployed successfully</div>
-      <div style="font-size:11px;color:var(--dim);margin-bottom:5px">Opt-in funnel page:</div>
+      <div style="margin-bottom:8px;font-size:12px;font-weight:600">✓ Deployed — funnel is live</div>
+      <div style="font-size:11px;color:var(--dim);margin-bottom:4px">Opt-in page:</div>
+      <div class="lk-row" style="margin-bottom:10px;border-color:var(--teal-bdr)">
+        <code style="color:var(--teal);font-size:11px">${esc(funnelUrl)}</code>
+        <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(funnelUrl)}').then(()=>toast('Copied','ok'))">Copy</span>
+      </div>
+      <div style="font-size:11px;color:var(--dim);margin-bottom:4px">VSL Bridge page:</div>
       <div class="lk-row" style="margin-bottom:10px">
-        <code>${esc(data.url)}</code>
-        <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(data.url)}').then(()=>toast('Copied','ok'))">Copy</span>
+        <code style="color:var(--blue);font-size:11px">${esc(bridgeUrl)}</code>
+        <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(bridgeUrl)}').then(()=>toast('Copied','ok'))">Copy</span>
       </div>
-      <div style="font-size:11px;color:var(--dim);margin-bottom:5px">VSL Bridge page:</div>
-      <div class="lk-row">
-        <code>${esc(data.bridgeUrl)}</code>
-        <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(data.bridgeUrl)}').then(()=>toast('Copied','ok'))">Copy</span>
-      </div>
-      <div style="margin-top:10px;padding:10px;background:var(--s2);border-radius:var(--r);font-size:11px;line-height:1.65">
+      <div style="padding:10px;background:var(--s2);border-radius:var(--r);font-size:11px;line-height:1.65;margin-bottom:8px">
         ${data.videoStatus === 'processing'
-          ? `<span style="color:var(--teal)">🎬 VSL video is generating in the background — bridge page shows the script now and updates automatically when video is ready (2-5 mins).</span>`
-          : `<span style="color:var(--muted)">ℹ Add DID_API_KEY to Netlify to enable automatic VSL video generation.</span>`
+          ? `<span style="color:var(--teal)">🎬 VSL video generating in background — bridge page shows script now and updates automatically when ready.</span>`
+          : `<span style="color:var(--muted)">ℹ Add DID_API_KEY to Netlify to enable automatic video generation.</span>`
         }
       </div>
-      <div style="margin-top:10px;font-size:11px;color:var(--dim);line-height:1.6">
-        <strong style="color:var(--body)">Your funnel flow:</strong><br>
-        Traffic → <a href="${esc(data.url)}" target="_blank" style="color:var(--teal);text-decoration:none">Opt-in</a> → <a href="${esc(data.bridgeUrl)}" target="_blank" style="color:var(--blue);text-decoration:none">VSL Bridge</a> → Affiliate offer
+      <div style="font-size:11px;color:var(--dim);line-height:1.6">
+        <strong style="color:var(--body)">Funnel flow:</strong>
+        Traffic → <a href="${esc(funnelUrl)}" target="_blank" style="color:var(--teal);text-decoration:none">Opt-in</a>
+        → <a href="${esc(bridgeUrl)}" target="_blank" style="color:var(--blue);text-decoration:none">VSL Bridge</a>
+        → Affiliate offer
       </div>`
 
-    addFeed('Funnel deployed: ' + name, 'ok')
-    toast('Funnel live', 'ok')
+    addFeed('Funnel deployed: ' + slug, 'ok')
+    toast('Funnel is live ✓', 'ok')
     loadOverview()
-    loadMyFunnels()  // refresh library
-  } catch(e) { setFB('dep-fb', 'err', '⚠ ' + e.message) }
+    loadMyFunnels()
+  } catch(e) {
+    setFB('dep-fb', 'err', '⚠ ' + e.message)
+  }
   btnLoad(btn, false, 'Deploy Funnel')
 }
 
