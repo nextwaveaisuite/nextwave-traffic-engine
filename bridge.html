@@ -28,7 +28,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0 24px
 .nav-name{font-family:var(--m);font-size:11px;font-weight:500;letter-spacing:.5px;color:var(--body)}
 .nav-name b{color:var(--teal)}
 .nav-step{font-family:var(--m);font-size:10px;color:var(--muted);display:flex;align-items:center;gap:8px}
-.step-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700}
+.step-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;font-family:var(--m)}
 .step-done{background:var(--teal-bg);border:1px solid var(--teal-bdr);color:var(--teal)}
 .step-active{background:var(--teal);color:#080c14}
 .step-next{background:var(--s2);border:1px solid var(--line);color:var(--muted)}
@@ -42,47 +42,97 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0 24px
 
 /* ERROR */
 .error-screen{min-height:70vh;display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center;padding:40px}
-.error-screen.show{display:flex}
 .error-screen h2{font-size:20px;font-weight:700}
 .error-screen p{font-size:13px;color:var(--dim);max-width:380px;line-height:1.7}
-.error-screen a{color:var(--teal);text-decoration:none;font-size:13px}
+.error-screen a{color:var(--teal);text-decoration:none}
 
-/* BRIDGE PAGE */
+/* PAGE WRAP */
 .bridge-wrap{display:none;max-width:740px;margin:0 auto;padding:50px 24px 80px}
-
-/* STEP BAR */
 .step-bar{background:var(--teal-bg);border:1px solid var(--teal-bdr);border-radius:8px;padding:10px 16px;margin-bottom:32px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--teal);font-family:var(--m)}
 .step-bar-dot{width:6px;height:6px;background:var(--teal);border-radius:50%;animation:pip 1.5s ease infinite}
 @keyframes pip{0%,100%{opacity:1}50%{opacity:.2}}
-
-/* HEADER */
-.bridge-header{text-align:center;margin-bottom:32px}
+.bridge-header{text-align:center;margin-bottom:28px}
 .bridge-eyebrow{font-family:var(--m);font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:var(--teal);margin-bottom:12px}
-.bridge-title{font-size:clamp(26px,5vw,48px);font-weight:700;line-height:1.08;letter-spacing:-1px;margin-bottom:10px}
-.bridge-sub{font-size:16px;color:var(--dim);font-weight:300;line-height:1.7;max-width:560px;margin:0 auto}
+.bridge-title{font-size:clamp(24px,5vw,44px);font-weight:700;line-height:1.08;letter-spacing:-1px;margin-bottom:10px}
+.bridge-sub{font-size:15px;color:var(--dim);font-weight:300;line-height:1.7;max-width:540px;margin:0 auto}
+
+/* ── VIDEO PLACEHOLDER ──────────────────────────────── */
+.video-placeholder-box{
+  position:relative;padding-bottom:56.25%;margin:28px 0;
+  border-radius:12px;overflow:hidden;
+  background:linear-gradient(160deg,var(--s1),var(--s2));
+  border:1px solid var(--line);cursor:default;
+}
+.video-ph-shimmer{
+  position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(25,230,176,.03),transparent);
+  animation:shimmer 3s ease infinite;
+}
+@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.video-ph-inner{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:14px;padding:24px;
+}
+.video-ph-pulse{
+  width:80px;height:80px;border-radius:50%;
+  background:var(--teal-bg);border:2px solid var(--teal-bdr);
+  display:flex;align-items:center;justify-content:center;
+  animation:pulse-ring 2s ease infinite;flex-shrink:0;
+}
+@keyframes pulse-ring{
+  0%,100%{box-shadow:0 0 0 0 rgba(25,230,176,.3)}
+  50%{box-shadow:0 0 0 20px rgba(25,230,176,0)}
+}
+.video-ph-play{
+  width:0;height:0;
+  border-top:20px solid transparent;
+  border-bottom:20px solid transparent;
+  border-left:34px solid var(--teal);
+  margin-left:7px;
+}
+.video-ph-title{
+  font-size:16px;font-weight:700;color:var(--body);
+  text-align:center;max-width:380px;line-height:1.3;
+}
+.video-ph-sub{
+  font-size:12px;color:var(--muted);text-align:center;
+  font-family:var(--m);
+}
+.video-ph-status{
+  display:flex;align-items:center;gap:8px;
+  font-family:var(--m);font-size:11px;color:var(--teal);
+}
+.video-ph-bar{
+  width:220px;height:3px;background:var(--line);
+  border-radius:2px;overflow:hidden;
+}
+.video-ph-bar-fill{
+  height:100%;width:40%;
+  background:linear-gradient(90deg,var(--teal),var(--blue));
+  border-radius:2px;animation:bar-sweep 2s ease infinite;
+}
+@keyframes bar-sweep{
+  0%{transform:translateX(-150%)}
+  100%{transform:translateX(400%)}
+}
+.gen-spin{width:12px;height:12px;border:2px solid var(--line);border-top-color:var(--teal);border-radius:50%;animation:spin .5s linear infinite;flex-shrink:0}
 
 /* VIDEO PLAYER */
 .video-container{position:relative;margin:28px 0;border-radius:12px;overflow:hidden;background:#000;border:1px solid var(--line)}
 .video-ratio{padding-bottom:56.25%}
 .video-container video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
-.video-container iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
-.video-placeholder{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;background:var(--s1)}
-.vp-icon{font-size:40px;opacity:.4}
-.vp-txt{font-size:12px;color:var(--muted);font-family:var(--m)}
-.generating-bar{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;background:var(--s2);border-top:1px solid var(--line);font-size:12px;color:var(--dim);font-family:var(--m)}
-.gen-spin{width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--teal);border-radius:50%;animation:spin .5s linear infinite}
+.video-sound-note{font-size:11px;color:var(--muted);text-align:center;margin-top:-16px;margin-bottom:24px;font-family:var(--m)}
 
-/* SCRIPT MODE (no video) */
+/* SCRIPT MODE */
 .script-mode{background:var(--s1);border:1px solid var(--line);border-radius:12px;padding:28px;margin:28px 0}
 .script-label{font-family:var(--m);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .script-label::after{content:'';flex:1;height:1px;background:var(--line)}
 .script-body{font-size:15px;color:var(--dim);line-height:1.9;white-space:pre-wrap}
-.script-note{font-size:11px;color:var(--muted);margin-top:14px;padding:10px;background:var(--s2);border-radius:6px;line-height:1.6;font-family:var(--m)}
 
 /* KEY POINTS */
 .key-points{margin:28px 0}
 .kp-label{font-family:var(--m);font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
-.kp-list{list-style:none;display:flex;flex-direction:column;gap:0}
+.kp-list{list-style:none}
 .kp-item{display:flex;gap:12px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--line)}
 .kp-item:last-child{border-bottom:none}
 .kp-check{width:22px;height:22px;border-radius:50%;background:var(--teal-bg);border:1px solid var(--teal-bdr);display:flex;align-items:center;justify-content:center;color:var(--teal);font-size:10px;flex-shrink:0;margin-top:2px;font-family:var(--m)}
@@ -96,19 +146,11 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0 24px
 
 /* CTA */
 .bridge-cta{text-align:center;margin-top:28px}
-.cta-btn{
-  display:inline-block;padding:18px 48px;
-  background:var(--teal);color:#080c14;
-  border:none;border-radius:10px;
-  font-family:var(--f);font-size:17px;font-weight:700;
-  cursor:pointer;text-decoration:none;
-  transition:all .15s;position:relative;overflow:hidden;
-}
+.cta-btn{display:inline-block;padding:18px 48px;background:var(--teal);color:#080c14;border:none;border-radius:10px;font-family:var(--f);font-size:17px;font-weight:700;cursor:pointer;text-decoration:none;transition:all .15s;position:relative;overflow:hidden}
 .cta-btn:hover{background:var(--teal2);transform:translateY(-2px);box-shadow:0 10px 28px rgba(25,230,176,.2)}
 .cta-btn.loading{opacity:.7;pointer-events:none}
 .cta-btn.loading::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:sweep 1s infinite}
 @keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
-.cta-btn-text{display:block;margin-bottom:3px}
 .cta-subtext{font-size:11px;color:var(--muted);text-align:center;margin-top:10px;font-family:var(--m)}
 
 /* FOOTER */
@@ -127,7 +169,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0 24px
     <div class="nav-name"><b>NEXT</b>WAVE</div>
   </a>
   <div class="nav-step">
-    <div class="step-dot step-done">✓</div>
+    <div class="step-dot step-done">&#10003;</div>
     <div class="step-line"></div>
     <div class="step-dot step-active">2</div>
     <div class="step-line"></div>
@@ -135,34 +177,37 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0 24px
   </div>
 </nav>
 
+<!-- LOADING -->
 <div class="loading-screen" id="loading">
   <div class="loader"></div>
-  <div class="load-txt">PREPARING YOUR ACCESS…</div>
+  <div class="load-txt">PREPARING YOUR ACCESS&#8230;</div>
 </div>
 
+<!-- ERROR -->
 <div class="error-screen" id="error-screen">
   <h2>Page not found</h2>
   <p>This bridge page doesn't exist or may have been removed.</p>
-  <a href="/">← Back</a>
+  <a href="/">&#8592; Back</a>
 </div>
 
+<!-- BRIDGE PAGE -->
 <div class="bridge-wrap" id="bridge-wrap">
 
   <div class="step-bar">
     <div class="step-bar-dot"></div>
-    <span>STEP 2 OF 3 — Watch this short video before accessing your offer</span>
+    <span>STEP 2 OF 3 &#8212; Watch this short video before accessing your offer</span>
   </div>
 
   <div class="bridge-header">
-    <div class="bridge-eyebrow">IMPORTANT — WATCH BEFORE CONTINUING</div>
-    <h1 class="bridge-title" id="b-title">Loading…</h1>
-    <p class="bridge-sub" id="b-sub">This 2-minute overview shows you exactly what you're about to get access to.</p>
+    <div class="bridge-eyebrow">IMPORTANT &#8212; WATCH BEFORE CONTINUING</div>
+    <h1 class="bridge-title" id="b-title">Loading&#8230;</h1>
+    <p class="bridge-sub" id="b-sub">This short overview shows you exactly what you're about to get access to.</p>
   </div>
 
-  <!-- VIDEO AREA — shows video if D-ID generated one, script if not -->
+  <!-- VIDEO AREA — placeholder + video or script -->
   <div id="video-area"></div>
 
-  <!-- KEY POINTS from benefits -->
+  <!-- KEY POINTS -->
   <div class="key-points" id="key-points-wrap">
     <div class="kp-label">What you're about to get access to</div>
     <ul class="kp-list" id="kp-list"></ul>
@@ -170,25 +215,23 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0 24px
 
   <!-- URGENCY -->
   <div class="urgency-bar">
-    <div class="urgency-icon">⏱</div>
+    <div class="urgency-icon">&#9201;</div>
     <div class="urgency-text">
-      <strong>This offer is time-sensitive.</strong> The page you're about to see may not be available at this price point permanently. Once you click through, act on what you see.
+      <strong>This offer is time-sensitive.</strong> The page you're about to see may not be available at this price permanently. Once you click through, act on what you see.
     </div>
   </div>
 
   <!-- CTA -->
   <div class="bridge-cta">
     <a class="cta-btn" id="bridge-cta-btn" href="#" onclick="goToOffer(event)">
-      <span class="cta-btn-text" id="bridge-cta-text">Yes — Take Me to the Offer →</span>
+      <span id="bridge-cta-text">Yes &#8212; Take Me to the Offer &#8594;</span>
     </a>
     <div class="cta-subtext" id="bridge-cta-sub">You have been approved for access</div>
   </div>
 
   <div class="bridge-footer">
-    <p>
-      Results vary based on individual effort and implementation. No income is guaranteed.<br>
-      <a href="/">Powered by NextWave</a>
-    </p>
+    <p>Results vary based on individual effort and implementation. No income is guaranteed.<br>
+    <a href="/">Powered by NextWave</a></p>
   </div>
 
 </div>
@@ -196,14 +239,10 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:0 24px
 <script type="module">
 import { supabase } from '/supabase.js'
 
-// ── EXTRACT SLUG FROM URL ─────────────────────────────
-// URL: /bridge/my-offer-slug
 const slug = window.location.pathname.split('/').filter(Boolean).pop()
 
-// ── LOAD BRIDGE PAGE DATA ─────────────────────────────
 async function loadBridge() {
   if (!slug) { showError(); return }
-
   try {
     const { data, error } = await supabase
       .from('funnels')
@@ -218,45 +257,32 @@ async function loadBridge() {
       try { copy = JSON.parse(copy) } catch { copy = null }
     }
 
-    const affiliateLink = data.affiliate_link || null
-    window._offerUrl    = affiliateLink
-    window._funnelSlug  = slug
+    window._offerUrl   = data.affiliate_link || null
+    window._funnelSlug = slug
 
-    // Populate title
-    document.title = copy?.vslTitle || 'One More Step…'
+    document.title = copy?.vslTitle || 'One More Step...'
     document.getElementById('b-title').textContent = copy?.vslTitle || 'Here Is What You Are About To Get Access To'
-    document.getElementById('b-sub').textContent   = 'Watch this short overview before clicking through to the offer.'
 
     // Render video area
     renderVideoArea(data, copy)
 
-    // Key points (bullets from funnel copy)
+    // Key points
     if (copy?.bullets?.length) {
       document.getElementById('kp-list').innerHTML = copy.bullets
-        .map(b => `<li class="kp-item"><div class="kp-check">✓</div><div class="kp-text">${esc(b)}</div></li>`)
+        .map(b => `<li class="kp-item"><div class="kp-check">&#10003;</div><div class="kp-text">${esc(b)}</div></li>`)
         .join('')
     } else {
       document.getElementById('key-points-wrap').style.display = 'none'
     }
 
-    // CTA button text
-    if (copy?.vslCta) {
-      document.getElementById('bridge-cta-text').textContent = copy.vslCta + ' →'
-    }
-    if (copy?.vslSubtext) {
-      document.getElementById('bridge-cta-sub').textContent = copy.vslSubtext
-    }
+    // CTA
+    if (copy?.vslCta) document.getElementById('bridge-cta-text').textContent = copy.vslCta + ' \u2192'
+    if (copy?.vslSubtext) document.getElementById('bridge-cta-sub').textContent = copy.vslSubtext
 
-    // Log bridge page view
-    supabase.from('events').insert([{
-      type:       'bridge_view',
-      value:      1,
-      funnel_id:  slug,
-      created_at: new Date().toISOString()
-    }]).then()
+    // Log view
+    supabase.from('events').insert([{ type:'bridge_view', value:1, funnel_id:slug, created_at:new Date().toISOString() }]).then()
 
-    // Show page
-    document.getElementById('loading').style.display     = 'none'
+    document.getElementById('loading').style.display    = 'none'
     document.getElementById('bridge-wrap').style.display = 'block'
 
   } catch(e) {
@@ -265,98 +291,113 @@ async function loadBridge() {
   }
 }
 
+// ── RENDER VIDEO AREA ─────────────────────────────────
 function renderVideoArea(data, copy) {
   const area   = document.getElementById('video-area')
   const status = data.vsl_video_status || null
   const video  = data.vsl_video_url    || null
 
+  // Video already ready — show player immediately
   if (video) {
-    // Video already ready — show player at top, script below
-    area.innerHTML = `
-      <div class="video-container" style="margin-bottom:20px">
-        <div class="video-ratio"></div>
-        <video controls autoplay muted playsinline preload="auto">
-          <source src="${esc(video)}" type="video/mp4">
-        </video>
-      </div>
-      <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:-12px;margin-bottom:20px;font-family:var(--m)">
-        🔊 Turn up your volume
-      </p>`
+    showVideoPlayer(area, video)
     return
   }
 
-  // ── SCRIPT IS PRIMARY CONTENT — always show immediately ──
-  // Video loads silently in background if generating
+  // Build video placeholder — looks like a real video player
+  const vslTitle  = (copy && copy.vslTitle) ? copy.vslTitle : 'Your Personalised Video Is Loading'
+  const isGenerating = (status === 'processing')
+
+  const statusHtml = isGenerating
+    ? `<div class="video-ph-status"><div class="gen-spin"></div><span id="gen-txt">Video is being generated \u2014 will appear here automatically</span></div>
+       <div class="video-ph-bar"><div class="video-ph-bar-fill"></div></div>`
+    : `<div class="video-ph-sub">Read the overview below while this page loads</div>`
+
   area.innerHTML = `
-    ${status === 'processing'
-      ? `<div id="video-slot" style="background:var(--s1);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px">
-           <div class="gen-spin"></div>
-           <span style="font-size:11px;color:var(--muted);font-family:var(--m)" id="gen-txt">
-             Personalised video generating — will appear here automatically
-           </span>
-         </div>`
-      : ''
-    }
-    ${copy?.vslScript
-      ? `<div class="script-mode" style="margin-bottom:24px">
-           <div class="script-label">READ THIS BEFORE CONTINUING</div>
+    <div class="video-placeholder-box" id="video-slot">
+      <div class="video-ph-shimmer"></div>
+      <div class="video-ph-inner">
+        <div class="video-ph-pulse"><div class="video-ph-play"></div></div>
+        <div class="video-ph-title">${esc(vslTitle)}</div>
+        ${statusHtml}
+      </div>
+    </div>
+    <p class="video-sound-note">&#128266; Turn on your sound before the video starts</p>
+    ${copy && copy.vslScript
+      ? `<div class="script-mode">
+           <div class="script-label">READ THIS OVERVIEW WHILE THE VIDEO LOADS</div>
            <div class="script-body">${esc(copy.vslScript)}</div>
          </div>`
       : ''
     }`
 
-  // If video is generating, poll silently and slot it in when ready
-  if (status === 'processing') {
-    pollForVideo(slug, copy)
-  }
+  // Poll for video if generating
+  if (isGenerating) pollForVideo(slug, copy)
 }
 
-function showVideoPlayer(videoUrl) {
-  // Replace the video slot with a real player, keep script below
-  const slot = document.getElementById('video-slot')
-  if (!slot) return
-
-  slot.outerHTML = `
-    <div class="video-container" style="margin-bottom:20px">
+function showVideoPlayer(containerOrArea, videoUrl) {
+  const existing = document.getElementById('video-slot')
+  const player   = `
+    <div class="video-container">
       <div class="video-ratio"></div>
-      <video controls autoplay muted playsinline preload="auto">
+      <video controls autoplay playsinline preload="auto">
         <source src="${esc(videoUrl)}" type="video/mp4">
       </video>
     </div>
-    <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:-12px;margin-bottom:20px;font-family:var(--m)">
-      🔊 Turn up your volume
-    </p>`
+    <p class="video-sound-note">&#128266; Turn up your volume for the best experience</p>`
+
+  if (existing) {
+    // Replace placeholder, keep script below
+    existing.insertAdjacentHTML('beforebegin', player)
+    existing.remove()
+    const noteAfter = existing.nextElementSibling
+    if (noteAfter && noteAfter.classList.contains('video-sound-note')) noteAfter.remove()
+  } else if (containerOrArea) {
+    containerOrArea.innerHTML = player + (containerOrArea.innerHTML || '')
+  }
 }
 
-let _pollTimer  = null
-let _pollCount  = 0
-const _maxPolls = 75
+// ── POLL FOR VIDEO ────────────────────────────────────
+let _pollTimer = null
+let _pollCount = 0
+const _maxPolls = 72 // 72 * 10s = 12 minutes
 
-async function pollForVideo(funnelSlug, copy) {
+function pollForVideo(funnelSlug) {
   if (_pollTimer) clearTimeout(_pollTimer)
   _pollTimer = setTimeout(async () => {
     _pollCount++
     if (_pollCount > _maxPolls) {
-      // Stop polling — script stays, remove spinner
+      // Stop — video taking too long, remove spinner
       const slot = document.getElementById('video-slot')
-      if (slot) slot.style.display = 'none'
+      if (slot) {
+        slot.querySelector('.video-ph-bar')?.remove()
+        const st = slot.querySelector('.video-ph-status')
+        if (st) st.style.display = 'none'
+      }
       return
     }
     try {
       const res  = await fetch('/.netlify/functions/video-status?slug=' + funnelSlug)
       const data = await res.json()
       if (data.status === 'ready' && data.videoUrl) {
-        showVideoPlayer(data.videoUrl)
+        showVideoPlayer(null, data.videoUrl)
         return
       }
       if (['error','timeout','no_key'].includes(data.status)) {
         const slot = document.getElementById('video-slot')
-        if (slot) slot.style.display = 'none'
+        if (slot) {
+          slot.querySelector('.video-ph-bar')?.remove()
+          const st = slot.querySelector('.video-ph-status')
+          if (st) st.style.display = 'none'
+        }
         return
       }
-      pollForVideo(funnelSlug, copy)
-    } catch(e) { pollForVideo(funnelSlug, copy) }
-  }, 10000) // Poll every 10 seconds — quietly
+      const genTxt = document.getElementById('gen-txt')
+      if (genTxt) genTxt.textContent = 'Video generating\u2026 (' + (_pollCount * 10) + 's)'
+      pollForVideo(funnelSlug)
+    } catch(e) {
+      pollForVideo(funnelSlug)
+    }
+  }, 10000)
 }
 
 // ── GO TO OFFER ────────────────────────────────────────
@@ -364,29 +405,16 @@ window.goToOffer = function(e) {
   e.preventDefault()
   const btn = document.getElementById('bridge-cta-btn')
   btn.classList.add('loading')
-  document.getElementById('bridge-cta-text').textContent = 'Taking you there…'
-
-  // Log click-through event
-  supabase.from('events').insert([{
-    type:       'bridge_clickthrough',
-    value:      1,
-    funnel_id:  window._funnelSlug || 'bridge',
-    created_at: new Date().toISOString()
-  }]).then()
-
+  document.getElementById('bridge-cta-text').textContent = 'Taking you there\u2026'
+  supabase.from('events').insert([{ type:'bridge_clickthrough', value:1, funnel_id:window._funnelSlug||'bridge', created_at:new Date().toISOString() }]).then()
   setTimeout(() => {
-    if (window._offerUrl) {
-      window.location.href = window._offerUrl
-    } else {
-      window.location.href = '/'
-    }
+    window.location.href = window._offerUrl || '/'
   }, 400)
 }
 
 function showError() {
   document.getElementById('loading').style.display      = 'none'
   document.getElementById('error-screen').style.display = 'flex'
-  document.getElementById('error-screen').classList.add('show')
 }
 
 function esc(s) {
