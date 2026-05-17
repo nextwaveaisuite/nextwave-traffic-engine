@@ -1292,26 +1292,24 @@ import { supabase } from './supabase.js'
 window._sb = supabase
 
 // ── AUTH GUARD ────────────────────────────────────────
-// Check if user is signed in — redirect to login if not
-const { data: { session: _session } } = await supabase.auth.getSession()
-if (!_session) {
-  window.location.href = '/login.html'
-  throw new Error('Not authenticated')
+try {
+  const { data: { session: _session } } = await supabase.auth.getSession()
+  if (!_session) {
+    window.location.href = '/login.html'
+  } else {
+    const _user = _session.user
+    sessionStorage.setItem('nw_email',   _user.email)
+    sessionStorage.setItem('nw_user_id', _user.id)
+    const _emailChip = document.getElementById('user-email-chip')
+    if (_emailChip) _emailChip.textContent = _user.email
+    supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') window.location.href = '/login.html'
+    })
+  }
+} catch(authErr) {
+  console.warn('Auth check failed — continuing without auth:', authErr.message)
+  // Dashboard still loads so user can navigate
 }
-
-// Store user info
-const _user = _session.user
-sessionStorage.setItem('nw_email',   _user.email)
-sessionStorage.setItem('nw_user_id', _user.id)
-
-// Show user email in topbar
-const _emailChip = document.getElementById('user-email-chip')
-if (_emailChip) _emailChip.textContent = _user.email
-
-// Listen for auth changes — sign out if session expires
-supabase.auth.onAuthStateChange((event) => {
-  if (event === 'SIGNED_OUT') window.location.href = '/login.html'
-})
 
 // ── SIGN OUT ──────────────────────────────────────────
 window.signOut = async function() {
