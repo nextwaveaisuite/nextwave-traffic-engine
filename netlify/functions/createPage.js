@@ -11,9 +11,10 @@ export async function handler(event) {
 
   try {
     const body = JSON.parse(event.body || '{}')
-    const name = body.name?.trim() || 'funnel'
-    const link = body.link?.trim() || null
-    const copy = body.copy || null
+    const name     = body.name?.trim() || 'funnel'
+    const link     = body.link?.trim() || null
+    const copy     = body.copy || null
+    const videoUrl = body.videoUrl?.trim() || null  // user's own video URL
 
     // Build slug
     const slug = name
@@ -24,9 +25,12 @@ export async function handler(event) {
       .replace(/^-|-$/g, '')
       .slice(0, 60) || 'funnel'
 
-    const hasVideo  = !!process.env.DID_API_KEY && !!copy?.vslScript
+    // If user provided their own video URL — use it directly, skip D-ID
+    // If no video URL — trigger D-ID background generation if key exists
+    const hasOwnVideo = !!videoUrl
+    const hasVideo    = !hasOwnVideo && !!process.env.DID_API_KEY && !!copy?.vslScript
 
-    console.log('createPage: saving slug =', slug, '| hasVideo =', hasVideo)
+    console.log('createPage: slug =', slug, '| own video =', hasOwnVideo, '| D-ID =', hasVideo)
 
     // ── UPSERT — handles duplicate slugs gracefully ───────
     const record = {
@@ -34,8 +38,8 @@ export async function handler(event) {
       affiliate_link:   link,
       slug,
       copy:             copy ? JSON.stringify(copy) : null,
-      vsl_video_url:    null,
-      vsl_video_status: hasVideo ? 'processing' : 'no_key',
+      vsl_video_url:    videoUrl || null,
+      vsl_video_status: hasOwnVideo ? 'ready' : hasVideo ? 'processing' : 'no_key',
       created_at:       new Date().toISOString()
     }
 
@@ -74,19 +78,18 @@ export async function handler(event) {
       fetch(`${siteUrl}/.netlify/functions/video-background`, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ script: copy.vslScript, slug, voice: 'en-US-JennyNeural' })
+        body:    JSON.stringify({ script: copy.vslScript, slug, voice: 'Joanna' })
       }).catch(e => console.warn('Background video non-fatal:', e.message))
     }
 
-    // Return slug only — dashboard builds full URLs from window.location.origin
-    // This avoids SITE_URL misconfiguration causing empty URLs
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         slug,
-        videoStatus: hasVideo ? 'processing' : 'no_key',
-        saved:       true
+        videoStatus: hasOwnVideo ? 'ready' : hasVideo ? 'processing' : 'no_key',
+        hasOwnVideo,
+        saved: true
       })
     }
 
