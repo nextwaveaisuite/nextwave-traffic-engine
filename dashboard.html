@@ -305,6 +305,8 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
 .mob-tab-more{position:relative}
 .mob-tab-more .mob-tab-icon{font-size:20px}
 </style>
+
+
 </head>
 <body>
 
@@ -587,27 +589,6 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
         <div class="p-head"><div class="p-title"><span class="p-icon">▶</span>Deploy to Live URL</div></div>
         <div class="p-body">
           <p style="font-size:11px;color:var(--muted);margin-bottom:11px;line-height:1.6">Generate copy first, then deploy publishes your opt-in page and VSL bridge page live.</p>
-          <!-- YOUR OWN VSL VIDEO -->
-          <div class="panel" style="margin-top:0">
-            <div class="p-head">
-              <div class="p-title"><span class="p-icon">🎬</span>Your VSL Video <span class="ps">optional — paste your own video URL</span></div>
-              <span class="bdg bdg-t" style="font-size:9px">RECOMMENDED</span>
-            </div>
-            <div class="p-body">
-              <div style="background:var(--teal-bg);border:1px solid var(--teal-bdr);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;font-size:11px;color:var(--teal);line-height:1.6">
-                <strong style="display:block;margin-bottom:2px">Use your own VSL video for instant playback.</strong>
-                Paste a direct MP4 link. If left empty, D-ID will generate one automatically (takes 2-3 mins).
-              </div>
-              <div class="fld" style="margin-bottom:0">
-                <label class="lbl">Direct video URL <span style="color:var(--muted);font-size:9px;font-weight:400">.mp4 or hosted video link</span></label>
-                <input class="inp" id="ai-video-url" placeholder="https://your-video-host.com/vsl-video.mp4" />
-              </div>
-              <div style="font-size:11px;color:var(--muted);margin-top:8px;line-height:1.65">
-                Works with: direct MP4 links, Google Drive (shared), Dropbox, Vimeo direct links, Amazon S3, or any publicly accessible video URL.
-              </div>
-            </div>
-          </div>
-
           <button class="btn btn-s btn-w" id="dep-btn" onclick="deployFunnel()" disabled>Deploy Funnel</button>
           <div class="fb" id="dep-fb"></div>
         </div>
@@ -1291,26 +1272,6 @@ body{background:var(--ink);color:var(--body);font-family:var(--f);font-size:13px
 import { supabase } from './supabase.js'
 window._sb = supabase
 
-// ── AUTH GUARD ────────────────────────────────────────
-try {
-  const { data: { session: _session } } = await supabase.auth.getSession()
-  if (!_session) {
-    window.location.href = '/login.html'
-  } else {
-    const _user = _session.user
-    sessionStorage.setItem('nw_email',   _user.email)
-    sessionStorage.setItem('nw_user_id', _user.id)
-    const _emailChip = document.getElementById('user-email-chip')
-    if (_emailChip) _emailChip.textContent = _user.email
-    supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_OUT') window.location.href = '/login.html'
-    })
-  }
-} catch(authErr) {
-  console.warn('Auth check failed — continuing without auth:', authErr.message)
-  // Dashboard still loads so user can navigate
-}
-
 // ── SIGN OUT ──────────────────────────────────────────
 window.signOut = async function() {
   await supabase.auth.signOut()
@@ -1911,18 +1872,17 @@ window.buildFunnel = async function() {
 window.deployFunnel = async function() {
   const name     = document.getElementById('ai-slug').value.trim() || document.getElementById('ai-offer-name').value.trim()
   const link     = document.getElementById('ai-url').value.trim()
-  const videoUrl = document.getElementById('ai-video-url')?.value.trim() || ''
   if (!name) { toast('Enter a funnel name or slug first', 'err'); return }
   const btn = document.getElementById('dep-btn')
-  btnLoad(btn, true, 'Deploying\u2026')
+  btnLoad(btn, true, 'Deploying…')
   try {
     const res = await fetch('/.netlify/functions/createPage', {
       method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ name, link, copy: savedCopy, videoUrl })
+      body: JSON.stringify({ name, link, copy: savedCopy })
     })
     let data = {}
     try { data = await res.json() } catch(je) {
-      throw new Error('Server error ' + res.status + ' \u2014 check Netlify \u2192 Functions \u2192 createPage \u2192 View logs')
+      throw new Error('Server error ' + res.status + ' — check Netlify → Functions → createPage → View logs')
     }
     if (!res.ok) throw new Error(data.error || 'Server error ' + res.status)
     if (data.error) throw new Error(data.error)
@@ -1935,7 +1895,7 @@ window.deployFunnel = async function() {
     const el = document.getElementById('dep-fb')
     el.className = 'fb on fb-ok'
     el.innerHTML = `
-      <div style="margin-bottom:8px;font-size:12px;font-weight:600">\u2713 Deployed \u2014 funnel is live</div>
+      <div style="margin-bottom:8px;font-size:12px;font-weight:600">✓ Deployed — funnel is live</div>
       <div style="font-size:11px;color:var(--dim);margin-bottom:4px">Opt-in page:</div>
       <div class="lk-row" style="margin-bottom:10px;border-color:var(--teal-bdr)">
         <code style="color:var(--teal);font-size:11px">${esc(funnelUrl)}</code>
@@ -1947,26 +1907,24 @@ window.deployFunnel = async function() {
         <span class="cp-btn" onclick="navigator.clipboard.writeText('${esc(bridgeUrl)}').then(()=>toast('Copied','ok'))">Copy</span>
       </div>
       <div style="padding:10px;background:var(--s2);border-radius:var(--r);font-size:11px;line-height:1.65;margin-bottom:8px">
-        ${data.hasOwnVideo
-          ? \`<span style="color:var(--teal)">\u2713 Your VSL video is set \u2014 plays instantly on the bridge page.</span>\`
-          : data.videoStatus === 'processing'
-          ? \`<span style="color:var(--teal)">\uD83C\uDFAC D-ID video generating in background \u2014 bridge page shows script now and updates when ready.</span>\`
-          : \`<span style="color:var(--muted)">\u2139 No video set. Add your own video URL above or add DID_API_KEY to Netlify.</span>\`
+        ${data.videoStatus === 'processing'
+          ? `<span style="color:var(--teal)">🎬 VSL video generating in background — bridge page shows script now and updates automatically when ready.</span>`
+          : `<span style="color:var(--muted)">ℹ Add DID_API_KEY to Netlify to enable automatic video generation.</span>`
         }
       </div>
       <div style="font-size:11px;color:var(--dim);line-height:1.6">
         <strong style="color:var(--body)">Funnel flow:</strong>
-        Traffic \u2192 <a href="${esc(funnelUrl)}" target="_blank" style="color:var(--teal);text-decoration:none">Opt-in</a>
-        \u2192 <a href="${esc(bridgeUrl)}" target="_blank" style="color:var(--blue);text-decoration:none">VSL Bridge</a>
-        \u2192 Affiliate offer
+        Traffic → <a href="${esc(funnelUrl)}" target="_blank" style="color:var(--teal);text-decoration:none">Opt-in</a>
+        → <a href="${esc(bridgeUrl)}" target="_blank" style="color:var(--blue);text-decoration:none">VSL Bridge</a>
+        → Affiliate offer
       </div>`
 
     addFeed('Funnel deployed: ' + slug, 'ok')
-    toast('Funnel is live \u2713', 'ok')
+    toast('Funnel is live ✓', 'ok')
     loadOverview()
     loadMyFunnels()
   } catch(e) {
-    setFB('dep-fb', 'err', '\u26A0 ' + e.message)
+    setFB('dep-fb', 'err', '⚠ ' + e.message)
     console.error('deployFunnel error:', e)
   }
   btnLoad(btn, false, 'Deploy Funnel')
@@ -2894,6 +2852,27 @@ function planBadge(plan) {
 // INIT
 loadOverview(); loadLinks(); syncStatus()
 setInterval(loadOverview, 30000)
+
+// ── AUTH GUARD (runs after all functions defined) ─────
+;(async () => {
+  try {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session) {
+      window.location.href = '/login.html'
+      return
+    }
+    const user = session.user
+    sessionStorage.setItem('nw_email',   user.email)
+    sessionStorage.setItem('nw_user_id', user.id)
+    const chip = document.getElementById('user-email-chip')
+    if (chip) chip.textContent = user.email
+    supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') window.location.href = '/login.html'
+    })
+  } catch(e) {
+    console.warn('Auth check failed:', e.message)
+  }
+})()
 </script>
 </body>
 </html>
