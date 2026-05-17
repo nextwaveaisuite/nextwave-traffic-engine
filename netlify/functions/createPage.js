@@ -11,12 +11,10 @@ export async function handler(event) {
 
   try {
     const body = JSON.parse(event.body || '{}')
-    const name     = body.name?.trim() || 'funnel'
-    const link     = body.link?.trim() || null
-    const copy     = body.copy || null
-    const videoUrl = body.videoUrl?.trim() || null  // user's own video URL
+    const name = body.name?.trim() || 'funnel'
+    const link = body.link?.trim() || null
+    const copy = body.copy || null
 
-    // Build slug
     const slug = name
       .toLowerCase()
       .replace(/\s+/g, '-')
@@ -25,25 +23,23 @@ export async function handler(event) {
       .replace(/^-|-$/g, '')
       .slice(0, 60) || 'funnel'
 
-    // If user provided their own video URL — use it directly, skip D-ID
-    // If no video URL — trigger D-ID background generation if key exists
-    const hasOwnVideo = !!videoUrl
-    const hasVideo    = !hasOwnVideo && !!process.env.DID_API_KEY && !!copy?.vslScript
+    const hasVideo = !!process.env.DID_API_KEY && !!copy?.vslScript
 
-    console.log('createPage: slug =', slug, '| own video =', hasOwnVideo, '| D-ID =', hasVideo)
+    console.log('createPage: saving slug =', slug, '| hasVideo =', hasVideo)
 
-    // ── UPSERT — handles duplicate slugs gracefully ───────
     const record = {
       funnel_name:      name,
       affiliate_link:   link,
       slug,
       copy:             copy ? JSON.stringify(copy) : null,
-      vsl_video_url:    videoUrl || null,
-      vsl_video_status: hasOwnVideo ? 'ready' : hasVideo ? 'processing' : 'no_key',
+      vsl_video_url:    null,
+      vsl_video_status: hasVideo ? 'processing' : 'no_key',
       created_at:       new Date().toISOString()
     }
 
     let data, error
+
+    // Try upsert first
     const upsertRes = await supabase
       .from('funnels')
       .upsert([record], { onConflict: 'slug' })
@@ -53,6 +49,7 @@ export async function handler(event) {
     data  = upsertRes.data
     error = upsertRes.error
 
+    // If upsert failed try delete + insert
     if (error) {
       console.warn('createPage upsert error:', error.message, '— trying delete+insert')
       await supabase.from('funnels').delete().eq('slug', slug)
@@ -72,7 +69,7 @@ export async function handler(event) {
 
     console.log('createPage: saved successfully, slug =', slug)
 
-    // ── TRIGGER BACKGROUND VIDEO ──────────────────────────
+    // Trigger background video generation
     if (hasVideo) {
       const siteUrl = process.env.SITE_URL || 'https://nextwave-traffic-engine.netlify.app'
       fetch(`${siteUrl}/.netlify/functions/video-background`, {
@@ -87,8 +84,7 @@ export async function handler(event) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         slug,
-        videoStatus: hasOwnVideo ? 'ready' : hasVideo ? 'processing' : 'no_key',
-        hasOwnVideo,
+        videoStatus: hasVideo ? 'processing' : 'no_key',
         saved: true
       })
     }
